@@ -1,0 +1,92 @@
+Card_Name,Range, Effect
+Spell_of_Binding,3, Target cannot move or attack for 4 turns
+Black_Binding,2, Target cannot move or attack for 4 turns
+Dismiss,2, Move enemy unit up to 3 spaces away from caster
+Summon_Fire_Vampire,1, Gain a 7 Hit Unit. Attack range = 1. Move range = 4.
+Summon_Baykhee,1, Gain a 4 Hit Unit. Attack range = 1. Move range = 4.
+Summon_Dark_Young,1, Gain a 7 Hit Unit. Attack range = 1. Move range = 1.
+Summon_Dimensional_Shambler,1, Gain a 4 Hit Unit. Attack range = 1. Move range = 2.
+Summon_Flying_Polyp,1, Gain a 9 Hit Unit. Attack range = 1. Move range = 5.
+Summon_Formless_Spawn,1, Gain a 6 Hit Unit. Attack range = 1. Move range = K.
+Summon_Hunting_Horror,1, Gain an 8 Hit Unit. Attack range = 1. Move range = 3.
+Summon_Hound_of_Tindalos,1, Gain a 6 Hit Unit. Attack range = 1. Move range = 3.
+Summon_Night_Gaunt,1, Gain a 3 Hit Unit. Attack range = 1. Move range = 4.
+Summon_Shantak,1, Gain a 5 Hit Unit. Attack range = 1. Move range = 4.
+Summon_Shoggoth,1, Gain a 10 Hit Unit. Attack range = 1. Move range = 2.
+Summon_Xiclotl,1, Gain a 5 Hit Unit. Attack range = 1. Move range = 1.
+Contact_Chthonian,, Draw 2 Spell cards
+Contact_Star_Spawn,, Draw 2 Spell cards
+Dread_Curse_of_Azathoth,, Attack of Range = 2
+Create_Gate,, Move Self or Adjacent friendly unit to any open space
+Elder_Sign,, Negate a Move card just Played
+Voorish_Sign,, Look at opponents hand. Draw a card from your deck.
+Powder_of_Ibn-Ghazi,, Look at opponents hand. Draw a card from your deck.
+Resurrection,, Bring friendly dead unit back to life adjacent to caster. Unit has 1 Hit.
+Shrivelling,, Attack of Range = 2
+Glass_from_Leng,, Look at opponents hand. Draw a card from your deck.
+Lamp_of_Alhazred,, Draw 2 Spell cards
+Plutonian_Drug,, Search Spell Deck for card & put it in your hand
+Shining_Trapezohedron,3,Gain Control of Target
+Bait,, Move enemy unit up to 3 spaces towards caster
+Spectral_Hunter,, Defense
+Bless_Blade,, Attack of Range = 1
+Body_Warping_of_Gorgoroth,, Self or Target gains 1 Hit
+Cast_out_Devil,, Negate target Control Spell or effect
+Call_Power_of_Nyambe,, Draw 2 Spell cards
+Ceremonial_Dagger,, Kill adjacent friendly unit to draw 3 spell cards
+Chant_of_Thoth,, Look at opponents hand. Draw a card from your deck.
+Chime_of_Tezchaptl,, Negate Spell just cast
+Cloud_Memory,, Opponent must discard Spell Hand
+Clutch_of_Nyogtha,, Attack of Range = K
+Command_Spell,3, Gain Control of Target for 3 turns
+Conjure_Glass_of_Mortlan,, Take card from your discard & put it in your hand
+Consume_Likeness,, Defense
+Bad-Corpse_Dust,, Negate a Move card just Played
+Barrier_of_Naach-Tith,, Defense or Negate Spell just cast
+Curse_Whistle,, Draw 2 Spell cards
+Fetch_Stick,, Attack of Range = 1
+Limbo_Gate,, Move Self or Adjacent friendly unit to any open space
+Mist_of_Releh,, No Attacks may be made this turn
+Scrying_Window,, Look at opponents hand. Draw a card from your deck.
+Time_Warp,4, Target is destroyed
+Insanity,, Any target unit loses 1 hit
+Curse_of_Darkness,, Destroy Target summoned Unit
+Curse_of_the_Stone,3, Target cannot move or attack for 4 turns
+Death_Spell,3, Target is destroyed
+Devolution,2, Gain Control of Target for 3 turns then target runs away
+Dominate,3, Gain Control of Target for 3 turns
+Dust_of_Suleiman,, Attack of Range = 1
+Eibon’s_Wheel_of_Mist,, Defense
+Enthrall_Victim,2, Target cannot move or attack for 4 turns
+Explode_Heart,2, Target is destroyed
+Eye_of_Light_&_Darkness,, All adjacent enemies take 1 Hit of Damage
+Fist_of_Yog_Sothoth,, Attack of Range = 4
+Flesh_Ward,, Caster Immune to Range = 1 Attacks for 5 turns
+Grasp_of_Cthulhu,4, Target cannot move or attack for 4 turns
+Hands_of_Colubra,, Attack of Range = 1
+Heal,, Self or adjacent unit regains 1 lost Hit
+Implant_Fear,3, Target cannot move or attack for 4 turns
+Keeness_of_Two_Alike,, Look at opponents hand. Draw a card from your deck.
+Levitate,, Defense
+Living_Clothes,, Attack of Range = 3 
+Look_to_the_Future,, Look at opponents hand. Draw a card from your deck.
+Mental_Suggestion,3, Gain Control of Target for 3 turns
+Mesmerize,2, Gain Control of Target for 4 turns
+Mind_Blast,, Attack of Range = 4
+Mind_Exchange,1, Gain Control of Target for 3 turns
+Nightmare,4, Target cannot move or attack for 4 turns
+Pipes_of_Madness,, Both players discard all their cards
+Power_Drain,, Steal 2 random spell cards from opponent
+Raise_Corpse,, Bring friendly dead unit back to life adjacent to caster. Unit has 1 Hit.
+Red_Sign_of_Shudde_M’ell,, All adjacent units take 1 Hit of Damage
+Remortification,, Defense
+Seal_of_Isis,, Negate a Spell card just played
+Send_Dreaming,, Draw 2 cards from your deck
+Song_of_Hastur,, Attack of Range = 4
+Song_of_Glissande,, Caster & 3 Targets within 2 spaces cannot move or attack for 2 turns
+Soul_Singing,, Move enemy unit up to 3 spaces in any direction
+Steal_Life,, Attack of Range = 2. Caster regains 1 lost Hit
+Unspeakable_Promise,, Draw 2 Spell cards
+Voice_of_Ra,, Draw 2 cards from your deck
+Wither_Limb,, Attack of Range = 3
+Wrack,3, Target cannot move or attack for 4 turns
