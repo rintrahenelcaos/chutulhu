@@ -17,7 +17,9 @@ FPS = 60
 
 chosen_cell = None
 pos_a = pygame.Vector2(0, 0)
-pos_b = pygame.Vector2(200, 300)
+pos_b = pygame.Vector2(0, 0)
+
+
 
 def grid_position(position):
     """translates clicks into discrete cell positions
@@ -54,28 +56,23 @@ def draw_window(pos):
     
     global chosen_cell
     global pos_a
+    global pos_b
     
     WIN.fill(BACKGROUND_COLOR)
     BOARD.fill("tan4")
     
     
     
-    pos_a = pos_a.move_towards(pos_b,20)
-    print(pos_a[0])
-    #cuadr = pygame.Rect()
-    #pygame.draw.rect(BOARD, "white", pos_a)
-    
     for row in range(ROWS):
         for col in range(row % 2, ROWS, 2):
             pygame.draw.rect(BOARD, "grey3",(CELL*row, CELL*col, CELL,CELL))
-    
-    
-    
-    
+   
     
     if chosen_cell != None:
+        
         pygame.draw.rect(BOARD, (127+waving_func(pygame.time.get_ticks()-chosen_cell[1]),127+waving_func(pygame.time.get_ticks()-chosen_cell[1]),127+waving_func(pygame.time.get_ticks()-chosen_cell[1])), chosen_cell[0])
-    
+        
+        #pos_a = pos_a.move_towards(pos_b,2)
     if pos != None:
         selected_pos = grid_position(pos)
         #print(selected_pos)
@@ -86,7 +83,15 @@ def draw_window(pos):
         #print((CELL*selected_pos[0], CELL*selected_pos[1], CELL, CELL))
         #pygame.draw.rect(BOARD, (255,0,0), (CELL*selected_pos[0], CELL*selected_pos[1], CELL, CELL))
         chosen_cell = (pygame.Rect(CELL*selected_pos[0], CELL*selected_pos[1], CELL, CELL),pygame.time.get_ticks())
-        print(pygame.time.get_ticks())
+        pos_b = pygame.Vector2(chosen_cell[0].x, chosen_cell[0].y)
+        #print(pygame.time.get_ticks())
+        
+    
+    pos_a = pos_a.move_towards(pos_b,10)
+    #print(pos_a[0])
+    #cuadr = pygame.Rect()
+    pygame.draw.rect(BOARD, "white", (pos_a[0],pos_a[1], 100,100))
+    
     
     
         
