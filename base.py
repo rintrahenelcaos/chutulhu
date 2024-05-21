@@ -53,13 +53,13 @@ class GameObject:
         self.scaled_image = pygame.transform.scale(self.image, (CELL, CELL))
         self.moving = False
         self.identif = identif
-    
+        
     def __str__(self) -> str:
         return str(self.identif)    
         
         
     
-    def game_object_drawer(self, vector, board):
+    def game_object_drawer(self, board, vector = None):
         if vector != None:
             self.go_pos = self.go_pos.move_towards(vector, 2)
             self.rec.x = self.go_pos[0]
@@ -67,7 +67,7 @@ class GameObject:
         board.blit(self.scaled_image, (self.rec))
         
 
-def draw_window(pos, prueba):
+def draw_window(pos, token):
     
     global chosen_cell
     global pos_a
@@ -102,7 +102,7 @@ def draw_window(pos, prueba):
             obj.move(pos_b, BOARD)
         BOARD.blit(obj.scaled_image, (obj.rec))"""
     
-    game_mechanics(pos)    
+    game_mechanics(pos, token)    
     
     WIN.blit(BOARD,(0,0))    # actualizes BOARD -> always after all changes odf it
     
@@ -113,21 +113,36 @@ def waving_func(time):
     z = 127*math.cos((2*math.pi/(FPS*40))*time)
     return z
 
-def game_mechanics(pos):
+def game_mechanics(pos, token):
     
     global chosen_cell
     global pos_a
     global pos_b
     
+    #print("en game_mechanics: ", token)
+    
+    
+    
+    
     if pos != None:
+        
         selected_pos = grid_position(pos)
+        if token != None:
+            tokenpos = grid_position((token.rec.x, token.rec.y))
+            if tokenpos == selected_pos:
+                print("token = pos")
+                token.moving == True
+        
         selected_in_grid = GRID.index(selected_pos)
         chosen_cell = (pygame.Rect(CELL*selected_pos[0], CELL*selected_pos[1], CELL, CELL),pygame.time.get_ticks())
         pos_b = pygame.Vector2(chosen_cell[0].x, chosen_cell[0].y)
         print(selected_in_grid)
-        
-    for obj in game_objects_list: 
-        obj.game_object_drawer(pos_b, BOARD)
+    
+    else:
+        for obj in game_objects_list: 
+            if obj.moving:
+                obj.game_object_drawer(BOARD, pos_b)
+            else: obj.game_object_drawer(BOARD)
         
     #draw_window(pos, None)
 
@@ -152,6 +167,7 @@ def main():
         
         clock.tick(FPS)
         pos = None
+        chosen_token = None
         if BOARD.get_rect().collidepoint(pygame.mouse.get_pos()):
             
             pygame.mouse.set_cursor(pygame.cursors.diamond)
@@ -177,10 +193,14 @@ def main():
                 elif pygame.mouse.get_cursor()==pygame.cursors.broken_x:
                     pos = pygame.mouse.get_pos()
                     print("image pressed")
-                
-                
+                    for obj in game_objects_list:
+                        if obj.rec.collidepoint(pygame.mouse.get_pos()):
+                            print(obj)
+                            chosen_token = obj
+                            print(type(chosen_token))
+                        #else: chosen_token = None
         #game_mechanics(pos)           
-        draw_window(pos, prueba)
+        draw_window(pos, chosen_token)
     
     #prueba = GameObject(CELL, 0, 0)       
             
