@@ -4,7 +4,7 @@ import sqlite3
 
 # csv file name
 filename = "cards.csv"
-csvs = ["units.csv", "cards.csv", "spells.csv"]
+csvs = ["units.csv", "units.csv", "cards.csv", "cards.csv", "spells.csv"]
 #csvs = ["units.csv", "cards.csv"]#, "spells.csv"]
 
 # initializing the titles and rows list
@@ -12,7 +12,7 @@ fields = []
 rows = []
 
 # list of tables
-list_tables = ["units", "cards", "spells"]
+list_tables = ["units_a", "units_b", "cards_a", "cards_b", "spells"]
 #list_tables = ["units", "cards"]#, "spells"]
 def csvlistconverter(filename):
 # csv file name
@@ -111,8 +111,10 @@ def tableconstructor(conection, fields, table_name,selection = None, ):
     
     pointer.execute(table)
     conection.commit()
+    
 
-def alltablesconstructor(conection):
+
+def alltablesconstructor(conection, faction_a, faction_b):
     
     for ind in range(len(csvs)):
         fields, rows = csvlistconverter(csvs[ind])
@@ -198,7 +200,7 @@ def data_loader(conection, rows, fields):
 if __name__ == "__main__":
     conector = conection_sql()
     
-    alltablesconstructor(conector)
+    alltablesconstructor(conector, "INVESTIGATORS", "CULTIST")
     
     
     

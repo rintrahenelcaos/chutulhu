@@ -131,7 +131,7 @@ def game_mechanics(pos, token):
             tokenpos = grid_position((token.rec.x, token.rec.y))
             if tokenpos == selected_pos:
                 print("token = pos")
-                token.moving == True
+                token.moving = True
         
         selected_in_grid = GRID.index(selected_pos)
         chosen_cell = (pygame.Rect(CELL*selected_pos[0], CELL*selected_pos[1], CELL, CELL),pygame.time.get_ticks())
@@ -176,11 +176,7 @@ def main():
                 if obj.rec.collidepoint(pygame.mouse.get_pos()):
                     pygame.mouse.set_cursor(pygame.cursors.broken_x)
             
-            """for obj in game_objects_list:
-                
-                if obj.rec.collidepoint(pygame.mouse.get_pos()):
-                    pygame.mouse.set_cursor(pygame.cursors.broken_x)
-                else: pygame.mouse.set_cursor(pygame.cursors.diamond)"""
+            
         else: pygame.mouse.set_cursor(pygame.cursors.arrow)
         
         for event in pygame.event.get():  
