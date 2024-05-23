@@ -131,18 +131,24 @@ def game_mechanics(pos, token):
             tokenpos = grid_position((token.rec.x, token.rec.y))
             if tokenpos == selected_pos:
                 print("token = pos")
-                token.moving == True
-        
+                token.moving = True
+            else:pass
+            """for obj in game_objects_list: 
+                    if obj.moving:
+                        obj.game_object_drawer(BOARD, pos_b)
+                    else: obj.game_object_drawer(BOARD)"""
+            
         selected_in_grid = GRID.index(selected_pos)
         chosen_cell = (pygame.Rect(CELL*selected_pos[0], CELL*selected_pos[1], CELL, CELL),pygame.time.get_ticks())
         pos_b = pygame.Vector2(chosen_cell[0].x, chosen_cell[0].y)
         print(selected_in_grid)
     
-    else:
-        for obj in game_objects_list: 
-            if obj.moving:
-                obj.game_object_drawer(BOARD, pos_b)
-            else: obj.game_object_drawer(BOARD)
+    
+    for obj in game_objects_list: 
+        print(obj.moving)
+        if obj.moving:
+            obj.game_object_drawer(BOARD, pos_b)
+        else: obj.game_object_drawer(BOARD)
         
     #draw_window(pos, None)
 
@@ -158,6 +164,7 @@ def main():
     prueba = GameObject(CELL, pos_a[0], pos_a[1], "token_1.png","prueba1")
     prueba2 = GameObject(CELL,300, 0, "token_2.png","prueba2")
     prueba3 = GameObject(CELL,700,700, "token_3.png","prueba3")
+    prueba3.moving = False
     game_objects_list.append(prueba)
     game_objects_list.append(prueba2)
     game_objects_list.append(prueba3)
