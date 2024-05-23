@@ -1,0 +1,410 @@
+INTRODUCTION
+Board & card game for 2 players.
+Battle between two factions in the Lovecraft Universe. 
+Abstract skirmish level combat.
+Each figure represents a single man/creature (unit). 
+
+DISCLAIMER
+Cthulhu is a licensed property.
+This is merely a Fan site.
+
+VICTORY
+You win if you kill the opposing Leaders.
+If a faction has no Leader, then a loss of half it’s units will defeat it.
+
+MAP & PIECES
+Use an 8x8 chessboard.
+Use chits or miniatures to represent units.
+
+FACTIONS
+Each player picks one Faction.
+Each Faction has its own set of units described in its own unit list.
+Each Faction has its own cardset described in its own cardset list.
+There are 8 Factions:
+Human Investigators
+Deep Ones
+Humanoids
+Yithians
+Elder Things
+Mi-Go
+Serpent People
+Cultists
+
+SPELL DECK
+Players share a common Spell Deck.
+Only leaders can use spells.
+Keep your spell cards in a Separate hand.
+
+SETUP
+Each player places one unit on each square of his back two rows.
+Units may not stack. 
+
+TURN SEQUENCE
+Players take turns. 
+Each turn has 3 phases:
+1. Fate Phase
+2. Move Phase
+3. Attack Phase
+
+FATE PHASE
+Draw 3 cards from your deck. 
+Max hand size = 5 cards.
+If the deck runs out, shuffle the discard and draw from it.
+Discard excess cards.
+
+MOVE PHASE
+Play (discard) a Move card to move one of your units.
+The move card has a number. 
+This is the number of spaces the unit moves.
+Moves can be diagonal or orthogonal. 
+“Knight” type move cards allow a unit to move like a knight in chess.
+Instead of moving just one unit in any direction, you have the 
+option of moving one or more units forward the indicated number of 
+spaces using a single move card.
+
+ATTACK PHASE
+Play (discard) an Attack card to have a unit attack.
+The attack card has a number. 
+This is the range of the attack.
+Attacks can be diagonal or orthogonal. 
+“Knight” type attack cards produce an attack with a range like a knight in chess.
+Attacks always do one Hit of damage to the target unless otherwise specified.
+Use Chits or coins to record damage.
+A unit reduced to zero Hits is killed and removed from the board.
+Your opponent may play Defense cards to negate your attack.
+
+UNIT TABLE NOMENCLATURE
+# = Number of that type of man you start the game with.
+Hits = Number of Hits that type of unit has.
+
+CARD LIST NOTATION
+M = Movement
+A = Attack
+D = Defense
+K = as a Knight would move in Chess
+Type = Purpose of card
+
+
+INVESTIGATORS UNIT TABLE
+Unit Name:		#	Hits	Notes:
+Townsfolk		8	1	-
+Companions		6	2	-
+Investigators		2	3	Leaders
+
+INVESTIGATORS CARD LIST
+Card Name:		#	Type	Range	Notes: 
+Cautious Advance	4	M	1
+Quick Advance		4	M	2
+Run			3	M	3
+Sprint			2	M	4
+Zig-Zag			2	M	K
+Pitchfork		1	A	1
+Shovel			1	A	1
+Torch			1	A	1
+Axe			1	A	1
+Shoot Point Blank	1	A	1	
+Pistol			2	A	2
+Revolver		1	A	2
+Dynamite		1	A	K
+Shotgun			2	A	3
+Rifle			2	A	4
+Duck			2	D	-
+Hide			2	D	-
+Block			2	D	-
+Battle Plan		2	X	-	Draw 3 cards
+Stalwart		2	D	-	Companions only
+Ancient Tome		4	X	-	Discard to Draw a Spell card
+
+
+DEEP ONES UNIT TABLE
+Unit Name:		#	Hits	Notes:
+Hybrids			8	1	-
+Deep Ones		6	2	-
+Ancient Deep One	2	3	Leaders
+
+DEEP ONES CARD LIST
+Card Name:		#	Type	Range	Notes: 
+Quiet Approach		4	M	1
+Shamble			4	M	2
+Loping Gait		3	M	3
+Deft Scramble		2	M	4
+Sinuous Movements	2	M	K
+Sharp Claws		2	A	1
+Silent Attack		1	A	1
+Bite			1	A	1
+Trident			1	A	1
+Net Attack		1	A	2
+Hunting Spear		2	A	2
+Thrown Harpoon		2	A	2
+Crossbow		3	A	3
+Scales			2	D	-
+Swift Motion		2	D	-	
+Move in Shadows		2	D	-
+Emerge from the Sea	2	X	-	Draw 3 cards
+Immortal 		2	D	-	Deep Ones only
+Deep Magic		4	X	-	Discard to Draw a Spell card
+
+HUMANOIDS UNIT TABLE
+Unit Name:		#	Hits	Notes:
+Ghouls			9	1	-
+Ghasts			6	2	-
+Gug			1	5	Leader
+
+HUMANOIDS CARD LIST
+Card Name:		#	Type	Range	Notes: 
+Awkward Movements	4	M	1
+Lurch Forward		4	M	2
+Run & Jump		3	M	3
+Gallop			2	M	4
+Hidden Ways		2	M	K
+Filthy Claws		1	A	1
+Jagged Bite		1	A	1
+Fangs			1	A	1
+Mule Kick		1	A	1
+Crushing Blow		1	A	1
+Rip to Pieces		1	A	1	
+Rend Flesh		1	A	1
+Thrown Rock		3	A	2
+Barrel Attack		2	M	2	Also Attack Range = 1
+Rubbery Hide		2	D	-
+Brutes			2	D	-
+Animal Reflexes		2	D	-
+Sense of Smell		1	X	-	Draw 3 Cards
+Savagery		1	X	-	Draw 3 Cards
+Massive Bulk		2	D	-	Ghasts & Gug
+Bestial Magic		4	X	-	Discard to Draw a Spell card
+
+
+ELDER THINGS UNIT TABLE
+Unit Name:		#	Hits	Notes:
+Elder Things		8	3	All can use Spells
+
+ELDER THINGS CARD LIST
+Card Name:		#	Type	Range	Notes: 
+Hover			4	M	1
+Float			4	M	2
+Glide			3	M	3
+Soar			3	M	4
+Dive			2	M	5
+Roll			2	M	K
+Tentacles		3	A	1
+Constriction		3	A	1
+Crushing Attack		4	M	1	Also Attack Range = 1
+Swoop Attack		3	M	2	Also Attack Range = 1
+Rigid Skin		2	D	-	
+Huge Size		2	D	-
+Flying Dodge		2	D	-
+Ascend			1	D	-
+Sense Without Light	1	X	-	Draw 3 cards
+Piping Speech		1	X	-	Draw 3 cards
+Ancient Knowledge	4	X	-	Discard to Draw a Spell card
+
+
+GREAT RACE OF YITH UNIT TABLE
+Unit Name:		#	Hits	Notes:
+Yithians	 	8	3	All can use Spells
+
+GREAT RACE OF YITH CARD LIST
+Card Name:		#	Type	Range	Notes: 
+Contraction		8	M	1	
+Expansion		5	M	2
+Nippers			3	A	1
+Lightning Gun Burst	2	A	2
+Lightning Gun Gout	2	A	3
+Lightning Gun Strike	2	A	4
+Lightning Gun Arc	2	A	K
+Lightning Gun Bolt	2	A	5
+Enormous Size		2	D	-
+Elastic Flesh		2	D	-
+Rigid Scales		2	D	-	
+Time Travel		1	X	-	Draw 5 cards and keep 2
+Mentalists		1	X	-	Draw 3 cards
+Trade Minds		1	X	3	Gain Control of Target
+Arcane Secret		2	X	-	Discard to Draw a Spell card
+
+
+SERPENT PEOPLE UNIT TABLE
+Unit Name:		#	Hits	Notes:
+Degenerates		8	1	
+Serpent Folk		6	2	
+Sorcerer of Yig		2	3	Leader	
+
+SERPENT PEOPLE CARD LIST
+Card Name:		#	Type	Range	Notes: 
+Coil			4	M	1
+Twist 			4	M	2
+Slither			3	M	3
+Shoot			2	M	4
+Slip & Slide		3	M	K
+Venomous Fangs		2	A	1
+Poisonous Bite		2	A	1
+Taloned Hands		2	A	1
+Constriction		1	A	1
+Spit Poison		2	A	2
+Poisoned Darts		2	A	2
+Firearms		2	A	3
+Sinuous Weaving 	2	D	-
+Sneak & Skulk		2	D	-
+Reptilian Scales	2	D	-	
+Cold-Blooded		2	X	-	Draw 3 cards
+Illusions		2	D	-	Not Degenerates
+Sorcery			6	X	-	Discard to Draw a Spell Card
+
+
+CULTIST UNIT TABLE
+Unit Name:		#	Hits	Notes:
+Worshippers		8	1
+Fanatics		6	2
+Evil High Priest	2	3	Leader
+
+CULTIST CARD LIST
+Card Name:		#	Type	Range	Notes: 
+Encroach		4	M	1
+March			4	M	2
+Run			3	M	3
+Charge			2	M	4
+Rush In			2	M	K
+Spear			2	A	1
+Dagger			2	A	1
+Machete			2	A	1
+Thrown Knives		2	A	2
+Pistol			2	A	2
+Bolas			2	A	3
+Antique Gun		1	A	3
+Frenzy			2	D	-
+Drugged			2	D	-
+Fanaticism		2	X	-	Draw 3 cards
+Ritual Sacrifice	5	X	-	Draw a Spell Card
+
+
+FUNGI FROM YUGGOTH UNIT TABLE
+Unit Name:		#	Hits	Notes:
+Mi-Go			10	2
+Mi-Go Surgeon		2	2	Leader
+
+FUNGI FROM YUGGOTH CARD LIST
+Card Name:		#	Type	Range	Notes: 
+Articulate Limbs	4	M	1
+Circle			4	M	2
+Membranous Wings	3	M	3
+Soar			3	M	4
+Dive			2	M	5
+Pitch			2	M	K
+Nippers			2	A	1
+Grapple			2	A	1
+Vivisection		2	A	1
+Dissection		2	A	1
+Drop Attack		4	M	1	Also Attack Range = 1
+Chitinous		2	D	-
+Fly Away		2	D	-
+Trickery		2	D	-
+Brain Surgery		1	X	1	Take control of target unit 
+Antennae		2	X	-	Draw 3 cards
+Interstellar Race	4	X	-	Draw 1 Spell Card
+
+SUMMONED UNITS
+Some spells can summon units, which appear in an empty space next to the caster.
+The controller may use Attack & Move cards with the unit.
+Instead of using the Range on the cards, the cards will be assigned a range according to 
+The spell description of the Unit.
+Summoned Units cannot use defense cards.
+A Summoned unit automatically loses 1 Hit per turn.
+
+CONTROLLED UNITS
+The controller may use Attack & Move cards with the unit.
+These cards will always be considered to have a range = 1.
+Controlled units cannot cast spells.
+
+SPELL CARD LIST
+Card Name: (Range) Effect
+Spell of Binding: (3) Target cannot move or attack for 4 turns
+Black Binding:  (2) Target cannot move or attack for 4 turns
+Dismiss: (2) Move enemy unit up to 3 spaces away from caster
+Summon Fire Vampire: (1) Gain a 7 Hit Unit. Attack range = 1. Move range = 4.
+Summon Baykhee: (1) Gain a 4 Hit Unit. Attack range = 1. Move range = 4.
+Summon Dark Young: (1) Gain a 7 Hit Unit. Attack range = 1. Move range = 1.
+Summon Dimensional Shambler: (1) Gain a 4 Hit Unit. Attack range = 1. Move range = 2.
+Summon Flying Polyp: (1) Gain a 9 Hit Unit. Attack range = 1. Move range = 5.
+Summon Formless Spawn: (1) Gain a 6 Hit Unit. Attack range = 1. Move range = K.
+Summon Hunting Horror: (1) Gain an 8 Hit Unit. Attack range = 1. Move range = 3.
+Summon Hound of Tindalos: (1) Gain a 6 Hit Unit. Attack range = 1. Move range = 3.
+Summon Night Gaunt: (1) Gain a 3 Hit Unit. Attack range = 1. Move range = 4.
+Summon Shantak: (1) Gain a 5 Hit Unit. Attack range = 1. Move range = 4.
+Summon Shoggoth: (1) Gain a 10 Hit Unit. Attack range = 1. Move range = 2.
+Summon Xiclotl: (1) Gain a 5 Hit Unit. Attack range = 1. Move range = 1.
+Contact Chthonian: Draw 2 Spell cards
+Contact Star Spawn: Draw 2 Spell cards
+Dread Curse of Azathoth: Attack of Range = 2
+Create Gate: Move Self or Adjacent friendly unit to any open space
+Elder Sign: Negate a Move card just Played
+Voorish Sign: Look at opponents hand. Draw a card from your deck.
+Powder of Ibn-Ghazi: Look at opponents hand. Draw a card from your deck.
+Resurrection: Bring friendly dead unit back to life adjacent to caster. Unit has 1 Hit.
+Shrivelling: Attack of Range = 2
+Glass from Leng: Look at opponents hand. Draw a card from your deck.
+Lamp of Alhazred: Draw 2 Spell cards
+Plutonian Drug: Search Spell Deck for card & put it in your hand
+Shining Trapezohedron: (3) Gain Control of Target
+Bait: Move enemy unit up to 3 spaces towards caster
+Spectral Hunter: Defense
+Bless Blade: Attack of Range = 1
+Body Warping of Gorgoroth: Self or Target gains 1 Hit
+Cast out Devil: Negate target Control Spell or effect
+Call Power of Nyambe: Draw 2 Spell cards
+Ceremonial Dagger: Kill adjacent friendly unit to draw 3 spell cards
+Chant of Thoth: Look at opponents hand. Draw a card from your deck.
+Chime of Tezchaptl: Negate Spell just cast
+Cloud Memory: Opponent must discard Spell Hand
+Clutch of Nyogtha: Attack of Range = K
+Command Spell: (3) Gain Control of Target for 3 turns
+Conjure Glass of Mortlan: Take card from your discard & put it in your hand
+Consume Likeness: Defense
+Bad-Corpse Dust: Negate a Move card just Played
+Barrier of Naach-Tith: Defense or Negate Spell just cast
+Curse Whistle: Draw 2 Spell cards
+Fetch Stick: Attack of Range = 1
+Limbo Gate: Move Self or Adjacent friendly unit to any open space
+Mist of Releh: No Attacks may be made this turn
+Scrying Window: Look at opponents hand. Draw a card from your deck.
+Time Warp: (4) Target is destroyed
+Insanity: Any target unit loses 1 hit
+Curse of Darkness: Destroy Target summoned Unit
+Curse of the Stone: (3) Target cannot move or attack for 4 turns
+Death Spell: (3) Target is destroyed
+Devolution: (2) Gain Control of Target for 3 turns then target runs away
+Dominate: (3) Gain Control of Target for 3 turns
+Dust of Suleiman: Attack of Range = 1
+Eibon’s Wheel of Mist: Defense
+Enthrall Victim: (2) Target cannot move or attack for 4 turns
+Explode Heart: (2) Target is destroyed
+Eye of Light & Darkness: All adjacent enemies take 1 Hit of Damage
+Fist of Yog Sothoth: Attack of Range = 4
+Flesh Ward: Caster Immune to Range = 1 Attacks for 5 turns
+Grasp of Cthulhu: (4) Target cannot move or attack for 4 turns
+Hands of Colubra: Attack of Range = 1
+Heal: Self or adjacent unit regains 1 lost Hit
+Implant Fear: (3) Target cannot move or attack for 4 turns
+Keeness of Two Alike: Look at opponents hand. Draw a card from your deck.
+Levitate: Defense
+Living Clothes: Attack of Range = 3 
+Look to the Future: Look at opponents hand. Draw a card from your deck.
+Mental Suggestion: (3) Gain Control of Target for 3 turns
+Mesmerize: (2) Gain Control of Target for 4 turns
+Mind Blast: Attack of Range = 4
+Mind Exchange: (1) Gain Control of Target for 3 turns
+Nightmare: (4) Target cannot move or attack for 4 turns
+Pipes of Madness: Both players discard all their cards
+Power Drain: Steal 2 random spell cards from opponent
+Raise Corpse: Bring friendly dead unit back to life adjacent to caster. Unit has 1 Hit.
+Red Sign of Shudde M’ell: All adjacent units take 1 Hit of Damage
+Remortification: Defense
+Seal of Isis: Negate a Spell card just played
+Send Dreaming: Draw 2 cards from your deck
+Song of Hastur: Attack of Range = 4
+Song of Glissande: Caster & 3 Targets within 2 spaces cannot move or attack for 2 turns
+Soul Singing: Move enemy unit up to 3 spaces in any direction
+Steal Life: Attack of Range = 2. Caster regains 1 lost Hit
+Unspeakable Promise: Draw 2 Spell cards
+Voice of Ra: Draw 2 cards from your deck
+Wither Limb: Attack of Range = 3
+Wrack: (3) Target cannot move or attack for 4 turns

@@ -4,7 +4,7 @@ import sqlite3
 
 # csv file name
 filename = "cards.csv"
-csvs = ["units.csv", "cards.csv", "spells.csv"]
+csvs = ["units.csv", "units.csv", "cards.csv", "cards.csv", "spells.csv"]
 #csvs = ["units.csv", "cards.csv"]#, "spells.csv"]
 
 # initializing the titles and rows list
@@ -12,7 +12,7 @@ fields = []
 rows = []
 
 # list of tables
-list_tables = ["units", "cards", "spells"]
+list_tables = ["units_a", "units_b", "cards_a", "cards_b", "spells"]
 #list_tables = ["units", "cards"]#, "spells"]
 def csvlistconverter(filename):
 # csv file name
@@ -111,8 +111,10 @@ def tableconstructor(conection, fields, table_name,selection = None, ):
     
     pointer.execute(table)
     conection.commit()
+    
 
-def alltablesconstructor(conection):
+
+def alltablesconstructor(conection, faction_a, faction_b):
     
     for ind in range(len(csvs)):
         fields, rows = csvlistconverter(csvs[ind])
@@ -133,6 +135,8 @@ def alltablesconstructor(conection):
             preload = preload + "?,"*len(fields)
             preload = preload[:-1]
             preload =  preload + ")"
+            preload3 = preload + " WHERE Faction = "+ str(faction_a) + " GROUP BY Faction;" 
+            print(preload3)
             
             preload2 = []
             for discrete in row:
@@ -144,7 +148,78 @@ def alltablesconstructor(conection):
             conection.commit()
         #tableconstructor(conection, fields, list_tables[ind])
         
+# Opcion con filtrado
+
+def alltablesconstructor(conection, faction_a, faction_b):
+    
+    for ind in range(len(csvs)):
+        fields, rows = csvlistconverter(csvs[ind])
+        try:
+            fields.remove("Nbr")
+            rows =repeated_token_extraction(rows)
+        except: pass
+        pointer = conection.cursor()
+        table = "CREATE TABLE IF NOT EXISTS "+list_tables[ind]+"(id INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT )" % " TEXT, ".join(fields)
         
+        pointer.execute(table)
+        conection.commit()
+        
+        for row in rows:
+            
+            preload = "INSERT INTO "+list_tables[ind]+"(%s) VALUES (" % ",".join(fields)
+            
+            preload = preload + "?,"*len(fields)
+            preload = preload[:-1]
+            preload =  preload + ")"
+            preload3 = preload + " WHERE Faction = "+ str(faction_a) + " GROUP BY Faction;" 
+            print(preload3)
+            
+            preload2 = []
+            for discrete in row:
+                preload2.append(str(discrete))
+            
+            tupleload = tuple(preload2)
+            
+            pointer.execute(preload, tupleload)
+            conection.commit()
+        
+        
+        #tableconstructor(conection, fields, list_tables[ind])
+
+def individual_table(conection, csv, table_to_create, faction):
+    
+    fields, rows = csvlistconverter(csv)
+    try: 
+        fields.remove("Nbr")
+        rows =repeated_token_extraction(rows)
+    except: pass
+    
+    faction_rows =
+    
+    pointer = conection.cursor()
+    table = "CREATE TABLE IF NOT EXISTS "+table_to_create+"(id INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT )" % " TEXT, ".join(fields)
+    
+    pointer.execute(table)
+    conection.commit() 
+    
+    for row in rows:
+            
+        preload = "INSERT INTO "+table_to_create+"(%s) VALUES (" % ",".join(fields)
+        
+        preload = preload + "?,"*len(fields)
+        preload = preload[:-1]
+        preload =  preload + ")"
+        preload3 = preload + " WHERE Faction = "+ str(faction_a) + " GROUP BY Faction;" 
+        print(preload3)
+        
+        preload2 = []
+        for discrete in row:
+            preload2.append(str(discrete))
+        
+        tupleload = tuple(preload2)
+        
+        pointer.execute(preload, tupleload)
+        conection.commit()       
 
 def loaddb(coneccion, tuplacarga):
 
@@ -195,10 +270,14 @@ def data_loader(conection, rows, fields):
     pass    
 
 
-if __name__ == "__main__":
+def main():
     conector = conection_sql()
     
-    alltablesconstructor(conector)
+    alltablesconstructor(conector, "INVESTIGATORS", "CULTIST")
+
+
+if __name__ == "__main__":
+    main()
     
     
     
