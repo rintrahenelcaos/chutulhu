@@ -80,14 +80,12 @@ def conection_sql():
     conector = sqlite3.connect("currentgame.db")
     return conector
 
-def tabledropper(conection):
+def tabledropper(conection, table):
     pointer = conection.cursor()
-    dropping = "DROP TABLE IF EXISTS deck"
+    dropping = "DROP TABLE IF EXISTS "+table 
     pointer.execute(dropping)
     conection.commit()
-    dropping = "DROP TABLE IF EXISTS images"
-    pointer.execute(dropping)
-    conection.commit()
+    
 
     
 
@@ -135,8 +133,8 @@ def alltablesconstructor(conection, faction_a, faction_b):
             preload = preload + "?,"*len(fields)
             preload = preload[:-1]
             preload =  preload + ")"
-            preload3 = preload + " WHERE Faction = "+ str(faction_a) + " GROUP BY Faction;" 
-            print(preload3)
+            #preload3 = preload + " WHERE Faction = "+ str(faction_a) + " GROUP BY Faction;" 
+            #print(preload3)
             
             preload2 = []
             for discrete in row:
@@ -150,51 +148,34 @@ def alltablesconstructor(conection, faction_a, faction_b):
         
 # Opcion con filtrado
 
-def alltablesconstructor(conection, faction_a, faction_b):
+def alltablesconstructor(faction_list):
     
-    for ind in range(len(csvs)):
-        fields, rows = csvlistconverter(csvs[ind])
-        try:
-            fields.remove("Nbr")
-            rows =repeated_token_extraction(rows)
-        except: pass
-        pointer = conection.cursor()
-        table = "CREATE TABLE IF NOT EXISTS "+list_tables[ind]+"(id INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT )" % " TEXT, ".join(fields)
-        
-        pointer.execute(table)
-        conection.commit()
-        
-        for row in rows:
-            
-            preload = "INSERT INTO "+list_tables[ind]+"(%s) VALUES (" % ",".join(fields)
-            
-            preload = preload + "?,"*len(fields)
-            preload = preload[:-1]
-            preload =  preload + ")"
-            preload3 = preload + " WHERE Faction = "+ str(faction_a) + " GROUP BY Faction;" 
-            print(preload3)
-            
-            preload2 = []
-            for discrete in row:
-                preload2.append(str(discrete))
-            
-            tupleload = tuple(preload2)
-            
-            pointer.execute(preload, tupleload)
-            conection.commit()
-        
-        
-        #tableconstructor(conection, fields, list_tables[ind])
+    
+    conector = conection_sql()
+    for ind in range(len(list_tables)):
+        tabledropper(conector, list_tables[ind])
+        individual_table(conector, csvs[ind], list_tables[ind],faction_list[ind%2])
+    
+    
 
-def individual_table(conection, csv, table_to_create, faction):
+def individual_table(conection, csv, table_to_create, faction = "None"):
     
     fields, rows = csvlistconverter(csv)
     try: 
         fields.remove("Nbr")
-        rows =repeated_token_extraction(rows)
+        rows = repeated_token_extraction(rows)
     except: pass
     
-    faction_rows =
+    faction_rows = []
+    try:
+        faction_field_index = fields.index("Faction")
+    
+        for row in rows:
+            if row[faction_field_index] == faction:
+                faction_rows.append(row)
+    except: faction_rows = rows.copy()
+    #print(faction_field_index)
+    
     
     pointer = conection.cursor()
     table = "CREATE TABLE IF NOT EXISTS "+table_to_create+"(id INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT )" % " TEXT, ".join(fields)
@@ -202,15 +183,14 @@ def individual_table(conection, csv, table_to_create, faction):
     pointer.execute(table)
     conection.commit() 
     
-    for row in rows:
+    for row in faction_rows:
             
         preload = "INSERT INTO "+table_to_create+"(%s) VALUES (" % ",".join(fields)
         
         preload = preload + "?,"*len(fields)
         preload = preload[:-1]
         preload =  preload + ")"
-        preload3 = preload + " WHERE Faction = "+ str(faction_a) + " GROUP BY Faction;" 
-        print(preload3)
+        
         
         preload2 = []
         for discrete in row:
@@ -270,14 +250,14 @@ def data_loader(conection, rows, fields):
     pass    
 
 
-def main():
-    conector = conection_sql()
+def main(faction_list):
     
-    alltablesconstructor(conector, "INVESTIGATORS", "CULTIST")
+    alltablesconstructor(faction_list)
 
 
 if __name__ == "__main__":
-    main()
+    factions = ["DEEP_ONES", "CULTIST"]
+    main(factions)
     
     
     
