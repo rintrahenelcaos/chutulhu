@@ -1,75 +1,75 @@
-Card_Name,Nbr,Type,Range,Notes,Faction
-Cautious_Advance,4,M,1,,INVESTIGATORS
-Quick_Advance,4,M,2,,INVESTIGATORS
-Run,3,M,3,,INVESTIGATORS
-Sprint,2,M,4,,INVESTIGATORS
-Zig-Zag,2,M,K,,INVESTIGATORS
-Pitchfork,1,A,1,,INVESTIGATORS
-Shovel,1,A,1,,INVESTIGATORS
-Torch,1,A,1,,INVESTIGATORS
-Axe,1,A,1,,INVESTIGATORS
-Shoot_Point_Blank,1,A,1,,INVESTIGATORS
-Pistol,2,A,2,,INVESTIGATORS
-Revolver,1,A,2,,INVESTIGATORS
-Dynamite,1,A,K,,INVESTIGATORS
-Shotgun,2,A,3,,INVESTIGATORS
-Rifle,2,A,4,,INVESTIGATORS
-Duck,2,D,-,,INVESTIGATORS
-Hide,2,D,-,,INVESTIGATORS
-Block,2,D,-,,INVESTIGATORS
-Battle_Plan,2,X,-,Draw 3 cards,INVESTIGATORS
-Stalwart,2,D,-,Companions only,INVESTIGATORS
-Ancient_Tome,4,X,-,Discard to Draw a Spell card,INVESTIGATORS
-Quiet_Approach,4,M,1,,DEEP_ONES
-Shamble,4,M,2,,DEEP_ONES
-Loping_Gait,3,M,3,,DEEP_ONES
-Deft_Scramble,2,M,4,,DEEP_ONES
-Sinuous_Movements,2,M,K,,DEEP_ONES
-Sharp_Claws,2,A,1,,DEEP_ONES
-Silent_Attack,1,A,1,,DEEP_ONES
-Bite,1,A,1,,DEEP_ONES
-Trident,1,A,1,,DEEP_ONES
-Net_Attack,1,A,2,,DEEP_ONES
-Hunting_Spear,2,A,2,,DEEP_ONES
-Thrown_Harpoon,2,A,2,,DEEP_ONES
-Crossbow,3,A,3,,DEEP_ONES
-Scales,2,D,-,,DEEP_ONES
-Swift_Motion,2,D,-,,DEEP_ONES
-Move_in_Shadows,2,D,-,,DEEP_ONES
-Emerge_from_the_Sea,2,X,-,Draw 3 cards,DEEP_ONES
-Immortal,2,D,-,Deep Ones only,DEEP_ONES
-Deep_Magic,4,X,-,Discard to Draw a Spell card,DEEP_ONES
-Coil,4,M,1,,SERPENT_PEOPLE
-Twist,4,M,2,,SERPENT_PEOPLE
-Slither,3,M,3,,SERPENT_PEOPLE
-Shoot,2,M,4,,SERPENT_PEOPLE
-Slip_&_Slide,3,M,K,,SERPENT_PEOPLE
-Venomous_Fangs,2,A,1,,SERPENT_PEOPLE
-Poisonous_Bite,2,A,1,,SERPENT_PEOPLE
-Taloned_Hands,2,A,1,,SERPENT_PEOPLE
-Constriction,1,A,1,,SERPENT_PEOPLE
-Spit_Poison,2,A,2,,SERPENT_PEOPLE
-Poisoned_Darts,2,A,2,,SERPENT_PEOPLE
-Firearms,2,A,3,,SERPENT_PEOPLE
-Sinuous_Weaving,2,D,-,,SERPENT_PEOPLE
-Sneak_&_Skulk,2,D,-,,SERPENT_PEOPLE
-Reptilian_Scales,2,D,-,,SERPENT_PEOPLE
-Cold-Blooded,2,X,-,Draw 3 cards,SERPENT_PEOPLE
-Illusions,2,D,-,Not Degenerates,SERPENT_PEOPLE
-Sorcery,6,X,-,Discard to Draw a Spell Card,SERPENT_PEOPLE
-Encroach,4,M,1,,CULTIST
-March,4,M,2,,CULTIST
-Run,3,M,3,,CULTIST
-Charge,2,M,4,,CULTIST
-Rush_In,2,M,K,,CULTIST
-Spear,2,A,1,,CULTIST
-Dagger,2,A,1,,CULTIST
-Machete,2,A,1,,CULTIST
-Thrown_Knives,2,A,2,,CULTIST
-Pistol,2,A,2,,CULTIST
-Bolas,2,A,3,,CULTIST
-Antique_Gun,1,A,3,,CULTIST
-Frenzy,2,D,-,,CULTIST
-Drugged,2,D,-,,CULTIST
-Fanaticism,2,X,-,Draw 3 cards,CULTIST
-Ritual_Sacrifice,5,X,-,Draw a Spell Card,CULTIST
+Card_Name,Nbr,Type,Range,Notes,Faction,Location,Deckorder
+Cautious_Advance,4,M,1,,INVESTIGATORS,,
+Quick_Advance,4,M,2,,INVESTIGATORS,,
+Run,3,M,3,,INVESTIGATORS,,
+Sprint,2,M,4,,INVESTIGATORS,,
+Zig-Zag,2,M,K,,INVESTIGATORS,,
+Pitchfork,1,A,1,,INVESTIGATORS,,
+Shovel,1,A,1,,INVESTIGATORS,,
+Torch,1,A,1,,INVESTIGATORS,,
+Axe,1,A,1,,INVESTIGATORS,,
+Shoot_Point_Blank,1,A,1,,INVESTIGATORS,,
+Pistol,2,A,2,,INVESTIGATORS,,
+Revolver,1,A,2,,INVESTIGATORS,,
+Dynamite,1,A,K,,INVESTIGATORS,,
+Shotgun,2,A,3,,INVESTIGATORS,,
+Rifle,2,A,4,,INVESTIGATORS,,
+Duck,2,D,-,,INVESTIGATORS,,
+Hide,2,D,-,,INVESTIGATORS,,
+Block,2,D,-,,INVESTIGATORS,,
+Battle_Plan,2,X,-,Draw 3 cards,INVESTIGATORS,,
+Stalwart,2,D,-,Companions only,INVESTIGATORS,,
+Ancient_Tome,4,X,-,Discard to Draw a Spell card,INVESTIGATORS,,
+Quiet_Approach,4,M,1,,DEEP_ONES,,
+Shamble,4,M,2,,DEEP_ONES,,
+Loping_Gait,3,M,3,,DEEP_ONES,,
+Deft_Scramble,2,M,4,,DEEP_ONES,,
+Sinuous_Movements,2,M,K,,DEEP_ONES,,
+Sharp_Claws,2,A,1,,DEEP_ONES,,
+Silent_Attack,1,A,1,,DEEP_ONES,,
+Bite,1,A,1,,DEEP_ONES,,
+Trident,1,A,1,,DEEP_ONES,,
+Net_Attack,1,A,2,,DEEP_ONES,,
+Hunting_Spear,2,A,2,,DEEP_ONES,,
+Thrown_Harpoon,2,A,2,,DEEP_ONES,,
+Crossbow,3,A,3,,DEEP_ONES,,
+Scales,2,D,-,,DEEP_ONES,,
+Swift_Motion,2,D,-,,DEEP_ONES,,
+Move_in_Shadows,2,D,-,,DEEP_ONES,,
+Emerge_from_the_Sea,2,X,-,Draw 3 cards,DEEP_ONES,,
+Immortal,2,D,-,Deep Ones only,DEEP_ONES,,
+Deep_Magic,4,X,-,Discard to Draw a Spell card,DEEP_ONES,,
+Coil,4,M,1,,SERPENT_PEOPLE,,
+Twist,4,M,2,,SERPENT_PEOPLE,,
+Slither,3,M,3,,SERPENT_PEOPLE,,
+Shoot,2,M,4,,SERPENT_PEOPLE,,
+Slip_&_Slide,3,M,K,,SERPENT_PEOPLE,,
+Venomous_Fangs,2,A,1,,SERPENT_PEOPLE,,
+Poisonous_Bite,2,A,1,,SERPENT_PEOPLE,,
+Taloned_Hands,2,A,1,,SERPENT_PEOPLE,,
+Constriction,1,A,1,,SERPENT_PEOPLE,,
+Spit_Poison,2,A,2,,SERPENT_PEOPLE,,
+Poisoned_Darts,2,A,2,,SERPENT_PEOPLE,,
+Firearms,2,A,3,,SERPENT_PEOPLE,,
+Sinuous_Weaving,2,D,-,,SERPENT_PEOPLE,,
+Sneak_&_Skulk,2,D,-,,SERPENT_PEOPLE,,
+Reptilian_Scales,2,D,-,,SERPENT_PEOPLE,,
+Cold-Blooded,2,X,-,Draw 3 cards,SERPENT_PEOPLE,,
+Illusions,2,D,-,Not Degenerates,SERPENT_PEOPLE,,
+Sorcery,6,X,-,Discard to Draw a Spell Card,SERPENT_PEOPLE,,
+Encroach,4,M,1,,CULTIST,,
+March,4,M,2,,CULTIST,,
+Run,3,M,3,,CULTIST,,
+Charge,2,M,4,,CULTIST,,
+Rush_In,2,M,K,,CULTIST,,
+Spear,2,A,1,,CULTIST,,
+Dagger,2,A,1,,CULTIST,,
+Machete,2,A,1,,CULTIST,,
+Thrown_Knives,2,A,2,,CULTIST,,
+Pistol,2,A,2,,CULTIST,,
+Bolas,2,A,3,,CULTIST,,
+Antique_Gun,1,A,3,,CULTIST,,
+Frenzy,2,D,-,,CULTIST,,
+Drugged,2,D,-,,CULTIST,,
+Fanaticism,2,X,-,Draw 3 cards,CULTIST,,
+Ritual_Sacrifice,5,X,-,Draw a Spell Card,CULTIST,,

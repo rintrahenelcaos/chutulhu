@@ -27,6 +27,7 @@ game_objects_list = []
 
 
 
+
 def grid_position(position):
     """translates clicks into discrete cell positions
 
