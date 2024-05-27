@@ -42,8 +42,8 @@ def deck_assigner(db):
     
     for i in range(cardcount):
         
-        to_deck = "UPDATE "+db+" SET Location = ? WHERE id=?"
-        
+        to_deck = "UPDATE "+db+" SET location = ? WHERE id=?"
+        print(to_deck)
         pointer.execute(to_deck, ("deck", str(i+1)))
         conector.commit()
 
@@ -51,7 +51,17 @@ def drawer(db):
     
     pointer = conector.cursor()
     
-    top_of_deck = "SELECT MIN(Deckorder)"
+    top_of_deck = "SELECT id FROM "+db+" WHERE Deckorder = (SELECT min(Deckorder) FROM "+db+") AND location = deck ORDER BY id"
+    print(top_of_deck)
+    pointer.execute(top_of_deck)
+    top = pointer.fetchall()[0][0]
+    print(top)
+    to_hand = "UPDATE "+db+" SET location=? WHERE id=?"
+    tupleload =("hand",str(top))
+    print(to_hand)
+    pointer.execute(to_hand,tupleload)
+    conector.commit()
+    
     
 
 def fate_phase():
@@ -63,6 +73,7 @@ def main():
     conector = conection_sql()
     print(deckmixer("cards_a"))
     deck_assigner("cards_a")
+    drawer("cards_a")
     
 if __name__ == "__main__":
     

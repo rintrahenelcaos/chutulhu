@@ -141,7 +141,7 @@ def game_mechanics(pos, token):
     
     
     for obj in game_objects_list: 
-        print(obj.moving)
+        #print(obj.moving)
         if obj.moving:
             obj.game_object_drawer(BOARD, pos_b)
         else: obj.game_object_drawer(BOARD)

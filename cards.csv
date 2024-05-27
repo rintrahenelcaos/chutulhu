@@ -1,4 +1,4 @@
-Card_Name,Nbr,Type,Range,Notes,Faction,Location,Deckorder
+Card_Name,Nbr,Type,Range,Notes,Faction,location,Deckorder
 Cautious_Advance,4,M,1,,INVESTIGATORS,,
 Quick_Advance,4,M,2,,INVESTIGATORS,,
 Run,3,M,3,,INVESTIGATORS,,
