@@ -51,18 +51,52 @@ def drawer(db):
     
     pointer = conector.cursor()
     
-    top_of_deck = "SELECT id FROM "+db+" WHERE Deckorder = (SELECT min(Deckorder) FROM "+db+") AND location = deck ORDER BY id"
-    print(top_of_deck)
-    pointer.execute(top_of_deck)
-    top = pointer.fetchall()[0][0]
-    print(top)
-    to_hand = "UPDATE "+db+" SET location=? WHERE id=?"
-    tupleload =("hand",str(top))
-    print(to_hand)
-    pointer.execute(to_hand,tupleload)
+    deck_order = "SELECT Deckorder FROM "+db+" WHERE location='deck'"
+    print(deck_order)
+    
+    pointer.execute(deck_order)
+    order = pointer.fetchall()
+    list_order = []
+    for ord in order:
+        lst = list(ord)
+        lst[0] = int(lst[0])
+        list_order.append(lst[0])
+    
+    min_order = min(list_order)
+    
+    
+    to_hand = "UPDATE "+db+" SET location='hand' WHERE Deckorder="+str(min_order)
+    
+    
+    pointer.execute(to_hand)
     conector.commit()
     
+    clear_deckorder = "UPDATE "+db+" SET Deckorder='' WHERE Deckorder="+str(min_order)
     
+    pointer.execute(clear_deckorder)
+    conector.commit()
+    
+def reshuffle_deck(db):    
+    
+    pointer = conector.cursor()
+    
+    idcounter = "SELECT id FROM "+db+" WHERE location='hand'"
+    pointer.execute(idcounter)
+    idcount = pointer.fetchall()
+    
+    print(idcount)
+    
+    idstuple = tuple([i[0] for i in idcount])
+    
+    print(idstuple)
+    
+    changer = "UPDATE "+db+" SET location='deckn' WHERE id IN "+str(idstuple)
+    
+    pointer.execute(changer)
+    conector.commit()
+        
+        
+        
 
 def fate_phase():
     
@@ -71,9 +105,17 @@ def fate_phase():
 
 def main():
     conector = conection_sql()
-    print(deckmixer("cards_a"))
-    deck_assigner("cards_a")
-    drawer("cards_a")
+    print(deckmixer("spells"))
+    deck_assigner("spells")
+    """pointer = conector.cursor()
+    changer = "UPDATE spells SET location='discard'"
+    pointer.execute(changer)
+    conector.commit()"""
+    drawer("spells")
+    drawer("spells")
+    drawer("spells")
+    reshuffle_deck("spells")
+    
     
 if __name__ == "__main__":
     
