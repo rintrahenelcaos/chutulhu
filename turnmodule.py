@@ -14,7 +14,7 @@ def deckmixer(db):
     
     pointer = conector.cursor()
     
-    extractor = "SELECT id FROM "+db
+    extractor = "SELECT id FROM "+db+" WHERE location='deck'"
     pointer.execute(extractor)
     cards = pointer.fetchall()
     
@@ -65,7 +65,7 @@ def drawer(db):
     min_order = min(list_order)
     
     
-    to_hand = "UPDATE "+db+" SET location='hand' WHERE Deckorder="+str(min_order)
+    to_hand = "UPDATE "+db+" SET location='discard' WHERE Deckorder="+str(min_order)
     
     
     pointer.execute(to_hand)
@@ -80,7 +80,7 @@ def reshuffle_deck(db):
     
     pointer = conector.cursor()
     
-    idcounter = "SELECT id FROM "+db+" WHERE location='hand'"
+    """idcounter = "SELECT id FROM "+db+" WHERE location='hand'"
     pointer.execute(idcounter)
     idcount = pointer.fetchall()
     
@@ -90,8 +90,9 @@ def reshuffle_deck(db):
     
     print(idstuple)
     
-    changer = "UPDATE "+db+" SET location='deckn' WHERE id IN "+str(idstuple)
     
+    changer = "UPDATE "+db+" SET location='deckn' WHERE id IN "+str(idstuple)"""
+    changer = "UPDATE "+db+" SET location='deck' WHERE location='discard'"
     pointer.execute(changer)
     conector.commit()
         
@@ -105,15 +106,35 @@ def fate_phase():
 
 def main():
     conector = conection_sql()
-    print(deckmixer("spells"))
-    deck_assigner("spells")
-    """pointer = conector.cursor()
+    #print(deckmixer("spells"))
+    #deck_assigner("spells")
+    pointer = conector.cursor()
     changer = "UPDATE spells SET location='discard'"
     pointer.execute(changer)
-    conector.commit()"""
-    drawer("spells")
-    drawer("spells")
-    drawer("spells")
+    conector.commit()
+    reshuffle_deck("spells")
+    deckmixer("spells")
+    
+    idcount = "SELECT MAX(id) FROM spells"
+    pointer.execute(idcount)
+    cardcount = pointer.fetchall()[0][0]
+    print(cardcount)
+    
+    for i in range(cardcount):
+        drawer("spells")
+    
+    #drawer("spells")
+    #drawer("spells")
+    #drawer("spells")
+    #drawer("spells")
+    #drawer("spells")
+    #drawer("spells")
+    #drawer("spells")
+    #drawer("spells")
+    #drawer("spells")
+    #drawer("spells")
+    #drawer("spells")
+    #drawer("spells")
     reshuffle_deck("spells")
     
     
