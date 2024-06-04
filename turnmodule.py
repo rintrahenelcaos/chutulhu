@@ -71,10 +71,10 @@ def drawer(db):
     pointer.execute(to_hand)
     conector.commit()
     
-    clear_deckorder = "UPDATE "+db+" SET Deckorder='' WHERE Deckorder="+str(min_order)
+    """clear_deckorder = "UPDATE "+db+" SET Deckorder='' WHERE Deckorder="+str(min_order)
     
     pointer.execute(clear_deckorder)
-    conector.commit()
+    conector.commit()"""
     
 def reshuffle_deck(db):    
     
@@ -120,7 +120,7 @@ def main():
     cardcount = pointer.fetchall()[0][0]
     print(cardcount)
     
-    for i in range(cardcount):
+    for i in range(cardcount-3):
         drawer("spells")
     
     #drawer("spells")
