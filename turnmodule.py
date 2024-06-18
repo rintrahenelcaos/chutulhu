@@ -47,11 +47,11 @@ def deck_assigner(db):
         pointer.execute(to_deck, ("deck", str(i+1)))
         conector.commit()
 
-def drawer(db):
+def drawer(db, player_hand, origin):
     
     pointer = conector.cursor()
     
-    deck_order = "SELECT Deckorder FROM "+db+" WHERE location='deck'"
+    deck_order = "SELECT Deckorder FROM "+db+" WHERE location='"+origin+"'"
     print(deck_order)
     
     pointer.execute(deck_order)
@@ -65,7 +65,7 @@ def drawer(db):
     min_order = min(list_order)
     
     
-    to_hand = "UPDATE "+db+" SET location='discard' WHERE Deckorder="+str(min_order)
+    to_hand = "UPDATE "+db+" SET location='"+player_hand+"' WHERE Deckorder="+str(min_order)
     
     
     pointer.execute(to_hand)
@@ -92,16 +92,37 @@ def reshuffle_deck(db):
     
     
     changer = "UPDATE "+db+" SET location='deckn' WHERE id IN "+str(idstuple)"""
-    changer = "UPDATE "+db+" SET location='deck' WHERE location='discard'"
+    changer = "UPDATE '"+db+"' SET location='deck' WHERE location='discard'"
     pointer.execute(changer)
     conector.commit()
         
         
         
 
-def fate_phase():
+def fate_phase(db, deck, player):
+       
+    """Draw 3 cards from your deck. 
+    Max hand size = 5 cards.
+    If the deck runs out, shuffle the discard and draw from it.
+    Discard excess cards."""
     
     pointer = conector.cursor()
+    
+    for i in range(3):
+        deckcounter = "SELECT COUNT(*) FROM "+db+" WHERE location='"+deck+"'"
+        print(deckcounter)
+        pointer.execute(deckcounter)
+        deckcount = pointer.fetchone()[0]
+        print("deckcount = ", deckcount, " ", type(deckcount))
+        
+        if deckcount == 0:
+            
+            reshuffle_deck(db)
+            deckmixer(db)
+            print("reshufle")
+            
+        drawer(db,player, deck)    
+    #drawer(deck, player)
     
 
 def main():
@@ -120,8 +141,14 @@ def main():
     cardcount = pointer.fetchall()[0][0]
     print(cardcount)
     
-    for i in range(cardcount-3):
-        drawer("spells")
+    for i in range(cardcount):
+        print(i)
+        #drawer("spells", "discard")
+        fate_phase("spells", 'deck',"discard")
+        #drawer("spells", "discard", "deck")
+        print(i)
+        
+        
     
     #drawer("spells")
     #drawer("spells")
@@ -135,7 +162,8 @@ def main():
     #drawer("spells")
     #drawer("spells")
     #drawer("spells")
-    reshuffle_deck("spells")
+    #reshuffle_deck("spells")
+    
     
     
 if __name__ == "__main__":
