@@ -1,23 +1,33 @@
 import pygame
 import math
 import os
+from constants import FACTIONS, ROWS, COLUMNS, GRID, FPS, BACKGROUND_COLOR, GRID_DIC
 
-WIDTH, HEIGHT = 900, 900
+
+
+WIDTH, HEIGHT = 900, 800
+pygame.display.init()
+resolution_info = pygame.display.Info()
+WIDTH, HEIGHT = 900, resolution_info.current_h-70
+CELL = round(HEIGHT/8,0)
+print(CELL)
+print(resolution_info.current_h, "    ", resolution_info.current_w)
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("TO CHANGE")
-CELL = 100
-ROWS = 8
-COLUMNS = 8
 
-BACKGROUND_COLOR = (0,0,0)
-
-BOARD = pygame.Surface((800, 800))
-GRID = [(x, y) for x in range(8) for y in range(8)]
-GRID_DIC = {}
-for cell in GRID:
-    GRID_DIC.update({cell:"None"})
-
-FPS = 60
+#ROWS = 8
+#COLUMNS = 8
+#CELL = 100
+#
+#BACKGROUND_COLOR = (0,0,0)
+#
+BOARD = pygame.Surface((CELL*8, CELL*8))
+#GRID = [(x, y) for x in range(8) for y in range(8)]
+#GRID_DIC = {}
+#for cell in GRID:
+#    GRID_DIC.update({cell:"None"})
+#
+#FPS = 60
 
 chosen_cell = None
 pos_a = pygame.Vector2(0, 0)
@@ -158,12 +168,14 @@ def main():
     
     
     prueba = GameObject(CELL, pos_a[0], pos_a[1], "token_1.png","prueba1")
-    prueba2 = GameObject(CELL,300, 0, "token_2.png","prueba2")
-    prueba3 = GameObject(CELL,700,700, "token_3.png","prueba3")
+    prueba2 = GameObject(CELL,CELL*3, 0, "token_2.png","prueba2")
+    prueba3 = GameObject(CELL,CELL*7,CELL*7, "token_3.png","prueba3")
     prueba3.moving = False
     game_objects_list.append(prueba)
     game_objects_list.append(prueba2)
     game_objects_list.append(prueba3)
+    resolution_info = pygame.display.Info()
+    print(resolution_info.current_h)
     print(str(game_objects_list))
     print(prueba)
     while run:
@@ -216,6 +228,7 @@ def main():
     
 
 if __name__=="__main__":
+    
     print(GRID_DIC)
     main()
     

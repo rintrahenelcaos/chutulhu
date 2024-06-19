@@ -1,14 +1,17 @@
 import sqlite3
 import random
-
-
+from dbcreator import alltablesconstructor
+from dbintermediatefunctions import deckmixer, deck_assigner, drawer, reshuffle_deck
+from constants import DECKS, FACTIONS
 
 def conection_sql():
     global conector
     conector = sqlite3.connect("currentgame.db")
     return conector
 
-def deckmixer(db):
+# DB intermediate functions
+
+#def deckmixer(db):
     
     to_shuffle = []
     
@@ -31,7 +34,7 @@ def deckmixer(db):
         conector.commit()
     return to_shuffle
 
-def deck_assigner(db):
+#def deck_assigner(db):
     
     pointer = conector.cursor()
     
@@ -47,7 +50,7 @@ def deck_assigner(db):
         pointer.execute(to_deck, ("deck", str(i+1)))
         conector.commit()
 
-def drawer(db, player_hand, origin):
+#def drawer(db, player_hand, origin):
     
     pointer = conector.cursor()
     
@@ -76,7 +79,7 @@ def drawer(db, player_hand, origin):
     pointer.execute(clear_deckorder)
     conector.commit()"""
     
-def reshuffle_deck(db):    
+#def reshuffle_deck(db):    
     
     pointer = conector.cursor()
     
@@ -96,8 +99,16 @@ def reshuffle_deck(db):
     pointer.execute(changer)
     conector.commit()
         
+# Direct Phase Functions        
+
+def new_game_preparations(faction_a, faction_b):
+    
+    alltablesconstructor([faction_a, faction_b])
+    for deck in DECKS:
         
-        
+        deck_assigner(deck)
+        deckmixer(deck)
+          
 
 def fate_phase(db, deck, player):
        
@@ -123,9 +134,24 @@ def fate_phase(db, deck, player):
             
         drawer(db,player, deck)    
     #drawer(deck, player)
+
+def move_phase():
+    
+    """MOVE PHASE
+    Play (discard) a Move card to move one of your units.
+    The move card has a number. 
+    This is the number of spaces the unit moves.
+    Moves can be diagonal or orthogonal. 
+    “Knight” type move cards allow a unit to move like a knight in chess.
+    Instead of moving just one unit in any direction, you have the 
+    option of moving one or more units forward the indicated number of 
+    spaces using a single move card."""   
+    
     
 
 def main():
+    
+    new_game_preparations()
     conector = conection_sql()
     #print(deckmixer("spells"))
     #deck_assigner("spells")
@@ -163,6 +189,23 @@ def main():
     #drawer("spells")
     #drawer("spells")
     #reshuffle_deck("spells")
+
+def main():
+    
+    new_game_preparations("INVESTIGATORS","SERPENT_PEOPLE")  
+    
+    conector = conection_sql()  
+    pointer = conector.cursor()
+    idcount = "SELECT MAX(id) FROM spells"
+    pointer.execute(idcount)
+    cardcount = pointer.fetchall()[0][0]
+    
+    for i in range(cardcount-5):
+        print(i)
+        
+        fate_phase("spells", 'deck',"discard")
+        
+        print(i)
     
     
     
