@@ -1,14 +1,19 @@
 import pygame
+
 import math
+
 import os
+
 from constants import FACTIONS, ROWS, COLUMNS, GRID, FPS, BACKGROUND_COLOR, GRID_DIC
+from gameobjects import TokenObject, CardObject
 
 
 
 WIDTH, HEIGHT = 900, 800
 pygame.display.init()
+pygame.font.init()
 resolution_info = pygame.display.Info()
-WIDTH, HEIGHT = 900, resolution_info.current_h-70
+WIDTH, HEIGHT = resolution_info.current_w-100, resolution_info.current_h-90
 CELL = round(HEIGHT/8,0)
 print(CELL)
 print(resolution_info.current_h, "    ", resolution_info.current_w)
@@ -22,6 +27,11 @@ pygame.display.set_caption("TO CHANGE")
 #BACKGROUND_COLOR = (0,0,0)
 #
 BOARD = pygame.Surface((CELL*8, CELL*8))
+FACTION_HAND = pygame.Rect((CELL*8,0),(CELL*4, CELL*4))
+SPELLS_HAND = pygame.Rect((CELL*8,CELL*4),(CELL*4,CELL*4))
+
+
+GENERIC_FONT = pygame.font.SysFont("times", 25)
 #GRID = [(x, y) for x in range(8) for y in range(8)]
 #GRID_DIC = {}
 #for cell in GRID:
@@ -52,16 +62,18 @@ def grid_position(position):
     y = (position[1]//CELL)#*CELL
     return (x,y)
 
+
+
 class GameObject:
     
-    def __init__(self, size, xpos, ypos, image, identif):
+    def __init__(self, size, xpos, ypos, image, identif, cellsize):
         self.size = size
         self.xpos = xpos
         self.ypos = ypos
         self.go_pos = pygame.Vector2(self.xpos, self.ypos)
         self.rec = pygame.Rect(self.go_pos[0], self.go_pos[1], self.size, self.size)
         self.image = pygame.image.load(os.path.join("images",str(image))).convert_alpha()
-        self.scaled_image = pygame.transform.scale(self.image, (CELL, CELL))
+        self.scaled_image = pygame.transform.scale(self.image, (cellsize, cellsize))
         self.moving = False
         self.identif = identif
         
@@ -86,6 +98,11 @@ def draw_window(pos, token):
     
     WIN.fill(BACKGROUND_COLOR)
     BOARD.fill("tan4")
+    #FACTION_HAND.fill("pink")
+    #SPELLS_HAND.fill("red")
+    #faction_hand_rect = pygame.Rect(0,0,FACTION_HAND.get_width(),FACTION_HAND.get_height())
+    
+    #FACTION_HAND.
     
     
     
@@ -115,7 +132,17 @@ def draw_window(pos, token):
     
     game_mechanics(pos, token)    
     
-    WIN.blit(BOARD,(0,0))    # actualizes BOARD -> always after all changes odf it
+    
+    WIN.blit(BOARD,(0,0))    # actualizes BOARD -> always after all changes of it
+    #WIN.blit(FACTION_HAND,(CELL*8,0))
+    #WIN.blit(SPELLS_HAND,(CELL*8,CELL*4))
+    pygame.draw.rect(WIN, "pink",FACTION_HAND)
+    pygame.draw.rect(WIN, "red",SPELLS_HAND)
+    faction_hand_sign = GENERIC_FONT.render("Faction Hand", 1, "black")
+    WIN.blit(faction_hand_sign,(FACTION_HAND.x+5,0))
+    spells_hand_sign = GENERIC_FONT.render("Spells hand",1,"black")
+    WIN.blit(spells_hand_sign, (SPELLS_HAND.x+5,SPELLS_HAND.y))
+    
     
     pygame.display.update()
     
@@ -165,11 +192,11 @@ def main():
     
     run = True
     clock = pygame.time.Clock()
-    
-    
-    prueba = GameObject(CELL, pos_a[0], pos_a[1], "token_1.png","prueba1")
-    prueba2 = GameObject(CELL,CELL*3, 0, "token_2.png","prueba2")
-    prueba3 = GameObject(CELL,CELL*7,CELL*7, "token_3.png","prueba3")
+    #pygame.draw.rect(WIN, "pink",FACTION_HAND)
+    #pygame.draw.rect(WIN, "pink",SPELLS_HAND)
+    prueba = TokenObject(CELL, pos_a[0], pos_a[1], "token_1.png", "prueba1")
+    prueba2 = TokenObject(CELL,CELL*3, 0, "token_2.png", "prueba2")
+    prueba3 = TokenObject(CELL,CELL*7,CELL*7, "token_3.png", "prueba3")
     prueba3.moving = False
     game_objects_list.append(prueba)
     game_objects_list.append(prueba2)
@@ -182,22 +209,44 @@ def main():
         
         clock.tick(FPS)
         pos = None
+        surface = None
         chosen_token = None
-        if BOARD.get_rect().collidepoint(pygame.mouse.get_pos()):
+        mousepos = pygame.mouse.get_pos()
+        """if FACTION_HAND.collidepoint(mousepos): 
+            surface = "faction_hand"
+            #print(surface)
+        elif SPELLS_HAND.collidepoint(mousepos):
+            surface = "spells_hand"  
+            #print(surface)
+        elif BOARD.get_rect().collidepoint(mousepos):
+            surface = "board"
+            #print(surface)"""
             
+        if BOARD.get_rect().collidepoint(mousepos):
+            surface = "board"
+            #surface = "board"
             pygame.mouse.set_cursor(pygame.cursors.diamond)
             for obj in game_objects_list:
                 
                 if obj.rec.collidepoint(pygame.mouse.get_pos()):
                     pygame.mouse.set_cursor(pygame.cursors.broken_x)
-            
-            
-        else: pygame.mouse.set_cursor(pygame.cursors.arrow)
+                    
+        else:
+            pygame.mouse.set_cursor(pygame.cursors.arrow) 
+            if FACTION_HAND.collidepoint(mousepos): 
+                surface = "faction_hand"
+                
+            elif SPELLS_HAND.collidepoint(mousepos):
+                surface = "spells_hand" 
+                #pygame.mouse.set_cursor(pygame.cursors.arrow)
+                
         
         for event in pygame.event.get():  
             if event.type == pygame.QUIT:
                 run = False
             if event.type == pygame.MOUSEBUTTONDOWN:
+                print("surface: ",surface)
+                
                 if pygame.mouse.get_cursor()==pygame.cursors.diamond:
                     pos = pygame.mouse.get_pos()
                     print("board ", pos)
@@ -210,6 +259,7 @@ def main():
                             chosen_token = obj
                             print(type(chosen_token))
                         #else: chosen_token = None
+                else: print("no board")
         #game_mechanics(pos)           
         draw_window(pos, chosen_token)
     
