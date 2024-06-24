@@ -27,8 +27,8 @@ pygame.display.set_caption("TO CHANGE")
 #BACKGROUND_COLOR = (0,0,0)
 #
 BOARD = pygame.Surface((CELL*8, CELL*8))
-FACTION_HAND = pygame.Rect((CELL*8,0),(CELL*4, CELL*4))
-SPELLS_HAND = pygame.Rect((CELL*8,CELL*4),(CELL*4,CELL*4))
+FACTION_HAND = pygame.Rect((CELL*8,0),(CELL*2, CELL*8))
+SPELLS_HAND = pygame.Rect((CELL*10,0),(CELL*2,CELL*8))
 
 
 GENERIC_FONT = pygame.font.SysFont("times", 25)
@@ -44,6 +44,7 @@ pos_a = pygame.Vector2(0, 0)
 #pos_b = pygame.Vector2(0, 0)
 pos_b = None
 game_objects_list = []
+game_card_list = []
 
 
 
@@ -136,13 +137,15 @@ def draw_window(pos, token):
     WIN.blit(BOARD,(0,0))    # actualizes BOARD -> always after all changes of it
     #WIN.blit(FACTION_HAND,(CELL*8,0))
     #WIN.blit(SPELLS_HAND,(CELL*8,CELL*4))
+    
     pygame.draw.rect(WIN, "pink",FACTION_HAND)
     pygame.draw.rect(WIN, "red",SPELLS_HAND)
     faction_hand_sign = GENERIC_FONT.render("Faction Hand", 1, "black")
     WIN.blit(faction_hand_sign,(FACTION_HAND.x+5,0))
     spells_hand_sign = GENERIC_FONT.render("Spells hand",1,"black")
     WIN.blit(spells_hand_sign, (SPELLS_HAND.x+5,SPELLS_HAND.y))
-    
+    for card in game_card_list:
+        card.card_drawer(WIN)
     
     pygame.display.update()
     
@@ -180,8 +183,8 @@ def game_mechanics(pos, token):
     for obj in game_objects_list: 
         #print(obj.moving)
         if obj.moving:
-            obj.game_object_drawer(BOARD, pos_b)
-        else: obj.game_object_drawer(BOARD)
+            obj.token_object_drawer(BOARD, pos_b)
+        else: obj.token_object_drawer(BOARD)
         
     #draw_window(pos, None)
 
@@ -197,10 +200,17 @@ def main():
     prueba = TokenObject(CELL, pos_a[0], pos_a[1], "token_1.png", "prueba1")
     prueba2 = TokenObject(CELL,CELL*3, 0, "token_2.png", "prueba2")
     prueba3 = TokenObject(CELL,CELL*7,CELL*7, "token_3.png", "prueba3")
+    pruebacard1 = CardObject(CELL*1.8, FACTION_HAND.x+5, FACTION_HAND.y+40, "LiK7BK9ia.jpeg", "pruebacard1" )
+    pruebacard2 = CardObject(CELL*1.8, FACTION_HAND.x+5, FACTION_HAND.y+40+CELL, "McLLez6ki.jpeg", "pruebacard1" )
+    
     prueba3.moving = False
     game_objects_list.append(prueba)
     game_objects_list.append(prueba2)
     game_objects_list.append(prueba3)
+    
+    game_card_list.append(pruebacard1)
+    game_card_list.append(pruebacard2)
+    
     resolution_info = pygame.display.Info()
     print(resolution_info.current_h)
     print(str(game_objects_list))
@@ -239,6 +249,12 @@ def main():
             elif SPELLS_HAND.collidepoint(mousepos):
                 surface = "spells_hand" 
                 #pygame.mouse.set_cursor(pygame.cursors.arrow)
+        
+        for card in game_card_list:
+            if card.rec.collidepoint(pygame.mouse.get_pos()): 
+                card.card_drawer(WIN,looked_on = True)
+                
+                print("card collide, height: ",card.rec.height)
                 
         
         for event in pygame.event.get():  
