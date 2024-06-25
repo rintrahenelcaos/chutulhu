@@ -252,9 +252,15 @@ def main():
         
         for card in game_card_list:
             if card.rec.collidepoint(pygame.mouse.get_pos()): 
-                card.card_drawer(WIN,looked_on = True)
+                card.looked_on = True
+                card.card_drawer(WIN)
+                if card.looked_on: print("card collide",card.looked_on)
+            else:
+                card.looked_on = False
+                card.card_drawer(WIN)
                 
-                print("card collide, height: ",card.rec.height)
+                #print("card collide, height: ",card.rec.height)
+            #else: card.card_drawer(WIN)
                 
         
         for event in pygame.event.get():  

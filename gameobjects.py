@@ -16,8 +16,9 @@ class CardObject:
         self.moving = False
         #self.image = image
         self.identif = identif
+        self.looked_on = False
         
-    def card_drawer(self, board, vector = None, looked_on = False):
+    def card_drawer(self, board, vector = None):
         if vector != None:
             self.go_pos = self.go_pos.move_towards(vector, 2)
             self.rec.x = self.go_pos[0]
@@ -28,10 +29,11 @@ class CardObject:
         else: 
             self.rec.height = self.size
             self.rec.width = self.size"""
-        if looked_on: 
-            self.scaled_image = pygame.transform.scale2x(self.image)
+        if self.looked_on:
+             
+            self.scaled_image = pygame.transform.scale(self.image,(self.rec.width*1.2, self.rec.height*1.2))
         else: 
-            print(type(self.image))
+            #print(type(self.image))
             self.scaled_image = pygame.transform.scale(self.image, (self.rec.width, self.rec.height))
         board.blit(self.scaled_image, (self.rec))
              
