@@ -3,16 +3,18 @@ import pygame
 import os
 
 
-class CardObject:
+class CardObject(pygame.sprite.Sprite):
+    
     
     def __init__(self, size, xpos, ypos,image, identif) -> None:
+        pygame.sprite.Sprite.__init__(self)
         self.size = size
         self.xpos = xpos
         self.ypos = ypos
         self.go_pos = pygame.Vector2(self.xpos, self.ypos)
         self.rec = pygame.Rect(self.go_pos[0], self.go_pos[1], self.size, self.size)
         self.image = pygame.image.load(os.path.join("images",str(image))).convert_alpha()
-        self.scaled_image = pygame.transform.scale(self.image, (self.rec.width, self.rec.height))
+        self.scaled_image = pygame.transform.scale(self.image, (self.size, self.size))
         self.moving = False
         #self.image = image
         self.identif = identif
@@ -31,14 +33,17 @@ class CardObject:
             self.rec.width = self.size"""
         if self.looked_on:
              
-            self.scaled_image = pygame.transform.scale(self.image,(self.rec.width*1.2, self.rec.height*1.2))
+            self.scaled_image = pygame.transform.scale(self.image,(self.size*1.2, self.size*1.2))
         else: 
             #print(type(self.image))
-            self.scaled_image = pygame.transform.scale(self.image, (self.rec.width, self.rec.height))
+            self.scaled_image = pygame.transform.scale(self.image, (self.size, self.size))
         board.blit(self.scaled_image, (self.rec))
+    
+    def card_positioner(self,  top = False):
+        
+        self.rec.height = self.rec.height-80
              
-        pass
-
+        
 class TokenObject:
     
     def __init__(self, size, xpos, ypos, image, identif):

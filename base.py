@@ -14,7 +14,9 @@ pygame.display.init()
 pygame.font.init()
 resolution_info = pygame.display.Info()
 WIDTH, HEIGHT = resolution_info.current_w-100, resolution_info.current_h-90
+#HEIGHT = resolution_info.current_h -90
 CELL = round(HEIGHT/8,0)
+#WIDTH = CELL*15
 print(CELL)
 print(resolution_info.current_h, "    ", resolution_info.current_w)
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -27,8 +29,8 @@ pygame.display.set_caption("TO CHANGE")
 #BACKGROUND_COLOR = (0,0,0)
 #
 BOARD = pygame.Surface((CELL*8, CELL*8))
-FACTION_HAND = pygame.Rect((CELL*8,0),(CELL*2, CELL*8))
-SPELLS_HAND = pygame.Rect((CELL*10,0),(CELL*2,CELL*8))
+FACTION_HAND = pygame.Rect((WIDTH-CELL*4,0),(CELL*2, CELL*8))
+SPELLS_HAND = pygame.Rect((WIDTH-CELL*2,0),(CELL*2,CELL*8))
 
 
 GENERIC_FONT = pygame.font.SysFont("times", 25)
@@ -202,7 +204,7 @@ def main():
     prueba3 = TokenObject(CELL,CELL*7,CELL*7, "token_3.png", "prueba3")
     pruebacard1 = CardObject(CELL*1.8, FACTION_HAND.x+5, FACTION_HAND.y+40, "LiK7BK9ia.jpeg", "pruebacard1" )
     pruebacard2 = CardObject(CELL*1.8, FACTION_HAND.x+5, FACTION_HAND.y+40+CELL, "McLLez6ki.jpeg", "pruebacard1" )
-    
+    pruebacard1.card_positioner()
     prueba3.moving = False
     game_objects_list.append(prueba)
     game_objects_list.append(prueba2)
