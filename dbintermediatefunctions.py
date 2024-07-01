@@ -1,12 +1,13 @@
 
 import sqlite3
 import random
+from dbcreator import conection_sql
 
 
-def conection_sql():
+"""def conection_sql():
     global conector
     conector = sqlite3.connect("currentgame.db")
-    return conector
+    return conector"""
 
 # DB intermediate functions
 
@@ -100,3 +101,23 @@ def reshuffle_deck(db):
     changer = "UPDATE '"+db+"' SET location='deck' WHERE location='discard'"
     pointer.execute(changer)
     conector.commit()
+    
+def card_counter(db, deck):
+    
+    conector = conection_sql()
+    pointer = conector.cursor()
+    
+    deckcounter = "SELECT COUNT(*) FROM "+db+" WHERE location='"+deck+"'"
+    print(deckcounter)
+    pointer.execute(deckcounter)
+    deckcount = pointer.fetchone()[0]
+    print("deckcount = ", deckcount, " ", type(deckcount))
+    
+    return deckcount
+
+def card_counter_extractor():
+    
+    conector = conection_sql()
+    pointer = conector.cursor()
+    
+    hand_list = []

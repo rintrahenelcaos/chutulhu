@@ -1,7 +1,7 @@
 import sqlite3
 import random
 from dbcreator import alltablesconstructor
-from dbintermediatefunctions import deckmixer, deck_assigner, drawer, reshuffle_deck
+from dbintermediatefunctions import deckmixer, deck_assigner, drawer, reshuffle_deck, card_counter
 from constants import DECKS, FACTIONS
 
 def conection_sql():
@@ -117,16 +117,17 @@ def fate_phase(db, deck, player):
     If the deck runs out, shuffle the discard and draw from it.
     Discard excess cards."""
     
-    pointer = conector.cursor()
+    #pointer = conector.cursor()
     
     for i in range(3):
-        deckcounter = "SELECT COUNT(*) FROM "+db+" WHERE location='"+deck+"'"
-        print(deckcounter)
-        pointer.execute(deckcounter)
-        deckcount = pointer.fetchone()[0]
-        print("deckcount = ", deckcount, " ", type(deckcount))
+        sensible = card_counter(db, deck)
+        #deckcounter = "SELECT COUNT(*) FROM "+db+" WHERE location='"+deck+"'"
+        #print(deckcounter)
+        #pointer.execute(deckcounter)
+        #deckcount = pointer.fetchone()[0]
+        #print("deckcount = ", deckcount, " ", type(deckcount))
         
-        if deckcount == 0:
+        if sensible == 0:
             
             reshuffle_deck(db)
             deckmixer(db)

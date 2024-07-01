@@ -6,6 +6,8 @@ import os
 
 from constants import FACTIONS, ROWS, COLUMNS, GRID, FPS, BACKGROUND_COLOR, GRID_DIC
 from gameobjects import TokenObject, CardObject
+from turnmodule import new_game_preparations, fate_phase
+from dbcreator import conection_sql
 
 
 
@@ -68,7 +70,7 @@ def grid_position(position):
 
 
 
-class GameObject:
+#class GameObject:
     
     def __init__(self, size, xpos, ypos, image, identif, cellsize):
         self.size = size
@@ -172,6 +174,7 @@ def game_mechanics(pos, token):
     global pos_a
     global pos_b
     
+    
     #print("en game_mechanics: ", token)
     
     
@@ -240,6 +243,8 @@ def main():
     
     
     
+    new_game_preparations("INVESTIGATORS","SERPENT_PEOPLE")
+        
     
     while run:
         
@@ -315,6 +320,7 @@ def main():
                     print("no board")
                     if button.collidepoint(mousepos):
                         print("draw")
+                        fate_phase("cards_a", "deck", "hand")
         #game_mechanics(pos)           
         draw_window(pos, chosen_token, focus_faction_card)
     
