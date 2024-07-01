@@ -6,9 +6,9 @@ import os
 class CardObject(pygame.sprite.Sprite):
     
     
-    def __init__(self, size, xpos, ypos,image, identif) -> None:
+    def __init__(self, size, xpos, ypos, image, identif) -> None:
         pygame.sprite.Sprite.__init__(self)
-        self.size = size
+        self.size = size*1.5
         self.xpos = xpos
         self.ypos = ypos
         self.go_pos = pygame.Vector2(self.xpos, self.ypos)
@@ -19,6 +19,9 @@ class CardObject(pygame.sprite.Sprite):
         #self.image = image
         self.identif = identif
         self.looked_on = False
+    
+    def __str__(self) -> str:
+        return str(self.identif)   
         
     def card_drawer(self, board, vector = None):
         if vector != None:
@@ -41,7 +44,9 @@ class CardObject(pygame.sprite.Sprite):
     
     def card_positioner(self,  top = False):
         
-        self.rec.height = self.rec.height-80
+        self.rec.width = self.size*0.5
+        if top:
+            self.rec.width = self.size
              
         
 class TokenObject:
