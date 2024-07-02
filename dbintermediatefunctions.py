@@ -115,9 +115,12 @@ def card_counter(db, deck):
     
     return deckcount
 
-def card_counter_extractor():
+def card_data_extractor(db, deck):
     
     conector = conection_sql()
     pointer = conector.cursor()
     
     hand_list = []
+    
+    to_get = "SELECT * FROM "+db+" WHERE location ='"+deck+"'"
+    

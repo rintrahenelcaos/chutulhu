@@ -121,20 +121,7 @@ def draw_window(pos, token, card):
         
         pygame.draw.rect(BOARD, (127+waving_func(pygame.time.get_ticks()-chosen_cell[1]),127+waving_func(pygame.time.get_ticks()-chosen_cell[1]),127+waving_func(pygame.time.get_ticks()-chosen_cell[1])), chosen_cell[0])
         
-    """if pos != None:
-        selected_pos = grid_position(pos)
-        selected_in_grid = GRID.index(selected_pos)
-        chosen_cell = (pygame.Rect(CELL*selected_pos[0], CELL*selected_pos[1], CELL, CELL),pygame.time.get_ticks())
-        pos_b = pygame.Vector2(chosen_cell[0].x, chosen_cell[0].y)
-        print(selected_in_grid)
-        
-    for obj in game_objects_list: 
-        obj.game_object_drawer(pos_b, BOARD)
-    """
-        
-    """ if pos_b != None:
-            obj.move(pos_b, BOARD)
-        BOARD.blit(obj.scaled_image, (obj.rec))"""
+    
     
     game_mechanics(pos, token)    
     
