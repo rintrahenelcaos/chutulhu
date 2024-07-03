@@ -122,5 +122,14 @@ def card_data_extractor(db, deck):
     
     hand_list = []
     
-    to_get = "SELECT * FROM "+db+" WHERE location ='"+deck+"'"
+    to_get = "SELECT Card_Name,Type,Notes,Images FROM "+db+" WHERE location ='"+deck+"'"
+    pointer.execute(to_get)
+    hand_list = pointer.fetchall()
+    print(hand_list)
     
+    return hand_list
+
+
+if __name__ == "__main__":
+    
+    card_data_extractor("cards_a", "hand")
