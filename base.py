@@ -8,7 +8,7 @@ from constants import FACTIONS, ROWS, COLUMNS, GRID, FPS, BACKGROUND_COLOR, GRID
 from gameobjects import TokenObject, CardObject
 from turnmodule import new_game_preparations, fate_phase
 from dbcreator import conection_sql
-from dbintermediatefunctions import card_data_extractor
+from dbintermediatefunctions import card_data_extractor, discarder
 
 
 
@@ -189,7 +189,9 @@ def faction_hand_controller(card, drawn_cards):
         crd.card_positioner() #
         crd.card_drawer(WIN)
     if card != None: #focus card changes size/picture 
-        hand_card_list[card].card_drawer(WIN)
+        try: 
+            hand_card_list[card].card_drawer(WIN)
+        except: pass
     collide = FACTION_HAND.collideobjectsall(hand_card_list, key=lambda crdobj: crdobj.rec)
     #print("hand_card_list: ",hand_card_list)
     #print("collide: ",collide)
@@ -305,9 +307,13 @@ def main():
                         fate_phase("cards_a", "deck", "hand")
                         drawn_cards = card_data_extractor("cards_a", "hand")
                     else:
+                        
                         for crd in hand_card_list:
                             if crd.rec.collidepoint(mousepos):
                                 print(crd.identif)
+                                discarder("cards_a", str(crd.identif))
+                                hand_card_list.remove(crd)
+                                drawn_cards = card_data_extractor("cards_a", "hand")
             
             #if event.type == pygame.Mo
         #game_mechanics(pos)           

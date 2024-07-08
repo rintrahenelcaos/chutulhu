@@ -88,6 +88,9 @@ def discarder(db, card):
     
     to_discard = "UPDATE "+db+" SET location='discard' WHERE Card_Name='"+card+"'"
     
+    pointer.execute(to_discard)
+    conector.commit()
+    
 def reshuffle_deck(db):    
     
     conector = conection_sql()
