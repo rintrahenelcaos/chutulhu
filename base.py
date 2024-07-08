@@ -71,33 +71,10 @@ def grid_position(position):
 
 
 
-#class GameObject:
-    
-    def __init__(self, size, xpos, ypos, image, identif, cellsize):
-        self.size = size
-        self.xpos = xpos
-        self.ypos = ypos
-        self.go_pos = pygame.Vector2(self.xpos, self.ypos)
-        self.rec = pygame.Rect(self.go_pos[0], self.go_pos[1], self.size, self.size)
-        self.image = pygame.image.load(os.path.join("images",str(image))).convert_alpha()
-        self.scaled_image = pygame.transform.scale(self.image, (cellsize, cellsize))
-        self.moving = False
-        self.identif = identif
-        
-    def __str__(self) -> str:
-        return str(self.identif)    
-        
-        
-    
-    def game_object_drawer(self, board, vector = None):
-        if vector != None:
-            self.go_pos = self.go_pos.move_towards(vector, 2)
-            self.rec.x = self.go_pos[0]
-            self.rec.y = self.go_pos[1]
-        board.blit(self.scaled_image, (self.rec))
+
         
 
-def draw_window(pos, token, card):
+def draw_window(pos, token, card, drawn_cards):
     
     global chosen_cell
     global pos_a
@@ -144,7 +121,7 @@ def draw_window(pos, token, card):
         crd.card_drawer(WIN)
     if card != None:
         hand_card_list[card].card_drawer(WIN)"""
-    faction_hand_controller(card)
+    faction_hand_controller(card, drawn_cards)
     
     
         
@@ -192,14 +169,30 @@ def game_mechanics(pos, token):
         
     #draw_window(pos, None)
     
-def faction_hand_controller(card):
+def faction_hand_controller(card, drawn_cards):
     
-    for crd in hand_card_list:
-        crd.rec.x = FACTION_HAND.x+5+CELL*hand_card_list.index(crd)*0.7
-        crd.card_positioner()
+    global hand_card_list
+    
+    for drawn in drawn_cards:
+        identif_list = []   # list of identifiers of cardobjects
+        for crd in hand_card_list:
+            identif_list.append(crd.identif)
+        try: 
+            identif_list.index(drawn[0]) # checks if cardobject already added
+        except:
+            hand_card_list.append(CardObject(CELL,0,0,drawn[3],drawn[0])) #adds cardobject
+        #hand_card_list = list(set(hand_card_list))
+        
+    for crd in hand_card_list:  # positions cardobject
+        crd.rec.x = FACTION_HAND.x+5+CELL*hand_card_list.index(crd)*0.7 # assigns position to the object in the hand
+        crd.rec.y = FACTION_HAND.y+CELL*0.3
+        crd.card_positioner() #
         crd.card_drawer(WIN)
-    if card != None:
+    if card != None: #focus card changes size/picture 
         hand_card_list[card].card_drawer(WIN)
+    collide = FACTION_HAND.collideobjectsall(hand_card_list, key=lambda crdobj: crdobj.rec)
+    #print("hand_card_list: ",hand_card_list)
+    #print("collide: ",collide)
     
     
 
@@ -217,25 +210,11 @@ def main():
     prueba3 = TokenObject(CELL,CELL*7,CELL*7, "token_3.png", "prueba3")
     pruebacard1 = CardObject(CELL, FACTION_HAND.x+5, FACTION_HAND.y+CELL*0.3, "LiK7BK9ia.jpeg", "pruebacard1" )
     pruebacard2 = CardObject(CELL, FACTION_HAND.x+5+CELL, FACTION_HAND.y+CELL*0.3, "McLLez6ki.jpeg", "pruebacard2" )
-    #pruebacard1.card_positioner()
+    
     game_objects_list.append(prueba)
     game_objects_list.append(prueba2)
     game_objects_list.append(prueba3)
-    #pruebacard3 = CardObject(CELL, FACTION_HAND.x+5, FACTION_HAND.y+CELL*0.3, "LiK7BK9ia.jpeg", "pruebacard1" )
-    #pruebacard4 = CardObject(CELL, FACTION_HAND.x+5+CELL, FACTION_HAND.y+CELL*0.3, "McLLez6ki.jpeg", "pruebacard2" )
-    #pruebacard5 = CardObject(CELL, FACTION_HAND.x+5, FACTION_HAND.y+CELL*0.3, "LiK7BK9ia.jpeg", "pruebacard1" )
-    #pruebacard6 = CardObject(CELL, FACTION_HAND.x+5+CELL, FACTION_HAND.y+CELL*0.3, "McLLez6ki.jpeg", "pruebacard2" )
-    #pruebacard7 = CardObject(CELL, FACTION_HAND.x+5, FACTION_HAND.y+CELL*0.3, "LiK7BK9ia.jpeg", "pruebacard1" )
-    #pruebacard8 = CardObject(CELL, FACTION_HAND.x+5+CELL, FACTION_HAND.y+CELL*0.3, "McLLez6ki.jpeg", "pruebacard2" )
-    #hand_card_list.append(pruebacard1)
-    #hand_card_list.append(pruebacard2)
-    #hand_card_list.append(pruebacard3)
-    #hand_card_list.append(pruebacard4)
-    #hand_card_list.append(pruebacard5)
-    #hand_card_list.append(pruebacard6)
-    #hand_card_list.append(pruebacard7)
-    #hand_card_list.append(pruebacard8)
-    #print(hand_card_list)
+    
     resolution_info = pygame.display.Info()
     print(resolution_info.current_h)
     print(str(game_objects_list))
@@ -253,7 +232,9 @@ def main():
         surface = None
         chosen_token = None
         focus_faction_card = None
+        drawn_cards = []
         mousepos = pygame.mouse.get_pos()
+        #event = pygame.event.poll()
         """if FACTION_HAND.collidepoint(mousepos): 
             surface = "faction_hand"
             #print(surface)
@@ -301,7 +282,8 @@ def main():
         for event in pygame.event.get():  
             if event.type == pygame.QUIT:
                 run = False
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            
+            if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]:
                 print("surface: ",surface)
                 
                 if pygame.mouse.get_cursor()==pygame.cursors.diamond:
@@ -321,9 +303,15 @@ def main():
                     if button.collidepoint(mousepos):
                         print("draw")
                         fate_phase("cards_a", "deck", "hand")
-                        card_data_extractor("cards_a", "hand")
+                        drawn_cards = card_data_extractor("cards_a", "hand")
+                    else:
+                        for crd in hand_card_list:
+                            if crd.rec.collidepoint(mousepos):
+                                print(crd.identif)
+            
+            #if event.type == pygame.Mo
         #game_mechanics(pos)           
-        draw_window(pos, chosen_token, focus_faction_card)
+        draw_window(pos, chosen_token, focus_faction_card, drawn_cards)
     
     #prueba = GameObject(CELL, 0, 0)       
             

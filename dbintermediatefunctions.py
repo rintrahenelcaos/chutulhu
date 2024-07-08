@@ -81,6 +81,13 @@ def drawer(db, player_hand, origin):
     pointer.execute(clear_deckorder)
     conector.commit()"""
     
+def discarder(db, card):
+    
+    conector = conection_sql()
+    pointer = conector.cursor()
+    
+    to_discard = "UPDATE "+db+" SET location='discard' WHERE Card_Name='"+card+"'"
+    
 def reshuffle_deck(db):    
     
     conector = conection_sql()

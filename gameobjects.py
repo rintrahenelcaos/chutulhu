@@ -8,7 +8,7 @@ class CardObject(pygame.sprite.Sprite):
     
     def __init__(self, size, xpos, ypos, image, identif) -> None:
         pygame.sprite.Sprite.__init__(self)
-        self.size = size*1.5
+        self.size = size*1
         self.xpos = xpos
         self.ypos = ypos
         self.go_pos = pygame.Vector2(self.xpos, self.ypos)
@@ -22,6 +22,9 @@ class CardObject(pygame.sprite.Sprite):
     
     def __str__(self) -> str:
         return str(self.identif)   
+    
+    def __repr__(self) -> str:
+        return self.identif
         
     def card_drawer(self, board, vector = None):
         if vector != None:
@@ -35,18 +38,26 @@ class CardObject(pygame.sprite.Sprite):
             self.rec.height = self.size
             self.rec.width = self.size"""
         if self.looked_on:
-             
-            self.scaled_image = pygame.transform.scale(self.image,(self.size*1.2, self.size*1.2))
+            self.card_info_shower(board) 
+            #self.scaled_image = pygame.transform.scale(self.image,(self.size*1.2, self.size*1.2))
         else: 
             #print(type(self.image))
             self.scaled_image = pygame.transform.scale(self.image, (self.size, self.size))
-        board.blit(self.scaled_image, (self.rec))
+            board.blit(self.scaled_image, (self.rec))
     
     def card_positioner(self,  top = False):
         
         self.rec.width = self.size*0.5
         if top:
             self.rec.width = self.size
+    
+    def card_info_shower(self, board):
+        
+        info_rec = pygame.Rect(self.rec.x, self.rec.y-self.size*2, self.size, self.size)
+        info_image = pygame.transform.scale(self.image,(self.size*2, self.size*3))
+        board.blit(info_image, (info_rec))
+        
+        
              
         
 class TokenObject:

@@ -1,25 +1,40 @@
 import pygame
 # Your game setup would go here
-gameScreen = pygame.display.set_mode((800,600))
-pygame.display.set_caption('Pygame Mouse Click - Test Game')
-# Define rectangles and their colors
-rectangles = [
-    {"rect": pygame.Rect((100, 100), (100, 100)), "color": (255,0,0), "clicked_color": (255,255,0)}, # Red rectangle
-    {"rect": pygame.Rect((350, 275), (100, 100)), "color": (0,255,0), "clicked_color": (255,0,255)}, # Green rectangle
-    {"rect": pygame.Rect((600, 450), (100, 100)), "color": (0,0,255), "clicked_color": (0,255,255)}  # Blue rectangle
+Rect = pygame.Rect
+
+r = Rect(1, 1, 10, 5)
+
+rects = [
+    Rect(1, 1, 5, 10),
+    Rect(1, 2, 10, 10),
+    Rect(15, 15, 1, 1),
+    Rect(2, 2, 1, 1),
 ]
-running = True
-while running:
-    gameScreen.fill((0,0,0)) # Clear the screen
-    for r in rectangles:  # Draw rectangles
-        pygame.draw.rect(gameScreen, r["color"], r["rect"])
-    pygame.display.update()
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            x, y = pygame.mouse.get_pos() # Get click position
-            for r in rectangles: # Check each rectangle
-                if r["rect"].collidepoint(x, y): # Check if click is within rectangle
-                    r["color"] = r["clicked_color"] # Change the clicked color
-pygame.quit()
+
+result = r.collidelistall(rects)  # -> <rect(1, 1, 10, 10)>
+
+print(result)
+
+class ObjectWithSomRectAttribute:
+    def __init__(self, name, collision_box, draw_rect):
+        self.name = name
+        self.draw_rect = draw_rect
+        self.collision_box = collision_box
+
+    """def __repr__(self):
+        return f'<{self.__class__.__name__}("{self.name}", {list(self.collision_box)}, {list(self.draw_rect)})>'"""
+
+objects = [
+    ObjectWithSomRectAttribute("A", Rect(15, 15, 1, 1), Rect(1, 1, 50, 50)),
+    ObjectWithSomRectAttribute("B", Rect(2, 2, 10, 10), Rect(300, 300, 50, 50)),
+    ObjectWithSomRectAttribute("C", Rect(2, 2, 10, 10), Rect(200, 500, 50, 50)),
+]
+
+# collision = r.collideobjects(objects) # this does not work because the items in the list are no Rect like object
+collision = r.collideobjectsall(
+    objects, key=lambda o: o.collision_box
+)  # -> <ObjectWithSomRectAttribute("B", [1, 1, 10, 10], [300, 300, 50, 50])>
+print(collision)
+
+screen_rect = r.collideobjectsall(objects, key=lambda o: o.draw_rect)  # -> None
+print(screen_rect)
