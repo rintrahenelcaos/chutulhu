@@ -17,9 +17,9 @@ Rifle,2,A,4,,INVESTIGATORS,,,McLLez6ki.jpeg
 Duck,2,D,-,,INVESTIGATORS,,,McLLez6ki.jpeg
 Hide,2,D,-,,INVESTIGATORS,,,McLLez6ki.jpeg
 Block,2,D,-,,INVESTIGATORS,,,McLLez6ki.jpeg
-Battle_Plan,2,X,-,Draw 3 cards,INVESTIGATORS,,,McLLez6ki.jpeg
+Battle_Plan,2,XF,3,Draw 3 cards,INVESTIGATORS,,,McLLez6ki.jpeg
 Stalwart,2,D,-,Companions only,INVESTIGATORS,,,McLLez6ki.jpeg
-Ancient_Tome,4,X,-,Discard to Draw a Spell card,INVESTIGATORS,,,McLLez6ki.jpeg
+Ancient_Tome,4,XS,1,Discard to Draw a Spell card,INVESTIGATORS,,,McLLez6ki.jpeg
 Quiet_Approach,4,M,1,,DEEP_ONES,,,McLLez6ki.jpeg
 Shamble,4,M,2,,DEEP_ONES,,,McLLez6ki.jpeg
 Loping_Gait,3,M,3,,DEEP_ONES,,,McLLez6ki.jpeg
@@ -36,9 +36,9 @@ Crossbow,3,A,3,,DEEP_ONES,,,McLLez6ki.jpeg
 Scales,2,D,-,,DEEP_ONES,,,McLLez6ki.jpeg
 Swift_Motion,2,D,-,,DEEP_ONES,,,McLLez6ki.jpeg
 Move_in_Shadows,2,D,-,,DEEP_ONES,,,McLLez6ki.jpeg
-Emerge_from_the_Sea,2,X,-,Draw 3 cards,DEEP_ONES,,,McLLez6ki.jpeg
+Emerge_from_the_Sea,2,XF,3,Draw 3 cards,DEEP_ONES,,,McLLez6ki.jpeg
 Immortal,2,D,-,Deep Ones only,DEEP_ONES,,,McLLez6ki.jpeg
-Deep_Magic,4,X,-,Discard to Draw a Spell card,DEEP_ONES,,,McLLez6ki.jpeg
+Deep_Magic,4,XS,1,Discard to Draw a Spell card,DEEP_ONES,,,McLLez6ki.jpeg
 Coil,4,M,1,,SERPENT_PEOPLE,,,McLLez6ki.jpeg
 Twist,4,M,2,,SERPENT_PEOPLE,,,McLLez6ki.jpeg
 Slither,3,M,3,,SERPENT_PEOPLE,,,McLLez6ki.jpeg
@@ -54,9 +54,9 @@ Firearms,2,A,3,,SERPENT_PEOPLE,,,McLLez6ki.jpeg
 Sinuous_Weaving,2,D,-,,SERPENT_PEOPLE,,,McLLez6ki.jpeg
 Sneak_&_Skulk,2,D,-,,SERPENT_PEOPLE,,,McLLez6ki.jpeg
 Reptilian_Scales,2,D,-,,SERPENT_PEOPLE,,,McLLez6ki.jpeg
-Cold-Blooded,2,X,-,Draw 3 cards,SERPENT_PEOPLE,,,McLLez6ki.jpeg
+Cold-Blooded,2,XF,3,Draw 3 cards,SERPENT_PEOPLE,,,McLLez6ki.jpeg
 Illusions,2,D,-,Not Degenerates,SERPENT_PEOPLE,,,McLLez6ki.jpeg
-Sorcery,6,X,-,Discard to Draw a Spell Card,SERPENT_PEOPLE,,,McLLez6ki.jpeg
+Sorcery,6,XS,1,Discard to Draw a Spell Card,SERPENT_PEOPLE,,,McLLez6ki.jpeg
 Encroach,4,M,1,,CULTIST,,,McLLez6ki.jpeg
 March,4,M,2,,CULTIST,,,McLLez6ki.jpeg
 Run,3,M,3,,CULTIST,,,McLLez6ki.jpeg
@@ -71,5 +71,5 @@ Bolas,2,A,3,,CULTIST,,,McLLez6ki.jpeg
 Antique_Gun,1,A,3,,CULTIST,,,McLLez6ki.jpeg
 Frenzy,2,D,-,,CULTIST,,,McLLez6ki.jpeg
 Drugged,2,D,-,,CULTIST,,,McLLez6ki.jpeg
-Fanaticism,2,X,-,Draw 3 cards,CULTIST,,,McLLez6ki.jpeg
-Ritual_Sacrifice,5,X,-,Draw a Spell Card,CULTIST,,,McLLez6ki.jpeg
+Fanaticism,2,XF,3,Draw 3 cards,CULTIST,,,McLLez6ki.jpeg
+Ritual_Sacrifice,5,XS,1,Draw a Spell Card,CULTIST,,,McLLez6ki.jpeg

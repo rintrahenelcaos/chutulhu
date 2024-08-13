@@ -125,15 +125,20 @@ def card_counter(db, deck):
     
     return deckcount
 
-def card_data_extractor(db, deck):
+def card_data_extractor(db, deck, data = "Card_Name,Type,Range,Notes,Images"):
     
     conector = conection_sql()
     pointer = conector.cursor()
     
     hand_list = []
-    
-    to_get = "SELECT Card_Name,Type,Notes,Images FROM "+db+" WHERE location ='"+deck+"'"
-    pointer.execute(to_get)
+    try:
+        to_get = "SELECT Card_Name,Type,Range,Notes,Images FROM "+db+" WHERE location ='"+deck+"'"
+        print(to_get)
+        pointer.execute(to_get)
+    except:
+        to_get = "SELECT Card_Name,Range,Effect,Images FROM "+db+" WHERE location ='"+deck+"'"
+        print(to_get)
+        pointer.execute(to_get)
     hand_list = pointer.fetchall()
     print(hand_list)
     
