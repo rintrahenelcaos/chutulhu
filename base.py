@@ -460,8 +460,7 @@ def main():   #New function
                                    if enemy.rec.collidepoint(mousepos):
                                         ### hit the enemy
                                         enemy.hits = enemy.hits - damage_in_course
-                                        if enemy.hits < 1:
-                                            player_b.player_tokens.remove(enemy)
+                                        
                                         ### resetting values to prevent various attacks over the same card ###
                                         available_attacks = []
                                         attack_indicator = None
@@ -510,8 +509,14 @@ def main():   #New function
                                 
                                 player_a.defense_phase()
 
+        # surviving tokens control
+        for token_a in player_a.player_tokens:
+            if token_a.hits < 1:
+                player_a.player_tokens.remove(token_a)
+        for token_b in player_b.player_tokens:
+            if token_b.hits < 1:
+                player_b.player_tokens.remove(token_b)
         
-       
             
         
             
