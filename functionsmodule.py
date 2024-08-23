@@ -49,7 +49,7 @@ def movement_blocker(available_moves, token_lists_a, token_list_b):  # movement 
                 available_moves.remove(move) 
             
         
-    print("out of movement_bloker: ",available_moves)
+    #print("out of movement_bloker: ",available_moves)
     return available_moves
 
 
@@ -232,7 +232,7 @@ def token_detector(acting_token, available_positions, friendly_tokens, enemy_tok
     
     for target in templist:
         for friendly in friendly_tokens:
-            print("friend: ", friendly.rec)
+            #print("friend: ", friendly.rec)
             if target == friendly.rec:
                 friends_list.append(target)
                 if acting_token == target:
@@ -271,7 +271,13 @@ def target_acquisition_new(attacking_token, friends_list, enemies_list):
         
         if blocked: enemies_on_sight.remove(target)
         
-    return enemies_on_sight  
+    return enemies_on_sight 
+
+def k_target_adquisition(attacks, enemies_list):
+    
+    enemies_in_sight = enemies_list
+    
+    return enemies_in_sight
     
 def movement_acquisition(moving_token, possible_moves, friends_in_the_way, enemies_in_the_way):
     
@@ -369,6 +375,7 @@ def available_attacks_detector_fixedrange(token_indicator, attack_range, token_l
         temp_list.append(k8)
         available_attacks = temp_list - movement_blocker(temp_list, token_lists_a, token_list_b)
         available_attacks = [i for n, i in enumerate(available_attacks) if i not in available_attacks[:n]]
+        
     
     else:    
            
@@ -429,6 +436,8 @@ def available_attacks_detector_maxrange_square(token_indicator, attack_range, fr
         #available_attacks = movement_blocker(temp_list, friendly_token_list, enemy_token_list)
         available_attacks = temp_list
         available_attacks = [i for n, i in enumerate(available_attacks) if i not in available_attacks[:n]]
+        friends_not_use, enemies_in_sight = token_detector(token_rec, available_attacks, friendly_token_list, enemy_token_list)
+        available_attacks = enemies_in_sight
     
     else:    
            

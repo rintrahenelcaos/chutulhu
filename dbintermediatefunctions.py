@@ -132,11 +132,11 @@ def card_data_extractor(db, deck, data = "Card_Name,Type,Range,Notes,Images"):
     
     hand_list = []
     try:
-        to_get = "SELECT Card_Name,Type,Range,Notes,Images FROM "+db+" WHERE location ='"+deck+"'"
+        to_get = "SELECT "+data+" FROM "+db+" WHERE location ='"+deck+"'"
         print(to_get)
         pointer.execute(to_get)
     except:
-        to_get = "SELECT Card_Name,Range,Effect,Images FROM "+db+" WHERE location ='"+deck+"'"
+        to_get = "SELECT "+data+" FROM "+db+" WHERE location ='"+deck+"'"
         print(to_get)
         pointer.execute(to_get)
     hand_list = pointer.fetchall()

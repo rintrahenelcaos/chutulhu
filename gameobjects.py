@@ -9,7 +9,7 @@ from functionsmodule import movement_activation, x_activation, attack_activation
 class CardObject(pygame.sprite.Sprite):
     
     
-    def __init__(self, size, xpos, ypos, image, identif, card_type, range) -> None:
+    def __init__(self, size, xpos, ypos, image, identif, card_type, range, damage = 1) -> None:
         pygame.sprite.Sprite.__init__(self)
         self.size = size*1
         self.sizeheight = size*5/3
@@ -25,6 +25,7 @@ class CardObject(pygame.sprite.Sprite):
         self.looked_on = False
         self.card_type = card_type
         self.range = range
+        self.damage = damage
         self.name_show = identif.replace("_"," ")[:-1]
         
     

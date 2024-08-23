@@ -261,9 +261,9 @@ def main():   #New function
     prueba2 = TokenObject(CELL,CELL*3, CELL*4, "token_1.png", "prueba2", 1)
     prueba3 = TokenObject(CELL,CELL*3,CELL*2, "token_3.png", "prueba3",1)
     
-    enemy1 = TokenObject(CELL,CELL*3, CELL*3, "token_2.png", "prueba2", 1)
-    enemy2 = TokenObject(CELL,CELL*2, CELL*3, "token_2.png", "prueba2", 1)
-    enemy3 = TokenObject(CELL,CELL*4, CELL*3, "token_2.png", "prueba2", 1)
+    enemy1 = TokenObject(CELL,CELL*3, CELL*3, "token_2.png", "prueba2", 2)
+    enemy2 = TokenObject(CELL,CELL*2, CELL*3, "token_2.png", "prueba2", 2)
+    enemy3 = TokenObject(CELL,CELL*4, CELL*3, "token_2.png", "prueba2", 2)
     enemy4 = TokenObject(CELL,CELL*2, CELL*2, "token_2.png", "prueba2", 1)
     enemy5 = TokenObject(CELL,CELL*2, CELL*1, "token_2.png", "prueba2", 1)
     enemy6 = TokenObject(CELL,CELL*4, CELL*2, "token_2.png", "prueba2", 1)
@@ -297,6 +297,7 @@ def main():   #New function
     attack_indicator = None
     attacking_tokens = False
     available_attacks = []
+    damage_in_course = 0
     
     chosen_token = None
     pos = None
@@ -340,7 +341,10 @@ def main():   #New function
         if BOARD.get_rect().collidepoint(mousepos) and (movement_indicator != None or attack_indicator != None):
             
             for mov in available_moves:
-                if mov.collidepoint(mousepos) and (moving_tokens or attacking_tokens):
+                if mov.collidepoint(mousepos) and moving_tokens:
+                    pygame.mouse.set_cursor(pygame.cursors.broken_x)
+            for att in available_attacks:
+                if att.collidepoint(mousepos) and attacking_tokens:
                     pygame.mouse.set_cursor(pygame.cursors.broken_x)
             for obj in player_a.player_tokens:
             
@@ -348,6 +352,7 @@ def main():   #New function
                     pygame.mouse.set_cursor(pygame.cursors.diamond)
         else:
             pygame.mouse.set_cursor(pygame.cursors.arrow) 
+            
         
         ### Cursor over CARDS ###
           
@@ -393,7 +398,8 @@ def main():   #New function
                             
                 for scrd in player_a.player_spell_hand:
                     if scrd.rec.collidepoint(mousepos):
-                        print("spell card played")  # CONTROL
+                        #print("spell card played")  # CONTROL
+                        pass
                 
                 ### FATE PHASE ###
                         
@@ -448,8 +454,20 @@ def main():   #New function
                 if current_phase == "att": 
                     
                     if pygame.mouse.get_cursor() == pygame.cursors.broken_x:
+                        for attack in available_attacks:
+                            if attack.collidepoint(mousepos):
+                               for enemy in player_b.player_tokens:
+                                   if enemy.rec.collidepoint(mousepos):
+                                        ### hit the enemy
+                                        enemy.hits = enemy.hits - damage_in_course
+                                        if enemy.hits < 1:
+                                            player_b.player_tokens.remove(enemy)
+                                        ### resetting values to prevent various attacks over the same card ###
+                                        available_attacks = []
+                                        attack_indicator = None
+                                        attacking_tokens = False
+                                        damage_in_course = 0
                         
-                        pass  
                     
                     elif pygame.mouse.get_cursor() == pygame.cursors.diamond:
                     
@@ -457,7 +475,7 @@ def main():   #New function
                             if attacking_tokens and token.rec.collidepoint(mousepos):
                                 chosen_token = token
                                 available_attacks = available_attacks_detector_maxrange_square(token, attack_indicator, player_a.player_tokens, player_b.player_tokens)
-                                print(available_attacks)
+                                #print(available_attacks)
                                 
                     
                     else:
@@ -466,6 +484,7 @@ def main():   #New function
                                 if (crd.card_type == "A"):
                                     attack_indicator = crd.activate_card()[1]
                                     discarder("cards_a", str(crd.identif))
+                                    damage_in_course = card.damage
                                     player_a.player_hand.remove(crd)
 
 
