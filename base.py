@@ -4,7 +4,7 @@ import math
 
 import os
 
-from constants import FACTIONS, ROWS, COLUMNS, GRID, FPS, BACKGROUND_COLOR, GRID_DIC, WIDTH, HEIGHT, CELL, GAME_SEQUENCE, CARD_WIDTH, FACTION_HAND, SPELLS_HAND, FACTION_DECK_POSITION, SPELL_DECK_POSITION
+from constants import FACTIONS, ROWS, COLUMNS, GRID, FPS, BACKGROUND_COLOR, GRID_DIC, WIDTH, HEIGHT, CELL, GAME_SEQUENCE, CARD_WIDTH, FACTION_HAND, SPELLS_HAND, FACTION_DECK_POSITION, SPELL_DECK_POSITION, WIN, BOARD, faction_deck_drawer_button,spells_deck_drawer_button,button2, GENERIC_FONT,CARD_FONT
 from gameobjects import TokenObject, CardObject
 from player_turn_module import new_game_preparations, fate_phase, move_phase, grid_position,to_grid,Player_Object
 from dbcreator import conection_sql
@@ -22,7 +22,7 @@ pygame.font.init()
 #WIDTH = CELL*15
 #print(CELL)
 #print(resolution_info.current_h, "    ", resolution_info.current_w)
-WIN = pygame.display.set_mode((WIDTH, HEIGHT))
+#WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("TO CHANGE")
 
 #ROWS = 8
@@ -31,16 +31,16 @@ pygame.display.set_caption("TO CHANGE")
 #
 #BACKGROUND_COLOR = (0,0,0)
 #
-BOARD = pygame.Surface((CELL*8, CELL*8))
+#BOARD = pygame.Surface((CELL*8, CELL*8))
 #FACTION_HAND = pygame.Rect((WIDTH-CELL*7,CELL*4),(CELL*8, CELL*2))
 #SPELLS_HAND = pygame.Rect((WIDTH-CELL*7,CELL*6),(CELL*8,CELL*2))
 
-faction_deck_drawer_button = pygame.Rect(FACTION_DECK_POSITION,(CARD_WIDTH,CARD_WIDTH*5/3))
-spells_deck_drawer_button = pygame.Rect(SPELL_DECK_POSITION,(CARD_WIDTH,CARD_WIDTH*5/3))
-button2 = pygame.Rect((WIDTH-CELL, 20),(CELL,20))
+#faction_deck_drawer_button = pygame.Rect(FACTION_DECK_POSITION,(CARD_WIDTH,CARD_WIDTH*5/3))
+#spells_deck_drawer_button = pygame.Rect(SPELL_DECK_POSITION,(CARD_WIDTH,CARD_WIDTH*5/3))
+#button2 = pygame.Rect((WIDTH-CELL, 20),(CELL,20))
 
 
-GENERIC_FONT = pygame.font.SysFont("times", int(CELL*0.2))
+#GENERIC_FONT = pygame.font.SysFont("times", int(CELL*0.2))
 #GRID = [(x, y) for x in range(8) for y in range(8)]
 #GRID_DIC = {}
 #for cell in GRID:
@@ -76,13 +76,6 @@ def draw_window(card, player_a_hand, scrd, spell_player_a_hand ,current_phase, p
             pygame.draw.rect(BOARD, "grey3",(CELL*row, CELL*col, CELL,CELL))
    
     
-    if chosen_cell != None:
-        
-        pygame.draw.rect(BOARD, (127+waving_func(pygame.time.get_ticks()-chosen_cell[1]),127+waving_func(pygame.time.get_ticks()-chosen_cell[1]),127+waving_func(pygame.time.get_ticks()-chosen_cell[1])), chosen_cell[0])
-        
-    
-    
-    #game_mechanics(pos, token) 
     available_moves_function(available_moves)   
     token_movement(player_tokens, player2_tokens)
     available_attacks_function(available_attacks)
@@ -126,41 +119,6 @@ def draw_window(card, player_a_hand, scrd, spell_player_a_hand ,current_phase, p
 def waving_func(time):
     z = 127*math.cos((2*math.pi/(FPS*40))*time)
     return z
-
-def game_mechanics(pos, token):
-    
-    global chosen_cell
-    global pos_a
-    global pos_b
-    
-    
-    #print("en game_mechanics: ", token)
-    
-    
-    
-    
-    if pos != None:
-        
-        selected_pos = grid_position(pos)
-        if token != None:
-            tokenpos = grid_position((token.rec.x, token.rec.y))
-            if tokenpos == selected_pos:
-                print("token = pos")
-                token.moving = True
-        
-        selected_in_grid = GRID.index(selected_pos)
-        chosen_cell = (pygame.Rect(CELL*selected_pos[0], CELL*selected_pos[1], CELL, CELL),pygame.time.get_ticks())
-        pos_b = pygame.Vector2(chosen_cell[0].x, chosen_cell[0].y)
-        print(selected_in_grid)
-    
-    
-    for obj in game_objects_list: 
-        #print(obj.moving)
-        if obj.moving:
-            obj.token_object_drawer(BOARD, pos_b)
-        else: obj.token_object_drawer(BOARD)
-        
-    #draw_window(pos, None)
 
 
         
@@ -246,7 +204,15 @@ def available_attacks_function(available_attacks):
         color = (127+waving_func(pygame.time.get_ticks()), 0, 0)
         pygame.draw.rect(BOARD, color, attack, width=6,border_radius=10)
     
-
+def pre_game(player_tokens):
+    
+    for token in player_tokens:
+        
+        
+    
+    
+    
+        pass
     
 
 
@@ -269,17 +235,6 @@ def main():   #New function
     enemy6 = TokenObject(CELL,CELL*4, CELL*2, "token_2.png", "prueba2", 1)
     enemy7 = TokenObject(CELL,CELL*4, CELL*1, "token_2.png", "prueba2", 1)
     enemy8 = TokenObject(CELL,CELL*3, CELL*1, "token_2.png", "prueba2", 1)
-    
-    
-    game_objects_list.append(prueba)
-    game_objects_list.append(prueba2)
-    game_objects_list.append(prueba3)
-    
-    resolution_info = pygame.display.Info()
-    #print(resolution_info.current_h)
-    #print(str(game_objects_list))
-    #print(prueba)
-    
     
     
     current_phase = GAME_SEQUENCE[1]
@@ -341,17 +296,17 @@ def main():   #New function
         if BOARD.get_rect().collidepoint(mousepos) and (movement_indicator != None or attack_indicator != None):
             
             for mov in available_moves:
-                if mov.collidepoint(mousepos) and moving_tokens:
+                if mov.collidepoint(mousepos) and moving_tokens: # during move phase
                     pygame.mouse.set_cursor(pygame.cursors.broken_x)
             for att in available_attacks:
-                if att.collidepoint(mousepos) and attacking_tokens:
+                if att.collidepoint(mousepos) and attacking_tokens: # during attack phase
                     pygame.mouse.set_cursor(pygame.cursors.broken_x)
             for obj in player_a.player_tokens:
             
-                if obj.rec.collidepoint(mousepos):
+                if obj.rec.collidepoint(mousepos): # during move phase token selection
                     pygame.mouse.set_cursor(pygame.cursors.diamond)
         else:
-            pygame.mouse.set_cursor(pygame.cursors.arrow) 
+            pygame.mouse.set_cursor(pygame.cursors.arrow) # standard
             
         
         ### Cursor over CARDS ###

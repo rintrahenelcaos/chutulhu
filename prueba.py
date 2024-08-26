@@ -1,32 +1,88 @@
 import pygame
-from pygame.locals import *
 
-SIZE = 500, 200
-RED = (255, 0, 0)
-GRAY = (150, 150, 150)
+# --- constants --- (UPPER_CASE names)
+
+SCREEN_WIDTH = 430
+SCREEN_HEIGHT = 410
+
+#BLACK = (  0,   0,   0)
+WHITE = (255, 255, 255)
+RED   = (255,   0,   0)
+
+FPS = 30
+
+# --- classses --- (CamelCase names)
+
+# empty
+
+# --- functions --- (lower_case names)
+
+# empty
+
+# --- main ---
+
+# - init -
 
 pygame.init()
-screen = pygame.display.set_mode(SIZE)
 
-rect = Rect(50, 60, 200, 80)
-print(f'x={rect.x}, y={rect.y}, w={rect.w}, h={rect.h}')
-print(f'left={rect.left}, top={rect.top}, right={rect.right}, bottom={rect.bottom}')
-print(f'center={rect.center}')
-rect0 = Rect.copy()
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+#screen_rect = screen.get_rect()
+
+pygame.display.set_caption("Tracking System")
+
+# - objects -
+
+rectangle = pygame.rect.Rect(176, 134, 17, 17)
+rectangle_draging = False
+
+# - mainloop -
+
+clock = pygame.time.Clock()
+
+running = True
 
 while running:
-    for event in pygame.event.get():
-        if event.type == QUIT:
-            running = False
-        
-        if event.type == KEYDOWN:
-            if event.key in dir:
-                v = dir[event.key]
-                rect.inflate_ip(v)
 
-    screen.fill(GRAY)
-    pygame.draw.rect(screen, GRAY, rect0, 1)
-    pygame.draw.rect(screen, RED, rect, 4)
+    # - events -
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:            
+                if rectangle.collidepoint(event.pos):
+                    rectangle_draging = True
+                    mouse_x, mouse_y = event.pos
+                    offset_x = rectangle.x - mouse_x
+                    offset_y = rectangle.y - mouse_y
+
+        elif event.type == pygame.MOUSEBUTTONUP:
+            if event.button == 1:            
+                rectangle_draging = False
+
+        elif event.type == pygame.MOUSEMOTION:
+            if rectangle_draging:
+                mouse_x, mouse_y = event.pos
+                rectangle.x = mouse_x + offset_x
+                rectangle.y = mouse_y + offset_y
+
+    # - updates (without draws) -
+
+    # empty
+
+    # - draws (without updates) -
+
+    screen.fill(WHITE)
+
+    pygame.draw.rect(screen, RED, rectangle)
+
     pygame.display.flip()
+
+    # - constant game speed / FPS -
+
+    clock.tick(FPS)
+
+# - end -
 
 pygame.quit()

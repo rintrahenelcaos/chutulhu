@@ -32,6 +32,9 @@ CELL = round(HEIGHT/8,0)
 WIDTH = CELL*15
 CARD_WIDTH = CELL*4/5
 
+WIN = pygame.display.set_mode((WIDTH, HEIGHT))
+BOARD = pygame.Surface((CELL*8, CELL*8))
+
 
 #positions
 
@@ -41,6 +44,11 @@ SPELLS_HAND = pygame.Rect((WIDTH-CELL*7,CELL*6),(CELL*8,CELL*2))
 FACTION_DECK_POSITION = (WIDTH-CELL,FACTION_HAND.y+CELL/2)
 SPELL_DECK_POSITION = (WIDTH-CELL,SPELLS_HAND.y+CELL/2)
 
+# Buttons
+
+faction_deck_drawer_button = pygame.Rect(FACTION_DECK_POSITION,(CARD_WIDTH,CARD_WIDTH*5/3))
+spells_deck_drawer_button = pygame.Rect(SPELL_DECK_POSITION,(CARD_WIDTH,CARD_WIDTH*5/3))
+button2 = pygame.Rect((WIDTH-CELL, 20),(CELL,20))
 
 
 #print(CELL)

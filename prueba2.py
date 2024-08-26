@@ -1,40 +1,54 @@
+from time import sleep
 import pygame
-# Your game setup would go here
-Rect = pygame.Rect
-
-r = Rect(1, 1, 10, 5)
-
-rects = [
-    Rect(1, 1, 5, 10),
-    Rect(1, 2, 10, 10),
-    Rect(15, 15, 1, 1),
-    Rect(2, 2, 1, 1),
-]
-
-result = r.collidelistall(rects)  # -> <rect(1, 1, 10, 10)>
-
-print(result)
-
-class ObjectWithSomRectAttribute:
-    def __init__(self, name, collision_box, draw_rect):
-        self.name = name
-        self.draw_rect = draw_rect
-        self.collision_box = collision_box
-
-    """def __repr__(self):
-        return f'<{self.__class__.__name__}("{self.name}", {list(self.collision_box)}, {list(self.draw_rect)})>'"""
-
-objects = [
-    ObjectWithSomRectAttribute("A", Rect(15, 15, 1, 1), Rect(1, 1, 50, 50)),
-    ObjectWithSomRectAttribute("B", Rect(2, 2, 10, 10), Rect(300, 300, 50, 50)),
-    ObjectWithSomRectAttribute("C", Rect(2, 2, 10, 10), Rect(200, 500, 50, 50)),
-]
-
-# collision = r.collideobjects(objects) # this does not work because the items in the list are no Rect like object
-collision = r.collideobjectsall(
-    objects, key=lambda o: o.collision_box
-)  # -> <ObjectWithSomRectAttribute("B", [1, 1, 10, 10], [300, 300, 50, 50])>
-print(collision)
-
-screen_rect = r.collideobjectsall(objects, key=lambda o: o.draw_rect)  # -> None
-print(screen_rect)
+import pygame_menu
+from pygame_menu import themes
+ 
+pygame.init()
+surface = pygame.display.set_mode((600, 400))
+ 
+def set_difficulty(value, difficulty):
+    print(value)
+    print(difficulty)
+ 
+def start_the_game():
+    mainmenu._open(loading)
+    pygame.time.set_timer(update_loading, 30)
+ 
+def level_menu():
+    mainmenu._open(level)
+ 
+ 
+mainmenu = pygame_menu.Menu('Welcome', 600, 400, theme=themes.THEME_SOLARIZED)
+mainmenu.add.text_input('Name: ', default='username')
+mainmenu.add.button('Play', start_the_game)
+mainmenu.add.button('Levels', level_menu)
+mainmenu.add.button('Quit', pygame_menu.events.EXIT)
+ 
+level = pygame_menu.Menu('Select a Difficulty', 600, 400, theme=themes.THEME_BLUE)
+level.add.selector('Difficulty :', [('Hard', 1), ('Easy', 2)], onchange=set_difficulty)
+ 
+loading = pygame_menu.Menu('Loading the Game...', 600, 400, theme=themes.THEME_DARK)
+loading.add.progress_bar("Progress", progressbar_id = "1", default=0, width = 200, )
+ 
+arrow = pygame_menu.widgets.LeftArrowSelection(arrow_size = (10, 15))
+ 
+update_loading = pygame.USEREVENT + 0
+ 
+while True:
+    events = pygame.event.get()
+    for event in events:
+        if event.type == update_loading:
+            progress = loading.get_widget("1")
+            progress.set_value(progress.get_value() + 1)
+            if progress.get_value() == 100:
+                pygame.time.set_timer(update_loading, 0)
+        if event.type == pygame.QUIT:
+            exit()
+ 
+    if mainmenu.is_enabled():
+        mainmenu.update(events)
+        mainmenu.draw(surface)
+        if (mainmenu.get_current().get_selected_widget()):
+            arrow.draw(surface, mainmenu.get_current().get_selected_widget())
+ 
+    pygame.display.update()
