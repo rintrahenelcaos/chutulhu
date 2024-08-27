@@ -11,61 +11,7 @@ from dbcreator import conection_sql
 from dbintermediatefunctions import card_data_extractor, discarder
 from functionsmodule import movement_blocker, available_movement_detector_pathfinding, available_movement_detector_linear_vector, available_attacks_detector_fixedrange, available_attacks_detector_maxrange_square
 
-"""def draw_window(card, player_a_hand, scrd, spell_player_a_hand ,current_phase, player, movement_indicator, available_moves, available_attacks,player_tokens, player2_tokens):
-    
-    
-    phase_informer = str
-    
-    if player:
-        phase_informer = "a_"+current_phase
-    else: phase_informer = "b_"+current_phase
-    
-    WIN.fill(BACKGROUND_COLOR)
-    BOARD.fill("tan4")
-        
-    for row in range(ROWS):
-        for col in range(row % 2, ROWS, 2):
-            pygame.draw.rect(BOARD, "grey3",(CELL*row, CELL*col, CELL,CELL))
-   
-    
-    available_moves_function(available_moves)   
-    token_movement(player_tokens, player2_tokens)
-    available_attacks_function(available_attacks)
-    
-    
-    WIN.blit(BOARD,(0,0))    # actualizes BOARD -> always after all changes of it
-    
-    pygame.draw.rect(WIN, "pink",FACTION_HAND)
-    pygame.draw.rect(WIN, "red",SPELLS_HAND)
-    
-    
-    faction_deck = pygame.image.load(os.path.join("images","faction_deck2.jpg")).convert_alpha() # load faction deck image
-    faction_deck_scaled_image = pygame.transform.scale(faction_deck, (faction_deck_drawer_button.width, faction_deck_drawer_button.height))
-    WIN.blit(faction_deck_scaled_image, (faction_deck_drawer_button))
-    
-    pygame.draw.rect(WIN, "white", button2)
-    
-    spells_deck = pygame.image.load(os.path.join("images","spells_deck_scaled.jpg")).convert_alpha() # load spells deck image
-    spells_deck_scaled_image = pygame.transform.scale(spells_deck,(spells_deck_drawer_button.width, spells_deck_drawer_button.height))
-    WIN.blit(spells_deck_scaled_image, (spells_deck_drawer_button))
-    
-    current_phase_informer = GENERIC_FONT.render(phase_informer, 1, "red")
-    WIN.blit(current_phase_informer, (CELL*10, 20))
-    
-    faction_hand_sign = GENERIC_FONT.render("Faction Hand", 1, "black")
-    WIN.blit(faction_hand_sign,(FACTION_HAND.x+5,FACTION_HAND.y))
-    
-    spells_hand_sign = GENERIC_FONT.render("Spells hand",1,"black")
-    WIN.blit(spells_hand_sign, (SPELLS_HAND.x+5,SPELLS_HAND.y))
-    
-    faction_hand_controller(card, player_a_hand, current_phase)
-    spells_hand_controller(scrd, spell_player_a_hand, current_phase)
-    
-    
-        
-    
-    
-    pygame.display.update()"""
+
     
 
 def waving_func(time):
@@ -158,7 +104,9 @@ def available_attacks_function(available_attacks):
     
 def pre_game(player_tokens):
     
+    
     for token in player_tokens:
+        
         
         
     
@@ -176,7 +124,7 @@ class Main():
         
         self.run = True
         self.clock = pygame.time.Clock()
-        self.pre_game = True
+        #self.pre_game = True
         self.current_phase = GAME_SEQUENCE[1]
         new_game_preparations("INVESTIGATORS","SERPENT_PEOPLE")
         self.player_a = Player_Object("currentgame.db", "cards_a", "player_a")
@@ -196,18 +144,18 @@ class Main():
         self.chosen_token = None
         self.pos = None
         
-        prueba = TokenObject(CELL, 0, 0, "token_1.png", "prueba1",1)
-        prueba2 = TokenObject(CELL,CELL*3, CELL*4, "token_1.png", "prueba2", 1)
-        prueba3 = TokenObject(CELL,CELL*3,CELL*2, "token_3.png", "prueba3",1)
+        prueba = TokenObject(CELL, 0, 0, "token_1.png", "prueba1",1,"")
+        prueba2 = TokenObject(CELL,CELL*3, CELL*4, "token_1.png", "prueba2", 1,"")
+        prueba3 = TokenObject(CELL,CELL*3,CELL*2, "token_3.png", "prueba3",1,"")
 
-        enemy1 = TokenObject(CELL,CELL*3, CELL*3, "token_2.png", "prueba2", 2)
-        enemy2 = TokenObject(CELL,CELL*2, CELL*3, "token_2.png", "prueba2", 2)
-        enemy3 = TokenObject(CELL,CELL*4, CELL*3, "token_2.png", "prueba2", 2)
-        enemy4 = TokenObject(CELL,CELL*2, CELL*2, "token_2.png", "prueba2", 1)
-        enemy5 = TokenObject(CELL,CELL*2, CELL*1, "token_2.png", "prueba2", 1)
-        enemy6 = TokenObject(CELL,CELL*4, CELL*2, "token_2.png", "prueba2", 1)
-        enemy7 = TokenObject(CELL,CELL*4, CELL*1, "token_2.png", "prueba2", 1)
-        enemy8 = TokenObject(CELL,CELL*3, CELL*1, "token_2.png", "prueba2", 1)
+        enemy1 = TokenObject(CELL,CELL*3, CELL*3, "token_2.png", "prueba2", 2,"")
+        enemy2 = TokenObject(CELL,CELL*2, CELL*3, "token_2.png", "prueba2", 2,"")
+        enemy3 = TokenObject(CELL,CELL*4, CELL*3, "token_2.png", "prueba2", 2,"")
+        enemy4 = TokenObject(CELL,CELL*2, CELL*2, "token_2.png", "prueba2", 1,"")
+        enemy5 = TokenObject(CELL,CELL*2, CELL*1, "token_2.png", "prueba2", 1,"")
+        enemy6 = TokenObject(CELL,CELL*4, CELL*2, "token_2.png", "prueba2", 1,"")
+        enemy7 = TokenObject(CELL,CELL*4, CELL*1, "token_2.png", "prueba2", 1,"")
+        enemy8 = TokenObject(CELL,CELL*3, CELL*1, "token_2.png", "prueba2", 1,"")
         
          
         
@@ -448,7 +396,7 @@ class Main():
         
         
         
-        pass
+        
     
     
          

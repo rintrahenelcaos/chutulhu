@@ -83,7 +83,7 @@ class CardObject(pygame.sprite.Sprite):
         
 class TokenObject:
     
-    def __init__(self, size, xpos, ypos, image, identif, hits):
+    def __init__(self, size, xpos, ypos, image, identif, hits, notes):
         self.size = size
         self.xpos = xpos
         self.ypos = ypos
@@ -95,6 +95,7 @@ class TokenObject:
         self.identif = identif
         self.vector_to_go = pygame.Vector2(self.xpos, self.ypos)
         self.hits = hits
+        self.notes = notes
         
     def __str__(self) -> str:
         return str(self.identif)    

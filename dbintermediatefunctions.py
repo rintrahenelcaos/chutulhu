@@ -144,6 +144,19 @@ def card_data_extractor(db, deck, data = "Card_Name,Type,Range,Notes,Images"):
     
     return hand_list
 
+def token_extractor(data, player):
+    
+    conector = conection_sql()
+    pointer = conector.cursor()
+    
+    token_list = []
+    
+    tokens_info = "SELECT Images,Unit_name,hits,notes from "+data+";"
+    pointer.execute(tokens_info)
+    token_list = pointer.fetchall()
+    
+    return token_list
+    
 
 if __name__ == "__main__":
     

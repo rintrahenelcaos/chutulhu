@@ -5,6 +5,7 @@ from constants import CELL
 
 
 
+
 def movement_activation(range):
     print("movement: ", range)
     return ("M", range)
