@@ -10,7 +10,7 @@ from player_turn_module import new_game_preparations, fate_phase, move_phase, gr
 from dbcreator import conection_sql
 from dbintermediatefunctions import card_data_extractor, discarder
 from functionsmodule import movement_blocker, available_movement_detector_pathfinding, available_movement_detector_linear_vector, available_attacks_detector_fixedrange, available_attacks_detector_maxrange_square
-
+from pregame_functions import player_token_assigner
 
     
 
@@ -390,7 +390,10 @@ class Main():
  
     def pre_game(self):
         
-        for token in self.player_a.player_tokens: pass
+        # control over 
+        
+        
+        pass
             
             
         
@@ -483,6 +486,13 @@ class Main():
         for attack in self.available_attacks:
             color = (127+waving_func(pygame.time.get_ticks()), 0, 0)
             pygame.draw.rect(BOARD, color, attack, width=6,border_radius=10)
+
+
+
+
+
+    
+
 
 if __name__=="__main__":
     

@@ -6,6 +6,7 @@ from dbintermediatefunctions import deckmixer, deck_assigner, drawer, reshuffle_
 from gameobjects import CardObject, TokenObject
 from constants import DECKS, FACTIONS, CELL, CARD_WIDTH, FACTION_DECK_POSITION, SPELL_DECK_POSITION, GRID
 from functionsmodule import movement_blocker
+from pregame_functions import token_extractor
 
 
 def conection_sql(database = "currentgame.db"):
@@ -25,7 +26,7 @@ class Player_Object():
         self.player_tokens = []
         self.to_move_token = None
         
-        
+    def token_list_loader(self): pass    
         
     def fate_phase(self, xpos = FACTION_DECK_POSITION[0], ypos = FACTION_DECK_POSITION[1], repetitions = 3): #db, deck, player -> ("cards_a", "deck", "hand") //// xpos and ypos are the deck positions
         

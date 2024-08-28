@@ -144,7 +144,7 @@ def card_data_extractor(db, deck, data = "Card_Name,Type,Range,Notes,Images"):
     
     return hand_list
 
-def token_extractor(data, player):
+def token_extractor(data):
     
     conector = conection_sql()
     pointer = conector.cursor()
