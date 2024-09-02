@@ -4,13 +4,17 @@ import math
 
 import os
 
-from constants import FACTIONS, ROWS, COLUMNS, GRID, FPS, BACKGROUND_COLOR, GRID_DIC, WIDTH, HEIGHT, CELL, GAME_SEQUENCE, CARD_WIDTH, FACTION_HAND, SPELLS_HAND, FACTION_DECK_POSITION, SPELL_DECK_POSITION, WIN, BOARD, faction_deck_drawer_button,spells_deck_drawer_button,button2, GENERIC_FONT,CARD_FONT, PRE_GAME_TOKEN_MAT
+from constants import FACTIONS, ROWS, COLUMNS, GRID, FPS, BACKGROUND_COLOR, GRID_DIC, WIDTH, HEIGHT, CELL, GAME_SEQUENCE, CARD_WIDTH, WIN, BOARD, button2
+from constants import PRE_GAME_TOKEN_MAT, pre_game_cancel_button, pre_game_ok_button
+from constants import FACTION_HAND, FACTION_DECK_POSITION, faction_deck_drawer_button
+from constants import SPELLS_HAND, SPELL_DECK_POSITION, spells_deck_drawer_button
+from constants import GENERIC_FONT, CARD_FONT
 from gameobjects import TokenObject, CardObject
 from player_turn_module import new_game_preparations, fate_phase, move_phase, grid_position,to_grid,Player_Object
 from dbcreator import conection_sql
 from dbintermediatefunctions import card_data_extractor, discarder
 from functionsmodule import movement_blocker, available_movement_detector_pathfinding, available_movement_detector_linear_vector, available_attacks_detector_fixedrange, available_attacks_detector_maxrange_square
-from pregame_functions import player_token_assigner
+from pregame_functions import player_token_assigner, starting_position_function
 
     
 
@@ -102,17 +106,6 @@ def available_attacks_function(available_attacks):
         color = (127+waving_func(pygame.time.get_ticks()), 0, 0)
         pygame.draw.rect(BOARD, color, attack, width=6,border_radius=10)
     
-def pre_game(player_tokens):
-    
-    
-    for token in player_tokens:
-        
-        
-        
-    
-    
-    
-        pass    
 
 
 class Main():
@@ -124,11 +117,11 @@ class Main():
         
         self.run = True
         self.clock = pygame.time.Clock()
-        #self.pre_game = True
+        self.scene = "pre_game"
         self.current_phase = GAME_SEQUENCE[1]
         new_game_preparations("INVESTIGATORS","SERPENT_PEOPLE")
-        self.player_a = Player_Object("currentgame.db", "cards_a", "player_a")
-        self.player_b = Player_Object("currentgame.db", "cards_b", "player_b")
+        self.player_a = Player_Object("currentgame.db", "units_a" ,"cards_a", "player_a")
+        self.player_b = Player_Object("currentgame.db", "units_b","cards_b", "player_b")
         self.hosting_player = True
         self.mousepos = pygame.mouse.get_pos()
         
@@ -143,6 +136,7 @@ class Main():
 
         self.chosen_token = None
         self.pos = None
+        self.ocupied_cell = None
         
         prueba = TokenObject(CELL, 0, 0, "token_1.png", "prueba1",1,"")
         prueba2 = TokenObject(CELL,CELL*3, CELL*4, "token_1.png", "prueba2", 1,"")
@@ -174,8 +168,12 @@ class Main():
         self.player_b.player_tokens.append(enemy6)
         self.player_b.player_tokens.append(enemy7)
         self.player_b.player_tokens.append(enemy8)
-    
-       
+
+        self.player_a.player_tokens = []   # testing pre-game
+        #self.player_b.player_tokens = []
+        self.player_a.player_token_assigner()
+        print(self.player_a.player_tokens)
+        self.pregame_mat_assigner()
         
     def main(self):
         
@@ -186,221 +184,337 @@ class Main():
         
         while self.run:
             
-            self.clock.tick(FPS)
+            if self.scene == "pre_game":
+                self.pre_game()
+            elif self.scene == "in_course":
+                self.in_course()            
             
-            
-            focus_faction_card = None
-            focus_spell_card = None
-            
-            
-            #drawn_cards = []
-            self.mousepos = pygame.mouse.get_pos()
-            
-                        
-            ### cursor's management ###
-        
-            if BOARD.get_rect().collidepoint(self.mousepos):
-                pygame.mouse.set_cursor(pygame.cursors.arrow) 
-
-            if BOARD.get_rect().collidepoint(self.mousepos) and (self.movement_indicator != None or self.attack_indicator != None):
-
-                for mov in self.available_moves:
-                    if mov.collidepoint(self.mousepos) and self.moving_tokens: # during move phase
-                        pygame.mouse.set_cursor(pygame.cursors.broken_x)
-                for att in self.available_attacks:
-                    if att.collidepoint(self.mousepos) and self.attacking_tokens: # during attack phase
-                        pygame.mouse.set_cursor(pygame.cursors.broken_x)
-                for obj in self.player_a.player_tokens:
-                
-                    if obj.rec.collidepoint(self.mousepos): # during move phase token selection
-                        pygame.mouse.set_cursor(pygame.cursors.diamond)
-            else:
-                pygame.mouse.set_cursor(pygame.cursors.arrow) # standard
-
-
-            ### Cursor over CARDS ###
-
-            for card in self.player_a.player_hand:
-                if card.rec.collidepoint(self.mousepos): 
-
-                    card.looked_on = True
-
-                    focus_faction_card = self.player_a.player_hand.index(card)
-
-                else:
-                    card.looked_on = False
-
-
-            for scrd in self.player_a.player_spell_hand:
-                if scrd.rec.collidepoint(self.mousepos):
-
-                    scrd.looked_on = True
-                    focus_spell_card = self.player_a.player_spell_hand.index(scrd)
-                else: 
-                    scrd.looked_on = False
-
-            ### EVENTS ####
-
-            for event in pygame.event.get():  
-                if event.type == pygame.QUIT:
-                    self.run = False
-
-                ### MOUSEBUTTONDOWN EVENTS ###
-
-                if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]:
-                    if button2.collidepoint(self.mousepos):   ### passing phases ---> test only
-
-                            if len(GAME_SEQUENCE) == GAME_SEQUENCE.index(self.current_phase)+1:
-                                self.hosting_player = not self.hosting_player
-
-
-                                self.current_phase = GAME_SEQUENCE[0]
-                            else:
-                                self.current_phase = GAME_SEQUENCE[GAME_SEQUENCE.index(self.current_phase)+1]
-
-                    ### SPELL CARDS EVENTS ###
-
-                    for scrd in self.player_a.player_spell_hand:
-                        if scrd.rec.collidepoint(self.mousepos):
-                            #print("spell card played")  # CONTROL
-                            pass
-                        
-                    ### FATE PHASE ###
-
-                    if self.current_phase == "fate":
-
-                        if faction_deck_drawer_button.collidepoint(self.mousepos):
-                            self.player_a.fate_phase(repetitions = 3)
-
-                    ### MOVE PHASE EVENT ###
-
-                    if self.current_phase == "move":
-                    
-
-                        if pygame.mouse.get_cursor() == pygame.cursors.broken_x: 
-                            for move in self.available_moves:
-                                if move.collidepoint(self.mousepos):
-                                
-                                    self.pos = (move.x, move.y)
-                                    #print("move to: ", self.pos)
-                                    self.position = pygame.Vector2(self.pos[0], self.pos[1])
-                                    self.chosen_token.vector_to_go = self.position
-                                    ### resetting values to prevent various movements over the same card ###
-                                    self.available_moves = [] 
-                                    self.pos = None
-                                    self.movement_indicator = None
-                                    self.moving_tokens = False
-
-                        elif pygame.mouse.get_cursor() == pygame.cursors.diamond:
-                        
-                            for token in self.player_a.player_tokens:
-                                if self.moving_tokens and token.rec.collidepoint(self.mousepos):
-                                    self.chosen_token = token
-
-                                    self.available_moves = available_movement_detector_linear_vector(token, self.movement_indicator ,self.player_a.player_tokens, self.player_b.player_tokens)
-                                    #print("self.available_moves",self.available_moves)
-                        else:
-                            for crd in self.player_a.player_hand:
-                                if crd.rec.collidepoint(self.mousepos):
-                                    if (crd.card_type == "M" or crd.card_type == "XS" or crd.card_type == "XF"):
-                                        code = crd.activate_card()
-                                        discarder("cards_a", str(crd.identif))
-                                        self.player_a.player_hand.remove(crd)
-
-                                        self.movement_indicator = self.player_a.move_phase(code)
-
-                                        if self.movement_indicator != None: self.moving_tokens = True
-                                        #print("self.moving_tokens: ",self.moving_tokens)  # CONTROL
-
-
-                    ### ATTACK PHASE EVENT ###
-
-                    if self.current_phase == "att": 
-
-                        if pygame.mouse.get_cursor() == pygame.cursors.broken_x:
-                            for attack in self.available_attacks:
-                                if attack.collidepoint(self.mousepos):
-                                   for enemy in self.player_b.player_tokens:
-                                       if enemy.rec.collidepoint(self.mousepos):
-                                            ### hit the enemy
-                                            enemy.hits = enemy.hits - self.damage_in_course
-
-                                            ### resetting values to prevent various attacks over the same card ###
-                                            self.available_attacks = []
-                                            self.attack_indicator = None
-                                            self.attacking_tokens = False
-                                            self.damage_in_course = 0
-
-
-                        elif pygame.mouse.get_cursor() == pygame.cursors.diamond:
-                        
-                            for token in self.player_a.player_tokens:
-                                if self.attacking_tokens and token.rec.collidepoint(self.mousepos):
-                                    self.chosen_token = token
-                                    self.available_attacks = available_attacks_detector_maxrange_square(token, self.attack_indicator, self.player_a.player_tokens, self.player_b.player_tokens)
-                                    #print(self.available_attacks)
-
-
-                        else:
-                            for crd in self.player_a.player_hand:
-                                if crd.rec.collidepoint(self.mousepos):
-                                    if (crd.card_type == "A"):
-                                        self.attack_indicator = crd.activate_card()[1]
-                                        discarder("cards_a", str(crd.identif))
-                                        self.damage_in_course = card.damage
-                                        self.player_a.player_hand.remove(crd)
-
-
-                                        #self.player_a.attack_phase()
-
-                                        if self.attack_indicator != None: self.attacking_tokens = True
-
-
-
-
-                    ### DEFENSE PHASE EVENT ###
-
-                    if self.current_phase == "def": 
-
-                        for crd in self.player_a.player_hand:
-                            if crd.rec.collidepoint(self.mousepos):        
-
-                                if self.current_phase == "def" and (crd.card_type == "D"):
-
-                                    crd.activate_card()
-                                    discarder("cards_a", str(crd.identif))
-                                    self.player_a.player_hand.remove(crd)
-
-                                    self.player_a.defense_phase()
-
-            # surviving tokens control
-            for token_a in self.player_a.player_tokens:
-                if token_a.hits < 1:
-                    self.player_a.player_tokens.remove(token_a)
-            for token_b in self.player_b.player_tokens:
-                if token_b.hits < 1:
-                    self.player_b.player_tokens.remove(token_b)
-
-
-
-
-            self.draw_window(focus_faction_card, focus_spell_card, "in_course")
-    
         pygame.quit()
  
     def pre_game(self):
         
-        # control over 
+        self.clock.tick(FPS)
+        self.mousepos = pygame.mouse.get_pos()
+        self.scene = "pre_game"
+        
+        self.movement_indicator = 1
+        #self.player_a.token_list_loader()
+        #print(self.player_a.player_tokens)
+        
+        self.available_moves = starting_position_function(self.player_a.player_tokens)
+        if self.ocupied_cell != None:   # overlapping tokens prevention
+            try:
+                self.available_moves.remove(self.ocupied_cell)
+            except:
+                self.ocupied_cell = None
         
         
-        pass
             
+        if BOARD.get_rect().collidepoint(self.mousepos):
+            pygame.mouse.set_cursor(pygame.cursors.arrow) 
+        
+        if BOARD.get_rect().collidepoint(self.mousepos):
             
+            for mov in self.available_moves:
+                if mov.collidepoint(self.mousepos) and self.moving_tokens: # during move phase
+                    pygame.mouse.set_cursor(pygame.cursors.broken_x)
+               
         
+            for obj in self.player_a.player_tokens:
+            
+                if obj.rec.collidepoint(self.mousepos): # during move phase token selection
+                    pygame.mouse.set_cursor(pygame.cursors.diamond) 
+            
+            if pre_game_cancel_button.collidepoint(self.mousepos) or pre_game_ok_button.collidepoint(self.mousepos):
+                
+                pygame.mouse.set_cursor(pygame.cursors.tri_left)
+                
         
+        else:
+            pygame.mouse.set_cursor(pygame.cursors.arrow) # standard        
         
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.run = False
+        
+            if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]:
+                if pre_game_cancel_button.collidepoint(self.mousepos): # cancel initial placement
+                    self.pregame_mat_assigner()
+                    self.moving_tokens = False
+                    self.chosen_token = None
+                
+                if pre_game_ok_button.collidepoint(self.mousepos) and len(self.available_moves) == 0:
+                    print("next scene")
+                    self.scene = "in_course"
+                
+                if pygame.mouse.get_cursor() == pygame.cursors.diamond:
+                    for token in self.player_a.player_tokens:
+                        if token.rec.collidepoint(self.mousepos):
+                            self.chosen_token = token
+
+                            self.moving_tokens = True
+                
+                if pygame.mouse.get_cursor() == pygame.cursors.broken_x:
+                    
+                    for move in self.available_moves:
+                        if move.collidepoint(self.mousepos):
+                        
+                            self.pos = (move.x, move.y)
+                            #print("move to: ", self.pos)
+                            self.position = pygame.Vector2(self.pos[0], self.pos[1])
+                            self.chosen_token.vector_to_go = self.position
+                            ### resetting values to prevent various movements over the same card ###
+                            self.pos = None
+                            self.moving_tokens = False
+                            self.chosen_token = None
+                            self.ocupied_cell = move
+                
+        if self.scene == "pre_game":
+            self.draw_window_pregame()
+        else: 
+            pass
         
     
+    def draw_window_pregame(self):   
+        
+        phase_informer = "pre-game"
+    
+        """if self.hosting_player:
+            phase_informer = "a_"+self.current_phase
+        else: phase_informer = "b_"+self.current_phase"""
+        
+        WIN.fill(BACKGROUND_COLOR)
+        BOARD.fill("tan4")
+
+        for row in range(ROWS):
+            for col in range(row % 2, ROWS, 2):
+                pygame.draw.rect(BOARD, "grey3",(CELL*row, CELL*col, CELL,CELL))
+                
+        pygame.draw.rect(BOARD,"green", PRE_GAME_TOKEN_MAT) 
+        
+        
+        
+        locate_token_text = GENERIC_FONT.render("Place the tokens in the avilable positions", 1, "red")
+        BOARD.blit(locate_token_text,(CELL, CELL//4))
+        
+        pygame.draw.rect(BOARD, "red", pre_game_cancel_button)
+        if len(self.available_moves) == 0:
+            pygame.draw.rect(BOARD, "darkgreen", pre_game_ok_button)
+        """else: 
+            pygame.draw.rect(BOARD, "darkgreen", pre_game_ok_button)"""
+        self.starting_positions()
+        self.selected_token()
+        self.token_movement("pre_game")
+         
+               
+        WIN.blit(BOARD,(0,0))    # actualizes BOARD -> always after all changes of it
+
+        
+        
+#
+        current_phase_informer = GENERIC_FONT.render(phase_informer, 1, "red")
+        WIN.blit(current_phase_informer, (CELL*10, 20))
+#
+       
+        
+        pygame.display.update()
+             
+            
+    def in_course(self):
+        
+        self.clock.tick(FPS)
+        self.mousepos = pygame.mouse.get_pos()
+        focus_faction_card = None
+        focus_spell_card = None
+        
+        ### cursor's management ###
+        
+        if BOARD.get_rect().collidepoint(self.mousepos):
+            pygame.mouse.set_cursor(pygame.cursors.arrow) 
+
+        if BOARD.get_rect().collidepoint(self.mousepos) and (self.movement_indicator != None or self.attack_indicator != None):
+
+            for mov in self.available_moves:
+                if mov.collidepoint(self.mousepos) and self.moving_tokens: # during move phase
+                    pygame.mouse.set_cursor(pygame.cursors.broken_x)
+            for att in self.available_attacks:
+                if att.collidepoint(self.mousepos) and self.attacking_tokens: # during attack phase
+                    pygame.mouse.set_cursor(pygame.cursors.broken_x)
+            for obj in self.player_a.player_tokens:
+            
+                if obj.rec.collidepoint(self.mousepos): # during move phase token selection
+                    pygame.mouse.set_cursor(pygame.cursors.diamond)
+        else:
+            pygame.mouse.set_cursor(pygame.cursors.arrow) # standard
+
+
+        ### Cursor over CARDS ###
+
+        for card in self.player_a.player_hand:
+            if card.rec.collidepoint(self.mousepos): 
+
+                card.looked_on = True
+
+                focus_faction_card = self.player_a.player_hand.index(card)
+
+            else:
+                card.looked_on = False
+
+
+        for scrd in self.player_a.player_spell_hand:
+            if scrd.rec.collidepoint(self.mousepos):
+
+                scrd.looked_on = True
+                focus_spell_card = self.player_a.player_spell_hand.index(scrd)
+            else: 
+                scrd.looked_on = False
+
+        ### EVENTS ####
+
+        for event in pygame.event.get():  
+            if event.type == pygame.QUIT:
+                self.run = False
+
+            ### MOUSEBUTTONDOWN EVENTS ###
+
+            if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]:
+                if button2.collidepoint(self.mousepos):   ### passing phases ---> test only
+
+                        if len(GAME_SEQUENCE) == GAME_SEQUENCE.index(self.current_phase)+1:
+                            self.hosting_player = not self.hosting_player
+
+
+                            self.current_phase = GAME_SEQUENCE[0]
+                        else:
+                            self.current_phase = GAME_SEQUENCE[GAME_SEQUENCE.index(self.current_phase)+1]
+
+                ### SPELL CARDS EVENTS ###
+
+                for scrd in self.player_a.player_spell_hand:
+                    if scrd.rec.collidepoint(self.mousepos):
+                        #print("spell card played")  # CONTROL
+                        pass
+                    
+                ### FATE PHASE ###
+
+                if self.current_phase == "fate":
+
+                    if faction_deck_drawer_button.collidepoint(self.mousepos):
+                        self.player_a.fate_phase(repetitions = 3)
+
+                ### MOVE PHASE EVENT ###
+
+                if self.current_phase == "move":
+                
+
+                    if pygame.mouse.get_cursor() == pygame.cursors.broken_x: 
+                        for move in self.available_moves:
+                            if move.collidepoint(self.mousepos):
+                            
+                                self.pos = (move.x, move.y)
+                                #print("move to: ", self.pos)
+                                self.position = pygame.Vector2(self.pos[0], self.pos[1])
+                                self.chosen_token.vector_to_go = self.position
+                                ### resetting values to prevent various movements over the same card ###
+                                self.available_moves = [] 
+                                self.pos = None
+                                self.movement_indicator = None
+                                self.moving_tokens = False
+
+                    elif pygame.mouse.get_cursor() == pygame.cursors.diamond:
+                    
+                        for token in self.player_a.player_tokens:
+                            if self.moving_tokens and token.rec.collidepoint(self.mousepos):
+                                self.chosen_token = token
+
+                                self.available_moves = available_movement_detector_linear_vector(token, self.movement_indicator ,self.player_a.player_tokens, self.player_b.player_tokens)
+                                #print("self.available_moves",self.available_moves)
+                    else:
+                        for crd in self.player_a.player_hand:
+                            if crd.rec.collidepoint(self.mousepos):
+                                if (crd.card_type == "M" or crd.card_type == "XS" or crd.card_type == "XF"):
+                                    code = crd.activate_card()
+                                    discarder("cards_a", str(crd.identif))
+                                    self.player_a.player_hand.remove(crd)
+
+                                    self.movement_indicator = self.player_a.move_phase(code)
+
+                                    if self.movement_indicator != None: self.moving_tokens = True
+                                    #print("self.moving_tokens: ",self.moving_tokens)  # CONTROL
+
+
+                ### ATTACK PHASE EVENT ###
+
+                if self.current_phase == "att": 
+
+                    if pygame.mouse.get_cursor() == pygame.cursors.broken_x:
+                        for attack in self.available_attacks:
+                            if attack.collidepoint(self.mousepos):
+                               for enemy in self.player_b.player_tokens:
+                                   if enemy.rec.collidepoint(self.mousepos):
+                                        ### hit the enemy
+                                        enemy.hits = enemy.hits - self.damage_in_course
+
+                                        ### resetting values to prevent various attacks over the same card ###
+                                        self.available_attacks = []
+                                        self.attack_indicator = None
+                                        self.attacking_tokens = False
+                                        self.damage_in_course = 0
+
+
+                    elif pygame.mouse.get_cursor() == pygame.cursors.diamond:
+                    
+                        for token in self.player_a.player_tokens:
+                            if self.attacking_tokens and token.rec.collidepoint(self.mousepos):
+                                self.chosen_token = token
+                                self.available_attacks = available_attacks_detector_maxrange_square(token, self.attack_indicator, self.player_a.player_tokens, self.player_b.player_tokens)
+                                #print(self.available_attacks)
+
+
+                    else:
+                        for crd in self.player_a.player_hand:
+                            if crd.rec.collidepoint(self.mousepos):
+                                if (crd.card_type == "A"):
+                                    self.attack_indicator = crd.activate_card()[1]
+                                    discarder("cards_a", str(crd.identif))
+                                    self.damage_in_course = card.damage
+                                    self.player_a.player_hand.remove(crd)
+
+
+                                    #self.player_a.attack_phase()
+
+                                    if self.attack_indicator != None: self.attacking_tokens = True
+
+
+
+
+                ### DEFENSE PHASE EVENT ###
+
+                if self.current_phase == "def": 
+
+                    for crd in self.player_a.player_hand:
+                        if crd.rec.collidepoint(self.mousepos):        
+
+                            if self.current_phase == "def" and (crd.card_type == "D"):
+
+                                crd.activate_card()
+                                discarder("cards_a", str(crd.identif))
+                                self.player_a.player_hand.remove(crd)
+
+                                self.player_a.defense_phase()
+
+        # surviving tokens control
+        for token_a in self.player_a.player_tokens:
+            if token_a.hits < 1:
+                self.player_a.player_tokens.remove(token_a)
+        for token_b in self.player_b.player_tokens:
+            if token_b.hits < 1:
+                self.player_b.player_tokens.remove(token_b)
+
+
+
+
+        self.draw_window(focus_faction_card, focus_spell_card, "in_course")
     
          
         
@@ -419,14 +533,11 @@ class Main():
             for col in range(row % 2, ROWS, 2):
                 pygame.draw.rect(BOARD, "grey3",(CELL*row, CELL*col, CELL,CELL))
     
-        if game_status_indicator == "in_course":
-            self.available_moves_method()   
-            self.token_movement()
-            self.available_attacks_method()
-        elif game_status_indicator == "pre_game":
-            
-            
-            self.token_movement()
+        
+        self.available_moves_method()   
+        self.token_movement("in_course")
+        self.available_attacks_method()
+        
 
 
         WIN.blit(BOARD,(0,0))    # actualizes BOARD -> always after all changes of it
@@ -454,10 +565,10 @@ class Main():
         spells_hand_sign = GENERIC_FONT.render("Spells hand",1,"black")
         WIN.blit(spells_hand_sign, (SPELLS_HAND.x+5,SPELLS_HAND.y))
         
-        if game_status_indicator == "in_course":
+        
             
-            faction_hand_controller(focus_faction_card, self.player_a.player_hand, self.current_phase)
-            spells_hand_controller(focus_spell_card, self.player_a.player_spell_hand, self.current_phase)
+        faction_hand_controller(focus_faction_card, self.player_a.player_hand, self.current_phase)
+        spells_hand_controller(focus_spell_card, self.player_a.player_spell_hand, self.current_phase)
 
 
 
@@ -465,14 +576,23 @@ class Main():
 
         pygame.display.update()
     
-    def token_movement(self):
+    def selected_token(self):
+        if self.chosen_token != None:
+            color = (127+waving_func(pygame.time.get_ticks()),127+waving_func(pygame.time.get_ticks()),127+waving_func(pygame.time.get_ticks()))
+            pygame.draw.rect(BOARD, color, self.chosen_token.rec, width=6,border_radius=10)
+            print(self.chosen_token)
+    
+    
+    def token_movement(self, game_secene):
     
         #print("new token mov")
+        
 
         for obj in self.player_a.player_tokens:
             obj.token_object_drawer(BOARD)
-        for obj2 in self.player_b.player_tokens:
-            obj2.token_object_drawer(BOARD)   
+        if game_secene == "in_course":
+            for obj2 in self.player_b.player_tokens:
+                obj2.token_object_drawer(BOARD)   
     
     def available_moves_method(self):
         #print(available_moves)
@@ -486,8 +606,29 @@ class Main():
         for attack in self.available_attacks:
             color = (127+waving_func(pygame.time.get_ticks()), 0, 0)
             pygame.draw.rect(BOARD, color, attack, width=6,border_radius=10)
+            
+    def pregame_mat_assigner(self):
+        
+        pregame_positions = [(x,y) for x in range(8) for y in range(2)]
+        count = 0
+        for token in self.player_a.player_tokens:
+            vector2 = pygame.Vector2(pregame_positions[count][0]*CELL, pregame_positions[count][1]*CELL+2*CELL)
+            token.vector_to_go = vector2
+            count += 1
+       
+    def starting_positions(self):
+        
+        
+        #positions_slots = starting_position_function(self.player_a.player_tokens)
+        for pos_slot in self.available_moves:
+            
+            color = (0,127+waving_func(pygame.time.get_ticks()),0)
+            pygame.draw.rect(BOARD, color, pos_slot, width=6,border_radius=10)
 
-
+    
+    
+    
+    
 
 
 

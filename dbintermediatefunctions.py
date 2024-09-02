@@ -154,10 +154,10 @@ def token_extractor(data):
     tokens_info = "SELECT Images,Unit_name,hits,notes from "+data+";"
     pointer.execute(tokens_info)
     token_list = pointer.fetchall()
-    
+    print(token_list)
     return token_list
     
 
 if __name__ == "__main__":
     
-    card_data_extractor("cards_a", "hand")
+    token_extractor("units_a")

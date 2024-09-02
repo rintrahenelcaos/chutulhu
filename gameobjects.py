@@ -107,7 +107,7 @@ class TokenObject:
             self.vector_to_go = vector
             
             
-        self.go_pos = self.go_pos.move_towards(self.vector_to_go, 4)
+        self.go_pos = self.go_pos.move_towards(self.vector_to_go, 5)
         self.rec.x = self.go_pos[0]
         self.rec.y = self.go_pos[1]
         board.blit(self.scaled_image, (self.rec))

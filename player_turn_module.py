@@ -2,11 +2,12 @@ import pygame
 import sqlite3
 import random
 from dbcreator import alltablesconstructor
-from dbintermediatefunctions import deckmixer, deck_assigner, drawer, reshuffle_deck, card_counter, card_data_extractor
+from dbintermediatefunctions import deckmixer, deck_assigner, drawer, reshuffle_deck, card_counter, card_data_extractor, token_extractor
 from gameobjects import CardObject, TokenObject
-from constants import DECKS, FACTIONS, CELL, CARD_WIDTH, FACTION_DECK_POSITION, SPELL_DECK_POSITION, GRID
+from constants import DECKS, FACTIONS, CELL, CARD_WIDTH, FACTION_DECK_POSITION, SPELL_DECK_POSITION, GRID, PRE_GAME_TOKEN_MAT
 from functionsmodule import movement_blocker
-from pregame_functions import token_extractor
+#from pregame_functions import player_token_assigner
+
 
 
 def conection_sql(database = "currentgame.db"):
@@ -15,10 +16,11 @@ def conection_sql(database = "currentgame.db"):
     return conector
 
 class Player_Object():
-    def __init__(self, database, player_deck, spell_player_hand):
+    def __init__(self, database, faction ,player_deck, spell_player_hand):
         #self.spells_db = spells_db
         self.conector = conection_sql(database)
         self.pointer = self.conector.cursor()
+        self.faction = faction # units_a or units_b
         self.player_deck = player_deck # cards_a or cards_b
         self.spell_player_hand = spell_player_hand # player_a or player_b
         self.player_hand = []
@@ -130,6 +132,16 @@ class Player_Object():
 
             drawer("spells", self.spell_player_hand, "deck")
             self.hand_refresher(card_data_extractor("spells", self.spell_player_hand), xpos, ypos, self.player_spell_hand)
+            
+    def player_token_assigner(self):
+        
+        #token_mat_positions = [(x,y)for x in range(8) for y in range(2)]
+        list_of_tokens = token_extractor(self.faction)
+        pos = 0
+        for token_inf in list_of_tokens:
+            self.player_tokens.append(TokenObject(CELL, 0, CELL,token_inf[0],token_inf[1],int(token_inf[2]), token_inf[3]))
+            pos += 1
+        
         
 
 

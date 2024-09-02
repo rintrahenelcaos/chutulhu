@@ -45,13 +45,18 @@ SPELLS_HAND = pygame.Rect((WIDTH-CELL*7,CELL*6),(CELL*8,CELL*2))
 FACTION_DECK_POSITION = (WIDTH-CELL,FACTION_HAND.y+CELL/2)
 SPELL_DECK_POSITION = (WIDTH-CELL,SPELLS_HAND.y+CELL/2)
 
-PRE_GAME_TOKEN_MAT = pygame.Rect((WIDTH-CELL*7,CELL*4),(CELL*6, CELL*4))
+PRE_GAME_TOKEN_MAT = pygame.Rect((0,0),(CELL*8, CELL*5))
 
 # Buttons
+
+pre_game_cancel_button = pygame.Rect((CELL, CELL//4*3),(CELL*2,CELL//2))
+pre_game_ok_button = pygame.Rect((CELL*4, CELL//4*3),(CELL*2,CELL//2))
 
 faction_deck_drawer_button = pygame.Rect(FACTION_DECK_POSITION,(CARD_WIDTH,CARD_WIDTH*5/3))
 spells_deck_drawer_button = pygame.Rect(SPELL_DECK_POSITION,(CARD_WIDTH,CARD_WIDTH*5/3))
 button2 = pygame.Rect((WIDTH-CELL, 20),(CELL,20))
+
+
 
 
 #print(CELL)
