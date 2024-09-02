@@ -118,7 +118,7 @@ class Main():
         self.run = True
         self.clock = pygame.time.Clock()
         self.scene = "pre_game"
-        self.current_phase = GAME_SEQUENCE[1]
+        self.current_phase = GAME_SEQUENCE[2]
         new_game_preparations("INVESTIGATORS","SERPENT_PEOPLE")
         self.player_a = Player_Object("currentgame.db", "units_a" ,"cards_a", "player_a")
         self.player_b = Player_Object("currentgame.db", "units_b","cards_b", "player_b")
@@ -133,6 +133,8 @@ class Main():
         self.attacking_tokens = False
         self.available_attacks = []
         self.damage_in_course = 0
+        self.damaged_token = []
+        self.damage_dealt = []
 
         self.chosen_token = None
         self.pos = None
@@ -453,7 +455,9 @@ class Main():
                                for enemy in self.player_b.player_tokens:
                                    if enemy.rec.collidepoint(self.mousepos):
                                         ### hit the enemy
-                                        enemy.hits = enemy.hits - self.damage_in_course
+                                        self.damaged_token = enemy
+                                        self.damage_dealt = self.damage_in_course
+                                        #enemy.hits = enemy.hits - self.damage_in_course
 
                                         ### resetting values to prevent various attacks over the same card ###
                                         self.available_attacks = []
@@ -490,20 +494,29 @@ class Main():
 
                 ### DEFENSE PHASE EVENT ###
 
-                if self.current_phase == "def": 
+                if self.current_phase == "def" and self.damaged_token != None: 
 
                     for crd in self.player_a.player_hand:
                         if crd.rec.collidepoint(self.mousepos):        
 
-                            if self.current_phase == "def" and (crd.card_type == "D"):
+                            if crd.card_type == "D":
 
                                 crd.activate_card()
+                                self.damaged_token = None
                                 discarder("cards_a", str(crd.identif))
                                 self.player_a.player_hand.remove(crd)
+                                
 
-                                self.player_a.defense_phase()
-
+                                #self.player_a.defense_phase()
+                
         # surviving tokens control
+        if self.current_phase == "clean" and (self.damaged_token != None and self.damage_dealt > 0):
+            try: 
+                ind = self.player_a.player_tokens.index(self.damaged_token)
+                self.player_a.player_tokens[ind].hits = self.player_a.player_tokens[ind].hits - self.damage_dealt
+            except:
+                ind = self.player_a.player_tokens.index(self.damaged_token)
+                self.player_a.player_tokens[ind].hits = self.player_a.player_tokens[ind].hits - self.damage_dealt
         for token_a in self.player_a.player_tokens:
             if token_a.hits < 1:
                 self.player_a.player_tokens.remove(token_a)
