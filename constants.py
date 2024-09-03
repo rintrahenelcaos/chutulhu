@@ -56,6 +56,8 @@ faction_deck_drawer_button = pygame.Rect(FACTION_DECK_POSITION,(CARD_WIDTH,CARD_
 spells_deck_drawer_button = pygame.Rect(SPELL_DECK_POSITION,(CARD_WIDTH,CARD_WIDTH*5/3))
 button2 = pygame.Rect((WIDTH-CELL, 20),(CELL,20))
 
+no_defense_button = pygame.Rect((WIDTH-CELL, CELL*2),(CELL,CELL))
+
 
 
 

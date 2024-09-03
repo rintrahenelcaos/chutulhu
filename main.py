@@ -4,7 +4,7 @@ import math
 
 import os
 
-from constants import FACTIONS, ROWS, COLUMNS, GRID, FPS, BACKGROUND_COLOR, GRID_DIC, WIDTH, HEIGHT, CELL, GAME_SEQUENCE, CARD_WIDTH, WIN, BOARD, button2
+from constants import FACTIONS, ROWS, COLUMNS, GRID, FPS, BACKGROUND_COLOR, GRID_DIC, WIDTH, HEIGHT, CELL, GAME_SEQUENCE, CARD_WIDTH, WIN, BOARD, button2, no_defense_button
 from constants import PRE_GAME_TOKEN_MAT, pre_game_cancel_button, pre_game_ok_button
 from constants import FACTION_HAND, FACTION_DECK_POSITION, faction_deck_drawer_button
 from constants import SPELLS_HAND, SPELL_DECK_POSITION, spells_deck_drawer_button
@@ -119,6 +119,7 @@ class Main():
         self.clock = pygame.time.Clock()
         self.scene = "pre_game"
         self.current_phase = GAME_SEQUENCE[2]
+        self.phase_passer = 2
         new_game_preparations("INVESTIGATORS","SERPENT_PEOPLE")
         self.player_a = Player_Object("currentgame.db", "units_a" ,"cards_a", "player_a")
         self.player_b = Player_Object("currentgame.db", "units_b","cards_b", "player_b")
@@ -133,8 +134,8 @@ class Main():
         self.attacking_tokens = False
         self.available_attacks = []
         self.damage_in_course = 0
-        self.damaged_token = []
-        self.damage_dealt = []
+        self.damaged_token = None
+        self.damage_dealt = 0
 
         self.chosen_token = None
         self.pos = None
@@ -455,15 +456,17 @@ class Main():
                                for enemy in self.player_b.player_tokens:
                                    if enemy.rec.collidepoint(self.mousepos):
                                         ### hit the enemy
-                                        self.damaged_token = enemy
-                                        self.damage_dealt = self.damage_in_course
+                                        self.damaged_token = self.player_b.player_tokens.index(enemy) # to use
+                                        
+                                        #self.damage_dealt = self.damage_in_course
                                         #enemy.hits = enemy.hits - self.damage_in_course
 
                                         ### resetting values to prevent various attacks over the same card ###
                                         self.available_attacks = []
                                         self.attack_indicator = None
                                         self.attacking_tokens = False
-                                        self.damage_in_course = 0
+                                        #self.damage_in_course = 0
+                                        self.current_phase = "def"
 
 
                     elif pygame.mouse.get_cursor() == pygame.cursors.diamond:
@@ -500,23 +503,23 @@ class Main():
                         if crd.rec.collidepoint(self.mousepos):        
 
                             if crd.card_type == "D":
-
+                                
                                 crd.activate_card()
+                                self.damage_in_course = 0
                                 self.damaged_token = None
                                 discarder("cards_a", str(crd.identif))
                                 self.player_a.player_hand.remove(crd)
                                 
-
-                                #self.player_a.defense_phase()
+                    if no_defense_button.collidepoint(self.mousepos):
+                        
+                        self.player_b.player_tokens[self.damaged_token].hits = self.player_b.player_tokens[self.damaged_token].hits - self.damage_in_course
+                        self.damage_in_course = 0
+                        self.damaged_token = None
+                        
+                                
                 
         # surviving tokens control
-        if self.current_phase == "clean" and (self.damaged_token != None and self.damage_dealt > 0):
-            try: 
-                ind = self.player_a.player_tokens.index(self.damaged_token)
-                self.player_a.player_tokens[ind].hits = self.player_a.player_tokens[ind].hits - self.damage_dealt
-            except:
-                ind = self.player_a.player_tokens.index(self.damaged_token)
-                self.player_a.player_tokens[ind].hits = self.player_a.player_tokens[ind].hits - self.damage_dealt
+        
         for token_a in self.player_a.player_tokens:
             if token_a.hits < 1:
                 self.player_a.player_tokens.remove(token_a)
@@ -564,6 +567,7 @@ class Main():
         WIN.blit(faction_deck_scaled_image, (faction_deck_drawer_button))
 
         pygame.draw.rect(WIN, "white", button2)
+        pygame.draw.rect(WIN, "red", no_defense_button)
 
         spells_deck = pygame.image.load(os.path.join("images","spells_deck_scaled.jpg")).convert_alpha() # load spells deck image
         spells_deck_scaled_image = pygame.transform.scale(spells_deck,(spells_deck_drawer_button.width, spells_deck_drawer_button.height))
