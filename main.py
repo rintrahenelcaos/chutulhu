@@ -16,6 +16,7 @@ from dbintermediatefunctions import card_data_extractor, discarder
 from functionsmodule import movement_blocker, available_movement_detector_pathfinding, available_movement_detector_linear_vector, available_attacks_detector_fixedrange, available_attacks_detector_maxrange_square
 from pregame_functions import player_token_assigner, starting_position_function
 
+from network import Network
     
 
 def waving_func(time):
@@ -175,8 +176,13 @@ class Main():
         self.player_a.player_tokens = []   # testing pre-game
         #self.player_b.player_tokens = []
         self.player_a.player_token_assigner()
-        print(self.player_a.player_tokens)
+        #print(self.player_a.player_tokens)
         self.pregame_mat_assigner()
+        
+        # Network Objects
+        
+        self.net = Network()
+        self.p = self.net.getP()
         
     def main(self):
         
@@ -329,6 +335,10 @@ class Main():
         self.mousepos = pygame.mouse.get_pos()
         focus_faction_card = None
         focus_spell_card = None
+        
+        # Network 
+        
+        self.p2 = self.net.send(self.p)
         
         ### cursor's management ###
         
@@ -597,7 +607,7 @@ class Main():
         if self.chosen_token != None:
             color = (127+waving_func(pygame.time.get_ticks()),127+waving_func(pygame.time.get_ticks()),127+waving_func(pygame.time.get_ticks()))
             pygame.draw.rect(BOARD, color, self.chosen_token.rec, width=6,border_radius=10)
-            print(self.chosen_token)
+            #print(self.chosen_token)
     
     
     def token_movement(self, game_secene):

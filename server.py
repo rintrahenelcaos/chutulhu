@@ -1,45 +1,58 @@
 import socket
 from _thread import *
 import sys
-
+import pickle
+from pickleobj import Exchange_object
 hostname = socket.gethostname()
 IP_addr = socket.gethostbyname(hostname)
-server = "10.160.4.213"
+server = IP_addr
+server = "192.168.1.2"
 port = 5555
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 try:
     sock.bind((server, port))
+except socket.error as e:
+    str(e)
 
-except socket.error as error:
-    str(error)
-    
 sock.listen(2)
-print("Waitng for connection")
+print("Waiting for a connection, Server Started")
 
-def client(conn):
-    
+
+players = [Exchange_object("player 1"), Exchange_object("player 2")]
+
+def threaded_client(conn, player):
+    conn.send(pickle.dumps(players[player]))
     reply = ""
     while True:
-        try: 
-            data = conn.recv(2048)
-            reply = data.decode("utf-8")
-            
-            if not data: 
-                print("disconected")
+        try:
+            data = pickle.loads(conn.recv(2048))
+            players[player] = data
+
+            if not data:
+                print("Disconnected")
                 break
-            else: 
-                print("received: ", reply)
-                print("sending: ", reply)
-            
-            conn.sendall(str.encode(reply))
-        
-        except: 
+            else:
+                if player == 1:
+                    reply = players[0]
+                else:
+                    reply = players[1]
+
+                print("Received: ", data)
+                print("Sending : ", reply)
+
+            conn.sendall(pickle.dumps(reply))
+        except:
             break
 
+    print("Lost connection")
+    conn.close()
+
+currentPlayer = 0
 while True:
     conn, addr = sock.accept()
-    print("connected to: ", addr)
-    
-    start_new_thread(client, (conn,)) 
+    print("Connected to:", addr)
+
+    start_new_thread(threaded_client, (conn, currentPlayer))
+    currentPlayer += 1
