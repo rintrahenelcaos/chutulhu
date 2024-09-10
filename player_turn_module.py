@@ -1,7 +1,7 @@
 import pygame
 import sqlite3
 import random
-from dbcreator import alltablesconstructor
+from dbcreator import alltablesconstructor, individual_list
 from dbintermediatefunctions import deckmixer, deck_assigner, drawer, reshuffle_deck, card_counter, card_data_extractor, token_extractor
 from gameobjects import CardObject, TokenObject
 from constants import DECKS, FACTIONS, CELL, CARD_WIDTH, FACTION_DECK_POSITION, SPELL_DECK_POSITION, GRID, PRE_GAME_TOKEN_MAT
@@ -16,15 +16,25 @@ def conection_sql(database = "currentgame.db"):
     return conector
 
 class Player_Object():
-    def __init__(self, database, faction ,player_deck, spell_player_hand):
+    def __init__(self, database, faction ,player_deck, spell_player_hand, player_faction):
         #self.spells_db = spells_db
         self.conector = conection_sql(database)
         self.pointer = self.conector.cursor()
         self.faction = faction # units_a or units_b
         self.player_deck = player_deck # cards_a or cards_b
         self.spell_player_hand = spell_player_hand # player_a or player_b
+        
+        self.faction_card_fields, self.faction_deck = individual_list("cards.csv", player_faction)   # create reference fields and cards lists
+        self.player_faction_hand = []
+        self.player_hand_objs = []
         self.player_hand = []
+        self.player_faction_discard = []
+        
+        self.player_spell_deck = []
+        self.player_spell_hand_ogjs = []
         self.player_spell_hand = []
+        self.player_spell_discard = []
+        
         self.player_tokens = []
         self.to_move_token = None
         
@@ -141,8 +151,37 @@ class Player_Object():
         for token_inf in list_of_tokens:
             self.player_tokens.append(TokenObject(CELL, 0, CELL,token_inf[0],token_inf[1],int(token_inf[2]), token_inf[3]))
             pos += 1
+    
+    def faction_drawer(self, repetitions = 3):
+        
+        for step in range(repetitions):
+            if len(self.faction_deck) == 0:
+                self.faction_deck = self.player_faction_discard
+                self.player_faction_discard = [] 
+            
+            drawn_card = random.choice(self.faction_deck)
+            self.player_faction_hand.append(drawn_card)
+            self.faction_deck.remove(drawn_card)
+    
+    def faction_drawer(self, repetitions = 3):
+        
+        for step in range(repetitions):
+            if len(self.faction_deck) == 0:
+                self.faction_deck = self.player_faction_discard
+                self.player_faction_discard = [] 
+            
+            drawn_card = random.choice(self.faction_deck)
+            self.player_faction_hand.append(drawn_card)
+            self.faction_deck.remove(drawn_card)
         
         
+    """def player_deck_creator(self):
+        
+        fields, rows = individual_list("cards.csv")
+        for row in rows:
+            self.faction_deck.append(CardObject(CELL, 0,0,))"""
+        
+            
 
 
 

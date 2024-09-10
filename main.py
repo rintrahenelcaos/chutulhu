@@ -122,8 +122,8 @@ class Main():
         self.current_phase = GAME_SEQUENCE[2]
         self.phase_passer = 2
         new_game_preparations("INVESTIGATORS","SERPENT_PEOPLE")
-        self.player_a = Player_Object("currentgame.db", "units_a" ,"cards_a", "player_a")
-        self.player_b = Player_Object("currentgame.db", "units_b","cards_b", "player_b")
+        self.player_a = Player_Object("currentgame.db", "units_a" ,"cards_a", "player_a", "INVESTIGATORS")
+        self.player_b = Player_Object("currentgame.db", "units_b","cards_b", "player_b", "SERPENT_PEOPLE")
         self.hosting_player = True
         self.mousepos = pygame.mouse.get_pos()
         

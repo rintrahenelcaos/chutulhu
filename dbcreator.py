@@ -249,15 +249,34 @@ def data_loader(conection, rows, fields):
         
     pass    
 
+def individual_list(csv, faction = "None"):
+    
+    fields, rows = csvlistconverter(csv)
+    try: 
+        fields.remove("Nbr")
+        rows = repeated_token_extraction(rows)
+    except: pass
+    #rows = repeated_token_extraction(rows)
+    
+    faction_rows = []
+    try:
+        faction_field_index = fields.index("Faction")
+    
+        for row in rows:
+            if row[faction_field_index] == faction:
+                faction_rows.append(row)
+    except: faction_rows = rows.copy()
+    return fields, faction_rows
 
 def main(faction_list):
     
-    alltablesconstructor(faction_list)
-
+    #alltablesconstructor(faction_list)
+    
+    print(individual_list(filename, faction=faction_list))
 
 if __name__ == "__main__":
     factions = ["DEEP_ONES", "CULTIST"]
-    main(factions)
+    main("CULTIST")
     
     
     
