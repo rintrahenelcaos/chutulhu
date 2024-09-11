@@ -181,8 +181,8 @@ class Main():
         
         # Network Objects
         
-        self.net = Network()
-        self.p = self.net.getP()
+        #self.net = Network()
+        #self.p = self.net.getP()
         
     def main(self):
         
@@ -338,7 +338,7 @@ class Main():
         
         # Network 
         
-        self.p2 = self.net.send(self.p)
+        #self.p2 = self.net.send(self.p)
         
         ### cursor's management ###
         
