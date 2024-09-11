@@ -48,13 +48,15 @@ class Player_Object():
         # If the deck runs out, shuffle the discard and draw from it.
         # Discard excess cards.
         for i in range(repetitions):
+            
+            drawn_card_data = self.faction_drawer()
+            req_info = ["Card_Name","Type","Range","Notes","Images"]
+            for inf in req_info
+            drawn_card_info(self.faction_card_fields.index("Card_Name"))
+                
+            self.hand_refresher()
             sensible = card_counter(self.player_deck, "deck")
-            #deckcounter = "SELECT COUNT(*) FROM "+db+" WHERE location='"+deck+"'"
-            #print(deckcounter)
-            #pointer.execute(deckcounter)
-            #deckcount = pointer.fetchone()[0]
-            #print("deckcount = ", deckcount, " ", type(deckcount))
-
+            
             if sensible == 0:
 
                 reshuffle_deck(self.player_deck)
@@ -152,28 +154,19 @@ class Player_Object():
             self.player_tokens.append(TokenObject(CELL, 0, CELL,token_inf[0],token_inf[1],int(token_inf[2]), token_inf[3]))
             pos += 1
     
-    def faction_drawer(self, repetitions = 3):
+    def faction_drawer(self):
         
-        for step in range(repetitions):
-            if len(self.faction_deck) == 0:
-                self.faction_deck = self.player_faction_discard
-                self.player_faction_discard = [] 
-            
-            drawn_card = random.choice(self.faction_deck)
-            self.player_faction_hand.append(drawn_card)
-            self.faction_deck.remove(drawn_card)
+        
+        if len(self.faction_deck) == 0:
+            self.faction_deck = self.player_faction_discard
+            self.player_faction_discard = [] 
+        
+        drawn_card = random.choice(self.faction_deck)
+        self.player_faction_hand.append(drawn_card)
+        self.faction_deck.remove(drawn_card)
+
+        return drawn_card
     
-    def faction_drawer(self, repetitions = 3):
-        
-        for step in range(repetitions):
-            if len(self.faction_deck) == 0:
-                self.faction_deck = self.player_faction_discard
-                self.player_faction_discard = [] 
-            
-            drawn_card = random.choice(self.faction_deck)
-            self.player_faction_hand.append(drawn_card)
-            self.faction_deck.remove(drawn_card)
-            
         
         
     """def player_deck_creator(self):

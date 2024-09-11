@@ -140,7 +140,7 @@ def card_data_extractor(db, deck, data = "Card_Name,Type,Range,Notes,Images"):
         print(to_get)
         pointer.execute(to_get)
     hand_list = pointer.fetchall()
-    print(hand_list)
+    print("hand_list: ",hand_list)
     
     return hand_list
 
