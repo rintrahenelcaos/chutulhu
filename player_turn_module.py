@@ -173,6 +173,7 @@ class Player_Object():
             drawn_card = random.choice(self.faction_deck)
             self.player_faction_hand.append(drawn_card)
             self.faction_deck.remove(drawn_card)
+            
         
         
     """def player_deck_creator(self):
