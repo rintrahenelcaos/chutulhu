@@ -30,8 +30,9 @@ class Player_Object():
         self.player_hand = []
         self.player_faction_discard = []
         
-        self.player_spell_deck = []
-        self.player_spell_hand_ogjs = []
+        self.spell_card_fields, self.player_spell_deck = individual_list("spells.csv")
+        #self.player_spell_deck = []
+        self.player_spell_hand_objs = []
         self.player_spell_hand = []
         self.player_spell_discard = []
         
@@ -49,12 +50,7 @@ class Player_Object():
         # Discard excess cards.
         for i in range(repetitions):
             
-            drawn_card_data = self.faction_drawer()
-            req_info = ["Card_Name","Type","Range","Notes","Images"]
-            for inf in req_info
-            drawn_card_info(self.faction_card_fields.index("Card_Name"))
-                
-            self.hand_refresher()
+            
             sensible = card_counter(self.player_deck, "deck")
             
             if sensible == 0:
@@ -64,7 +60,26 @@ class Player_Object():
                 print("reshufle")
 
             drawer(self.player_deck, "hand", "deck")
-            self.hand_refresher(card_data_extractor(self.player_deck, "hand"), xpos, ypos, self.player_hand)  
+            self.hand_refresher(card_data_extractor(self.player_deck, "hand"), xpos, ypos, self.player_hand_objs)  
+    
+    #### New Method with lists
+    def fate_phase(self, xpos = FACTION_DECK_POSITION[0], ypos = FACTION_DECK_POSITION[1], repetitions = 3): #db, deck, player -> ("cards_a", "deck", "hand") //// xpos and ypos are the deck positions
+        # FATE PHASE
+        # Draw 3 cards from your deck. 
+        # Max hand size = 5 cards.
+        # If the deck runs out, shuffle the discard and draw from it.
+        # Discard excess cards.
+        for i in range(repetitions):
+            
+            drawn_card_data = self.faction_drawer()
+            req_info = ["Card_Name","Type","Range","Notes","Images"]
+            drawn_card_info = []
+            for inf in req_info:
+                drawn_card_info.append(drawn_card_data[(self.faction_card_fields.index(inf))])
+        print(drawn_card_info)
+        self.hand_refresher(drawn_card_info, xpos, ypos, self.player_hand_objs)
+        
+        
     
     def move_phase(self, codes_tuple):
     
@@ -143,7 +158,21 @@ class Player_Object():
                 print("reshufle spells")
 
             drawer("spells", self.spell_player_hand, "deck")
-            self.hand_refresher(card_data_extractor("spells", self.spell_player_hand), xpos, ypos, self.player_spell_hand)
+            self.hand_refresher(card_data_extractor("spells", self.spell_player_hand), xpos, ypos, self.player_spell_hand_objs)
+    
+    ### New Method with lists 
+    def xs_card_activation(self, xpos = SPELL_DECK_POSITION[0], ypos = SPELL_DECK_POSITION[1], repetitions = 1):
+        
+        for rep in range(repetitions):
+            drawn_card_data = self.spell_drawer()
+            req_info = ["Card_Name","Type","Range","Notes","Images"]
+            drawn_card_info = []
+            for inf in req_info:
+                drawn_card_info.append(drawn_card_data[(self.spell_card_fields.index(inf))]) 
+        
+        self.hand_refresher(drawn_card_info, xpos, ypos, self.player_spell_hand_objs)
+        
+        
             
     def player_token_assigner(self):
         
@@ -167,6 +196,18 @@ class Player_Object():
 
         return drawn_card
     
+    def spell_drawer(self):
+        
+        if len(self.player_spell_deck) == 0:
+            self.player_spell_deck = self.player_spell_discard
+            self.player_spell_discard = []
+        
+        drawn_card = random.choice(self.player_spell_deck)
+        self.player_spell_hand.append(drawn_card)
+        self.player_spell_deck.remove(drawn_card)
+        
+        return drawn_card
+            
         
         
     """def player_deck_creator(self):
@@ -306,20 +347,7 @@ def main():
 
 def main():
     
-    new_game_preparations("INVESTIGATORS","SERPENT_PEOPLE")  
-    
-    conector = conection_sql()  
-    pointer = conector.cursor()
-    idcount = "SELECT MAX(id) FROM spells"
-    pointer.execute(idcount)
-    cardcount = pointer.fetchall()[0][0]
-    
-    for i in range(cardcount-5):
-        print(i)
-        
-        fate_phase("spells", 'deck',"discard")
-        
-        print(i)
+    pass
     
 def grid_position(position):
     """translates clicks into discrete cell positions

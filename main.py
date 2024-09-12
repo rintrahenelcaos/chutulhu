@@ -173,11 +173,11 @@ class Main():
         self.player_b.player_tokens.append(enemy7)
         self.player_b.player_tokens.append(enemy8)
 
-        self.player_a.player_tokens = []   # testing pre-game
+        #self.player_a.player_tokens = []   # testing pre-game
         #self.player_b.player_tokens = []
-        self.player_a.player_token_assigner()
+        #self.player_a.player_token_assigner()
         #print(self.player_a.player_tokens)
-        self.pregame_mat_assigner()
+        #self.pregame_mat_assigner()
         
         # Network Objects
         
@@ -189,7 +189,7 @@ class Main():
         #run = True
         #clock = pygame.time.Clock()
         
-        
+        self.scene = "in_course"
         
         while self.run:
             
@@ -363,22 +363,22 @@ class Main():
 
         ### Cursor over CARDS ###
 
-        for card in self.player_a.player_hand:
+        for card in self.player_a.player_hand_objs:
             if card.rec.collidepoint(self.mousepos): 
 
                 card.looked_on = True
 
-                focus_faction_card = self.player_a.player_hand.index(card)
+                focus_faction_card = self.player_a.player_hand_objs.index(card)
 
             else:
                 card.looked_on = False
 
 
-        for scrd in self.player_a.player_spell_hand:
+        for scrd in self.player_a.player_spell_hand_objs:
             if scrd.rec.collidepoint(self.mousepos):
 
                 scrd.looked_on = True
-                focus_spell_card = self.player_a.player_spell_hand.index(scrd)
+                focus_spell_card = self.player_a.player_spell_hand_objs.index(scrd)
             else: 
                 scrd.looked_on = False
 
@@ -403,7 +403,7 @@ class Main():
 
                 ### SPELL CARDS EVENTS ###
 
-                for scrd in self.player_a.player_spell_hand:
+                for scrd in self.player_a.player_spell_hand_objs:
                     if scrd.rec.collidepoint(self.mousepos):
                         #print("spell card played")  # CONTROL
                         pass
@@ -443,12 +443,12 @@ class Main():
                                 self.available_moves = available_movement_detector_linear_vector(token, self.movement_indicator ,self.player_a.player_tokens, self.player_b.player_tokens)
                                 #print("self.available_moves",self.available_moves)
                     else:
-                        for crd in self.player_a.player_hand:
+                        for crd in self.player_a.player_hand_objs:
                             if crd.rec.collidepoint(self.mousepos):
                                 if (crd.card_type == "M" or crd.card_type == "XS" or crd.card_type == "XF"):
                                     code = crd.activate_card()
                                     discarder("cards_a", str(crd.identif))
-                                    self.player_a.player_hand.remove(crd)
+                                    self.player_a.player_hand_objs.remove(crd)
 
                                     self.movement_indicator = self.player_a.move_phase(code)
 
@@ -489,13 +489,13 @@ class Main():
 
 
                     else:
-                        for crd in self.player_a.player_hand:
+                        for crd in self.player_a.player_hand_objs:
                             if crd.rec.collidepoint(self.mousepos):
                                 if (crd.card_type == "A"):
                                     self.attack_indicator = crd.activate_card()[1]
                                     discarder("cards_a", str(crd.identif))
                                     self.damage_in_course = card.damage
-                                    self.player_a.player_hand.remove(crd)
+                                    self.player_a.player_hand_objs.remove(crd)
 
 
                                     #self.player_a.attack_phase()
@@ -509,7 +509,7 @@ class Main():
 
                 if self.current_phase == "def" and self.damaged_token != None: 
 
-                    for crd in self.player_a.player_hand:
+                    for crd in self.player_a.player_hand_objs:
                         if crd.rec.collidepoint(self.mousepos):        
 
                             if crd.card_type == "D":
@@ -518,7 +518,7 @@ class Main():
                                 self.damage_in_course = 0
                                 self.damaged_token = None
                                 discarder("cards_a", str(crd.identif))
-                                self.player_a.player_hand.remove(crd)
+                                self.player_a.player_hand_objs.remove(crd)
                                 
                     if no_defense_button.collidepoint(self.mousepos):
                         
@@ -594,8 +594,8 @@ class Main():
         
         
             
-        faction_hand_controller(focus_faction_card, self.player_a.player_hand, self.current_phase)
-        spells_hand_controller(focus_spell_card, self.player_a.player_spell_hand, self.current_phase)
+        faction_hand_controller(focus_faction_card, self.player_a.player_hand_objs, self.current_phase)
+        spells_hand_controller(focus_spell_card, self.player_a.player_spell_hand_objs, self.current_phase)
 
 
 
