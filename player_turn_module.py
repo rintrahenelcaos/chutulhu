@@ -76,8 +76,8 @@ class Player_Object():
             drawn_card_info = []
             for inf in req_info:
                 drawn_card_info.append(drawn_card_data[(self.faction_card_fields.index(inf))])
-        print(drawn_card_info)
-        self.hand_refresher(drawn_card_info, xpos, ypos, self.player_hand_objs)
+            print("drawn_card_info: ",drawn_card_info)
+            self.hand_refresher(drawn_card_info, xpos, ypos, self.player_hand_objs)
         
         
     
@@ -136,6 +136,9 @@ class Player_Object():
     
     def hand_refresher(self, drawn_cards, xpos, ypos, card_obj_list):  
         
+        print("drawn_cards in hande refresher: ",drawn_cards)
+        for drawn in drawn_cards:
+            print(drawn)
         #drawn_cards = card_data_extractor(self.player_deck, "hand")
         for drawn in drawn_cards:
             identif_list = []   # list of identifiers of cardobjects
@@ -207,7 +210,23 @@ class Player_Object():
         self.player_spell_deck.remove(drawn_card)
         
         return drawn_card
+    
+    ### New Method for lists
+    def hand_refresher(self, drawn_cards, xpos, ypos, card_obj_list):  
+        
+        print("drawn_cards in hande refresher: ",drawn_cards)
+        for drawn in drawn_cards:
+            print(drawn)
+        #drawn_cards = card_data_extractor(self.player_deck, "hand")
+        identif_list = []  # list of identifiers of cardobjects
+        for crd in card_obj_list:
+            identif_list.append(crd.identif)
+        try: 
+            identif_list.index(drawn_cards[0]) # checks if cardobject already added
+        except:
+            card_obj_list.append(CardObject(CARD_WIDTH,xpos,ypos,drawn_cards[4],drawn_cards[0],drawn_cards[1],drawn_cards[2])) #adds cardobject
             
+        print(card_obj_list)            
         
         
     """def player_deck_creator(self):
