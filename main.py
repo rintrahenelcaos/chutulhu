@@ -498,9 +498,10 @@ class Main():
                             if crd.rec.collidepoint(self.mousepos):
                                 if (crd.card_type == "A"):
                                     self.attack_indicator = crd.activate_card()[1]
-                                    discarder("cards_a", str(crd.identif))
+                                    self.player_a.faction_card_discard(crd)
+                                    #discarder("cards_a", str(crd.identif))
                                     self.damage_in_course = card.damage
-                                    self.player_a.player_hand_objs.remove(crd)
+                                    #self.player_a.player_hand_objs.remove(crd)
 
 
                                     #self.player_a.attack_phase()
@@ -522,8 +523,9 @@ class Main():
                                 crd.activate_card()
                                 self.damage_in_course = 0
                                 self.damaged_token = None
-                                discarder("cards_a", str(crd.identif))
-                                self.player_a.player_hand_objs.remove(crd)
+                                self.player_a.faction_card_discard(crd)
+                                #discarder("cards_a", str(crd.identif))
+                                #self.player_a.player_hand_objs.remove(crd)
                                 
                     if no_defense_button.collidepoint(self.mousepos):
                         
@@ -599,8 +601,8 @@ class Main():
         
         
             
-        faction_hand_controller(focus_faction_card, self.player_a.player_hand_objs, self.current_phase)
-        spells_hand_controller(focus_spell_card, self.player_a.player_spell_hand_objs, self.current_phase)
+        self.faction_hand_controller(focus_faction_card, self.current_phase)
+        self.spells_hand_controller(focus_spell_card, self.current_phase)
 
 
 
@@ -660,8 +662,64 @@ class Main():
     def position_turner(self):
         
         for obj2 in self.player_b.player_tokens:
-            obj2.xpos = obj2.xpos
-            obj2.ypos = obj2.ypos + BOARD - CELL
+            obj2.xpos = obj2.xpos + BOARD.get_width() - CELL
+            obj2.ypos = obj2.ypos + BOARD.get_height() - CELL
+            
+    def faction_hand_controller(self, card,  current_phase):
+    
+            
+        for crd in self.player_a.player_hand_objs:  # positions cardobject
+
+            ypos = float
+            position = pygame.Vector2(0,0)
+            #crd.rec.x = FACTION_HAND.x+5+CELL*player_hand.index(crd)*0.7 # assigns position to the object in the hand
+            #crd.rec.y = FACTION_HAND.y+CELL*0.7
+
+            if current_phase == "move" and (crd.card_type == "M" or crd.card_type == "XS" or crd.card_type == "XF"):
+                ypos = FACTION_HAND.y+CELL*0.3
+                position = pygame.Vector2(FACTION_HAND.x+5+CELL*self.player_a.player_hand_objs.index(crd)*0.7, ypos)
+                #crd.card_drawer(WIN,pygame.Vector2(FACTION_HAND.x+5+CELL*player_hand.index(crd)*0.7, ypos))
+
+            elif current_phase == "att" and (crd.card_type == "A"):
+                ypos = FACTION_HAND.y+CELL*0.3
+                position = pygame.Vector2(FACTION_HAND.x+5+CELL*self.player_a.player_hand_objs.index(crd)*0.7, ypos)
+
+                #crd.card_drawer(WIN, position)  
+            elif current_phase == "def" and (crd.card_type == "D"):
+                ypos = FACTION_HAND.y+CELL*0.3
+                position = pygame.Vector2(FACTION_HAND.x+5+CELL*self.player_a.player_hand_objs.index(crd)*0.7, ypos)
+
+                #crd.card_drawer(WIN, position)  
+            elif current_phase == "fate":
+                ypos = FACTION_HAND.y+CELL*0.7
+                position = pygame.Vector2(FACTION_HAND.x+5+CELL*self.player_a.player_hand_objs.index(crd)*0.7, ypos)
+            else:
+                ypos = FACTION_HAND.y+CELL*0.7
+                position = pygame.Vector2(FACTION_HAND.x+5+CELL*self.player_a.player_hand_objs.index(crd)*0.7, ypos)
+            crd.card_drawer(WIN, position)   
+            crd.card_positioner() # 
+        if card != None: #focus card changes size/picture - prevents false overlaping
+            try: 
+                self.player_a.player_hand_objs[card].card_drawer(WIN)
+                #print(player_hand[card].card_type)
+            except: pass
+            
+    def spells_hand_controller(self, scrd,  current_phase): 
+    
+        for card in self.player_a.player_spell_hand_objs: 
+            #ypos = float
+            #position = pygame.Vector2(0,0)
+
+            ypos = SPELLS_HAND.y+CELL*0.7
+            position = pygame.Vector2(SPELLS_HAND.x+5+CELL*self.player_a.player_spell_hand_objs.index(card)*0.7,ypos)
+
+            card.card_drawer(WIN, position)
+            card.card_positioner()
+
+        if scrd != None:
+            try:
+                self.player_a.player_spell_hand_objs[scrd].card_drawer(WIN)
+            except: pass
     
     
     
