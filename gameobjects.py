@@ -20,7 +20,6 @@ class CardObject(pygame.sprite.Sprite):
         self.image = pygame.image.load(os.path.join("images",str(image))).convert_alpha()
         self.scaled_image = pygame.transform.scale(self.image, (self.size, self.size))
         self.moving = False
-        #self.image = image
         self.identif = identif
         self.looked_on = False
         self.card_type = card_type

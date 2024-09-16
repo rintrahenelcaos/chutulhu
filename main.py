@@ -121,7 +121,7 @@ class Main():
         self.scene = "pre_game"
         self.current_phase = GAME_SEQUENCE[2]
         self.phase_passer = 2
-        new_game_preparations("INVESTIGATORS","SERPENT_PEOPLE")
+        #new_game_preparations("INVESTIGATORS","SERPENT_PEOPLE")
         self.player_a = Player_Object("currentgame.db", "units_a" ,"cards_a", "player_a", "INVESTIGATORS")
         self.player_b = Player_Object("currentgame.db", "units_b","cards_b", "player_b", "SERPENT_PEOPLE")
         self.hosting_player = True
@@ -175,7 +175,7 @@ class Main():
 
         #self.player_a.player_tokens = []   # testing pre-game
         #self.player_b.player_tokens = []
-        #self.player_a.player_token_assigner()
+        #self.player_a.token_list_loader()
         #print(self.player_a.player_tokens)
         #self.pregame_mat_assigner()
         
@@ -447,14 +447,19 @@ class Main():
                             if crd.rec.collidepoint(self.mousepos):
                                 if (crd.card_type == "M" or crd.card_type == "XS" or crd.card_type == "XF"):
                                     code = crd.activate_card()
-                                    discarder("cards_a", str(crd.identif))
-                                    self.player_a.player_hand_objs.remove(crd)
+                                    #discarder("cards_a", str(crd.identif))
+                                    
+                                    self.player_a.faction_card_discard(crd)
+                                    #self.player_a.player_hand_objs.remove(crd)
 
                                     self.movement_indicator = self.player_a.move_phase(code)
 
                                     if self.movement_indicator != None: self.moving_tokens = True
                                     #print("self.moving_tokens: ",self.moving_tokens)  # CONTROL
 
+                        for crd in self.player_a.player_spell_hand_objs:
+                            if crd.rec.collidepoint(self.mousepos):
+                                self.player_a.spell_card_discard(crd)
 
                 ### ATTACK PHASE EVENT ###
 
@@ -652,6 +657,11 @@ class Main():
             color = (0,127+waving_func(pygame.time.get_ticks()),0)
             pygame.draw.rect(BOARD, color, pos_slot, width=6,border_radius=10)
 
+    def position_turner(self):
+        
+        for obj2 in self.player_b.player_tokens:
+            obj2.xpos = obj2.xpos
+            obj2.ypos = obj2.ypos + BOARD - CELL
     
     
     

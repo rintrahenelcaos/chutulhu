@@ -3,7 +3,7 @@ import csv
 import sqlite3
 
 # csv file name
-filename = "cards.csv"
+filename = "units.csv"
 csvs = ["units.csv", "units.csv", "cards.csv", "cards.csv", "spells.csv"]
 #csvs = ["units.csv", "cards.csv"]#, "spells.csv"]
 
@@ -267,6 +267,8 @@ def individual_list(csv, faction = "None"):
                 faction_rows.append(row)
     except: faction_rows = rows.copy()
     return fields, faction_rows
+
+
 
 def main(faction_list):
     

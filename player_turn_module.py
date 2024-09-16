@@ -4,7 +4,7 @@ import random
 from dbcreator import alltablesconstructor, individual_list
 from dbintermediatefunctions import deckmixer, deck_assigner, drawer, reshuffle_deck, card_counter, card_data_extractor, token_extractor
 from gameobjects import CardObject, TokenObject
-from constants import DECKS, FACTIONS, CELL, CARD_WIDTH, FACTION_DECK_POSITION, SPELL_DECK_POSITION, GRID, PRE_GAME_TOKEN_MAT
+from constants import DECKS, FACTIONS, CELL, CARD_WIDTH, FACTION_DECK_POSITION, SPELL_DECK_POSITION, GRID, PRE_GAME_TOKEN_MAT, REQ_FIELDS
 from functionsmodule import movement_blocker
 #from pregame_functions import player_token_assigner
 
@@ -24,7 +24,9 @@ class Player_Object():
         self.player_deck = player_deck # cards_a or cards_b
         self.spell_player_hand = spell_player_hand # player_a or player_b
         
-        self.faction_card_fields, self.faction_deck = individual_list("cards.csv", player_faction)   # create reference fields and cards lists
+        self.player_faction = player_faction
+        
+        self.faction_card_fields, self.faction_deck = individual_list("cards.csv", self.player_faction)   # create reference fields and cards lists
         self.player_faction_hand = []
         self.player_hand_objs = []
         self.player_hand = []
@@ -37,9 +39,21 @@ class Player_Object():
         self.player_spell_discard = []
         
         self.player_tokens = []
+        self.player_dead_tokens = []
         self.to_move_token = None
         
-    def token_list_loader(self): pass    
+    def token_list_loader(self): 
+        
+        fields, token_list = individual_list("units.csv", self.player_faction)
+        pos = 0
+        
+        for token_inf in token_list:
+            temp_list = []
+            for req in REQ_FIELDS:
+                temp_list.append(token_inf[fields.index(req)])
+            self.player_tokens.append(TokenObject(CELL, 0, CELL,temp_list[0],temp_list[1],int(temp_list[2]), temp_list[3]))
+            pos += 1
+        
         
     def fate_phase(self, xpos = FACTION_DECK_POSITION[0], ypos = FACTION_DECK_POSITION[1], repetitions = 3): #db, deck, player -> ("cards_a", "deck", "hand") //// xpos and ypos are the deck positions
         
@@ -177,7 +191,7 @@ class Player_Object():
         
         
             
-    def player_token_assigner(self):
+    def player_token_assigner(self): # oudatted Delete
         
         #token_mat_positions = [(x,y)for x in range(8) for y in range(2)]
         list_of_tokens = token_extractor(self.faction)
@@ -226,7 +240,28 @@ class Player_Object():
         except:
             card_obj_list.append(CardObject(CARD_WIDTH,xpos,ypos,drawn_cards[4],drawn_cards[0],drawn_cards[1],drawn_cards[2])) #adds cardobject
             
-        print(card_obj_list)            
+        print(card_obj_list)  
+        
+    def faction_card_discard(self,card_to_discard_obj):
+        
+                
+        card_index = self.player_hand_objs.index(card_to_discard_obj)
+        card_in_list = self.player_faction_hand[card_index]
+        self.player_faction_discard.append(card_in_list)
+        self.player_faction_hand.remove(card_in_list)
+        self.player_hand_objs.remove(card_to_discard_obj)
+    
+    def spell_card_discard(self, card_to_discard_obj):
+        
+        identifier = card_to_discard_obj.identif
+        for crd in self.player_spell_hand:
+            if crd[self.spell_card_fields.index("Card_Name")] == identifier:
+                self.player_spell_discard.append(crd)
+                self.player_spell_hand.remove(crd)
+                self.player_spell_hand_objs.remove(card_to_discard_obj)
+                
+               
+                  
         
         
     """def player_deck_creator(self):

@@ -71,3 +71,10 @@ CARD_FONT = pygame.font.SysFont("times",int(CELL*0.18))
 GAME_SEQUENCE = ["a_fate", "a_move", "a_att", "b_def","b_fate", "b_move", "b_att", "a_def"]
 GAME_SEQUENCE = ["def", "clean", "fate", "move", "att"]
 
+
+### Constants for object loaders
+
+
+
+REQ_FIELDS = ['Images','Unit_Name', 'Hits', 'Notes'] # for token objects in Player_Object
+
