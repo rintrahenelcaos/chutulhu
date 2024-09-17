@@ -18,8 +18,8 @@ def conection_sql(database = "currentgame.db"):
 class Player_Object():
     def __init__(self, database, faction ,player_deck, spell_player_hand, player_faction):
         #self.spells_db = spells_db
-        self.conector = conection_sql(database)
-        self.pointer = self.conector.cursor()
+        #self.conector = conection_sql(database)
+        #self.pointer = self.conector.cursor()
         self.faction = faction # units_a or units_b
         self.player_deck = player_deck # cards_a or cards_b
         self.spell_player_hand = spell_player_hand # player_a or player_b
@@ -358,46 +358,7 @@ def movement(range):
   
     
 
-def main():
-    
-    new_game_preparations()
-    conector = conection_sql()
-    #print(deckmixer("spells"))
-    #deck_assigner("spells")
-    pointer = conector.cursor()
-    changer = "UPDATE spells SET location='discard'"
-    pointer.execute(changer)
-    conector.commit()
-    reshuffle_deck("spells")
-    deckmixer("spells")
-    
-    idcount = "SELECT MAX(id) FROM spells"
-    pointer.execute(idcount)
-    cardcount = pointer.fetchall()[0][0]
-    print(cardcount)
-    
-    for i in range(cardcount):
-        print(i)
-        #drawer("spells", "discard")
-        fate_phase("spells", 'deck',"discard")
-        #drawer("spells", "discard", "deck")
-        print(i)
-        
-        
-    
-    #drawer("spells")
-    #drawer("spells")
-    #drawer("spells")
-    #drawer("spells")
-    #drawer("spells")
-    #drawer("spells")
-    #drawer("spells")
-    #drawer("spells")
-    #drawer("spells")
-    #drawer("spells")
-    #drawer("spells")
-    #drawer("spells")
-    #reshuffle_deck("spells")
+
 
 def main():
     
