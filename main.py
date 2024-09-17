@@ -124,7 +124,7 @@ class Main():
         #new_game_preparations("INVESTIGATORS","SERPENT_PEOPLE")
         self.player_a = Player_Object("currentgame.db", "units_a" ,"cards_a", "player_a", "INVESTIGATORS")
         self.player_b = Player_Object("currentgame.db", "units_b","cards_b", "player_b", "SERPENT_PEOPLE")
-        self.hosting_player = True
+        self.player = True
         self.mousepos = pygame.mouse.get_pos()
         
         self.movement_indicator = None  # signals movement amount
@@ -288,7 +288,7 @@ class Main():
         
         phase_informer = "pre-game"
     
-        """if self.hosting_player:
+        """if self.player:
             phase_informer = "a_"+self.current_phase
         else: phase_informer = "b_"+self.current_phase"""
         
@@ -394,7 +394,7 @@ class Main():
                 if button2.collidepoint(self.mousepos):   ### passing phases ---> test only
 
                         if len(GAME_SEQUENCE) == GAME_SEQUENCE.index(self.current_phase)+1:
-                            self.hosting_player = not self.hosting_player
+                            self.player = not self.player
 
 
                             self.current_phase = GAME_SEQUENCE[0]
@@ -555,7 +555,7 @@ class Main():
         
         phase_informer = str
     
-        if self.hosting_player:
+        if self.player:
             phase_informer = "a_"+self.current_phase
         else: phase_informer = "b_"+self.current_phase
 
