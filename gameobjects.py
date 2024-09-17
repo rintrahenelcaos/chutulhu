@@ -2,7 +2,7 @@ import pygame
 
 import os
 
-from constants import CARD_FONT
+from constants import CARD_FONT, CELL, BOARD
 from functionsmodule import movement_activation, x_activation, attack_activation, defense_activation
 
 
@@ -101,13 +101,19 @@ class TokenObject:
         
         
     
-    def token_object_drawer(self, board, vector = None):
+    def token_object_drawer(self, board, vector = None, turner = False):
         if vector != None:
             self.vector_to_go = vector
-            
-            
-        self.go_pos = self.go_pos.move_towards(self.vector_to_go, 5)
-        self.rec.x = self.go_pos[0]
-        self.rec.y = self.go_pos[1]
+        if turner:
+            #self.vector_to_go.x =  self.vector_to_go.x 
+            #self.vector_to_go.y =  self.vector_to_go.y  
+            self.go_pos = self.go_pos.move_towards(self.vector_to_go, 5)
+            self.rec.x = self.go_pos[0]+ BOARD.get_width() - CELL
+            self.rec.y = self.go_pos[1]+ BOARD.get_height() -  CELL
+            #self.rec.x = -self.go_pos[0]
+        else:    
+            self.go_pos = self.go_pos.move_towards(self.vector_to_go, 5)
+            self.rec.x = self.go_pos[0]
+            self.rec.y = self.go_pos[1]
         board.blit(self.scaled_image, (self.rec))
         

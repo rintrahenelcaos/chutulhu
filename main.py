@@ -142,36 +142,36 @@ class Main():
         self.pos = None
         self.ocupied_cell = None
         
-        prueba = TokenObject(CELL, 0, 0, "token_1.png", "prueba1",1,"")
+        #prueba = TokenObject(CELL, 0, 0, "token_1.png", "prueba1",1,"")
         prueba2 = TokenObject(CELL,CELL*3, CELL*4, "token_1.png", "prueba2", 1,"")
         prueba3 = TokenObject(CELL,CELL*3,CELL*2, "token_3.png", "prueba3",1,"")
 
-        enemy1 = TokenObject(CELL,CELL*3, CELL*3, "token_2.png", "prueba2", 2,"")
-        enemy2 = TokenObject(CELL,CELL*2, CELL*3, "token_2.png", "prueba2", 2,"")
-        enemy3 = TokenObject(CELL,CELL*4, CELL*3, "token_2.png", "prueba2", 2,"")
-        enemy4 = TokenObject(CELL,CELL*2, CELL*2, "token_2.png", "prueba2", 1,"")
-        enemy5 = TokenObject(CELL,CELL*2, CELL*1, "token_2.png", "prueba2", 1,"")
-        enemy6 = TokenObject(CELL,CELL*4, CELL*2, "token_2.png", "prueba2", 1,"")
-        enemy7 = TokenObject(CELL,CELL*4, CELL*1, "token_2.png", "prueba2", 1,"")
-        enemy8 = TokenObject(CELL,CELL*3, CELL*1, "token_2.png", "prueba2", 1,"")
+        enemy1 = TokenObject(CELL,CELL*5,0, "token_2.png", "prueba2", 2,"")
+        #enemy2 = TokenObject(CELL,CELL*2, CELL*3, "token_2.png", "prueba2", 2,"")
+        #enemy3 = TokenObject(CELL,CELL*4, CELL*3, "token_2.png", "prueba2", 2,"")
+        #enemy4 = TokenObject(CELL,CELL*2, CELL*2, "token_2.png", "prueba2", 1,"")
+        #enemy5 = TokenObject(CELL,CELL*2, CELL*1, "token_2.png", "prueba2", 1,"")
+        #enemy6 = TokenObject(CELL,CELL*4, CELL*2, "token_2.png", "prueba2", 1,"")
+        #enemy7 = TokenObject(CELL,CELL*4, CELL*1, "token_2.png", "prueba2", 1,"")
+        #enemy8 = TokenObject(CELL,CELL*3, CELL*1, "token_2.png", "prueba2", 1,"")
         
          
         
         phase = str
         
 
-        self.player_a.player_tokens.append(prueba)
+        #self.player_a.player_tokens.append(prueba)
         self.player_a.player_tokens.append(prueba2)
         self.player_a.player_tokens.append(prueba3) 
 
         self.player_b.player_tokens.append(enemy1) 
-        self.player_b.player_tokens.append(enemy2) 
-        self.player_b.player_tokens.append(enemy3)   
-        self.player_b.player_tokens.append(enemy4)
-        self.player_b.player_tokens.append(enemy5)
-        self.player_b.player_tokens.append(enemy6)
-        self.player_b.player_tokens.append(enemy7)
-        self.player_b.player_tokens.append(enemy8)
+        #self.player_b.player_tokens.append(enemy2) 
+        #self.player_b.player_tokens.append(enemy3)   
+        #self.player_b.player_tokens.append(enemy4)
+        #self.player_b.player_tokens.append(enemy5)
+        #self.player_b.player_tokens.append(enemy6)
+        #self.player_b.player_tokens.append(enemy7)
+        #self.player_b.player_tokens.append(enemy8)
 
         #self.player_a.player_tokens = []   # testing pre-game
         #self.player_b.player_tokens = []
@@ -625,8 +625,13 @@ class Main():
         for obj in self.player_a.player_tokens:
             obj.token_object_drawer(BOARD)
         if game_secene == "in_course":
+            #self.position_turner()
             for obj2 in self.player_b.player_tokens:
-                obj2.token_object_drawer(BOARD)   
+                
+                obj2.token_object_drawer(BOARD, turner = True) 
+                #obj2.vector_to_go = pygame.Vector2(CELL, CELL)
+                print(obj2.go_pos)
+                  
     
     def available_moves_method(self):
         #print(available_moves)
@@ -659,11 +664,7 @@ class Main():
             color = (0,127+waving_func(pygame.time.get_ticks()),0)
             pygame.draw.rect(BOARD, color, pos_slot, width=6,border_radius=10)
 
-    def position_turner(self):
-        
-        for obj2 in self.player_b.player_tokens:
-            obj2.xpos = obj2.xpos + BOARD.get_width() - CELL
-            obj2.ypos = obj2.ypos + BOARD.get_height() - CELL
+    
             
     def faction_hand_controller(self, card,  current_phase):
     
