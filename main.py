@@ -119,13 +119,14 @@ class Main():
         self.run = True
         self.clock = pygame.time.Clock()
         self.scene = "pre_game"
-        self.current_phase = GAME_SEQUENCE[2]
+        self.current_phase = GAME_SEQUENCE[0]
         self.phase_passer = 2
         #new_game_preparations("INVESTIGATORS","SERPENT_PEOPLE")
         self.player_a = Player_Object("currentgame.db", "units_a" ,"cards_a", "player_a", "INVESTIGATORS")
         self.player_b = Player_Object("currentgame.db", "units_b","cards_b", "player_b", "SERPENT_PEOPLE")
         self.player_turn = True
         self.mousepos = pygame.mouse.get_pos()
+        
         
         self.movement_indicator = None  # signals movement amount
         self.moving_tokens = False # tokens are to be moved
@@ -137,16 +138,20 @@ class Main():
         self.damage_in_course = 0
         self.damaged_token = None
         self.damage_dealt = 0
-
+        
+        self.defense_indicator = False
+        
         self.chosen_token = None
         self.pos = None
         self.ocupied_cell = None
+        
+        self.freezing_mouse_event = pygame.USEREVENT+1
         
         #prueba = TokenObject(CELL, 0, 0, "token_1.png", "prueba1",1,"")
         prueba2 = TokenObject(CELL,CELL*3, CELL*4, "token_1.png", "prueba2", 1,"")
         prueba3 = TokenObject(CELL,CELL*3,CELL*2, "token_3.png", "prueba3",1,"")
 
-        enemy1 = TokenObject(CELL,CELL*5,0, "token_2.png", "prueba2", 2,"")
+        enemy1 = TokenObject(CELL,CELL*0,CELL*0, "token_2.png", "prueba2", 2,"")
         #enemy2 = TokenObject(CELL,CELL*2, CELL*3, "token_2.png", "prueba2", 2,"")
         #enemy3 = TokenObject(CELL,CELL*4, CELL*3, "token_2.png", "prueba2", 2,"")
         #enemy4 = TokenObject(CELL,CELL*2, CELL*2, "token_2.png", "prueba2", 1,"")
@@ -388,18 +393,17 @@ class Main():
             if event.type == pygame.QUIT:
                 self.run = False
 
+            if event.type== self.freezing_mouse_event:
+                
+                self.phase_passer_method()
+                
             ### MOUSEBUTTONDOWN EVENTS ###
 
             if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]:
                 if button2.collidepoint(self.mousepos):   ### passing phases ---> test only
-
-                        if len(GAME_SEQUENCE) == GAME_SEQUENCE.index(self.current_phase)+1:
-                            self.player_turn = not self.player_turn
-
-
-                            self.current_phase = GAME_SEQUENCE[0]
-                        else:
-                            self.current_phase = GAME_SEQUENCE[GAME_SEQUENCE.index(self.current_phase)+1]
+                    
+                    self.phase_passer_method()
+                    
                 
                 if self.player_turn:
 
@@ -415,7 +419,11 @@ class Main():
                     if self.current_phase == "fate":
                     
                         if faction_deck_drawer_button.collidepoint(self.mousepos):
+                            
                             self.player_a.fate_phase(repetitions = 3)
+                            pygame.time.set_timer(self.freezing_mouse_event, 1000, 1) # prevents hitting the cards when drawing
+                            
+                            #self.phase_passer_method()
     
                     ### MOVE PHASE EVENT ###
     
@@ -435,6 +443,9 @@ class Main():
                                     self.pos = None
                                     self.movement_indicator = None
                                     self.moving_tokens = False
+                                    pygame.time.set_timer(self.freezing_mouse_event, 1000, 1)
+                                    #self.phase_passer_method()
+                                    
     
                         elif pygame.mouse.get_cursor() == pygame.cursors.diamond:
                         
@@ -482,8 +493,15 @@ class Main():
                                             self.available_attacks = []
                                             self.attack_indicator = None
                                             self.attacking_tokens = False
-                                            #self.damage_in_course = 0
-                                            self.current_phase = "def"
+                                            self.defense_indicator = True
+                                            self.player_b.player_tokens[self.damaged_token].hits = self.player_b.player_tokens[self.damaged_token].hits - self.damage_in_course
+                                            self.damage_in_course = 0
+                                            #self.current_phase = "def"
+                                            pygame.time.wait(10000)
+                                            pygame.time.set_timer(self.freezing_mouse_event, 1000, 1)
+                                            #self.phase_passer_method()
+                        
+                                            
     
     
                         elif pygame.mouse.get_cursor() == pygame.cursors.diamond:
@@ -508,16 +526,19 @@ class Main():
     
                                         #self.player_a.attack_phase()
     
-                                        if self.attack_indicator != None: self.attacking_tokens = True
+                                        if self.attack_indicator != None: 
+                                            self.attacking_tokens = True
+                                            
     
     
     
     
                     ### DEFENSE PHASE EVENT ###
-    
-                    if self.current_phase == "def" and self.damaged_token != None: 
-                    
-                        for crd in self.player_a.player_hand_objs:
+                    #if self.defense_indicator:
+                    if self.current_phase == "def" and self.damaged_token != None: # test function
+                        pass
+                        #self.player_turn = False
+                        """for crd in self.player_a.player_hand_objs:
                             if crd.rec.collidepoint(self.mousepos):        
                             
                                 if crd.card_type == "D":
@@ -526,6 +547,8 @@ class Main():
                                     self.damage_in_course = 0
                                     self.damaged_token = None
                                     self.player_a.faction_card_discard(crd)
+                                    self.player_turn = True
+                                    self.defense_indicator = False
                                     #discarder("cards_a", str(crd.identif))
                                     #self.player_a.player_hand_objs.remove(crd)
                                     
@@ -534,6 +557,8 @@ class Main():
                             self.player_b.player_tokens[self.damaged_token].hits = self.player_b.player_tokens[self.damaged_token].hits - self.damage_in_course
                             self.damage_in_course = 0
                             self.damaged_token = None
+                            self.player_turn = True
+                            self.defense_indicator = False"""
                         
                                 
                 
@@ -621,18 +646,15 @@ class Main():
     
     def token_movement(self, game_secene):
     
-        #print("new token mov")
-        
 
         for obj in self.player_a.player_tokens:
             obj.token_object_drawer(BOARD)
         if game_secene == "in_course":
-            #self.position_turner()
+            
             for obj2 in self.player_b.player_tokens:
                 
                 obj2.token_object_drawer(BOARD, turner = True) 
-                #obj2.vector_to_go = pygame.Vector2(CELL, CELL)
-                print(obj2.go_pos)
+                
                   
     
     def available_moves_method(self):
@@ -724,7 +746,17 @@ class Main():
                 self.player_a.player_spell_hand_objs[scrd].card_drawer(WIN)
             except: pass
     
-    
+    def phase_passer_method(self):
+        
+        
+        if len(GAME_SEQUENCE) == GAME_SEQUENCE.index(self.current_phase)+1:
+            
+            
+            self.player_turn = not self.player_turn
+            self.current_phase = GAME_SEQUENCE[0]
+        else:
+            
+            self.current_phase = GAME_SEQUENCE[GAME_SEQUENCE.index(self.current_phase)+1]
     
     
 

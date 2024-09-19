@@ -1,8 +1,9 @@
 import socket
 from _thread import *
-import sys
+from player import Player
 import pickle
-from pickleobj import Exchange_object
+
+
 hostname = socket.gethostname()
 IP_addr = socket.gethostbyname(hostname)
 server = IP_addr
@@ -20,7 +21,7 @@ sock.listen(2)
 print("Waiting for a connection, Server Started")
 
 
-players = [Exchange_object("player 1"), Exchange_object("player 2")]
+players = [Player(0,0,50,50,(255,0,0)), Player(100,100, 50,50, (0,0,255))]
 
 def threaded_client(conn, player):
     conn.send(pickle.dumps(players[player]))

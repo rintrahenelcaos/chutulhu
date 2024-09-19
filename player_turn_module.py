@@ -55,26 +55,26 @@ class Player_Object():
             pos += 1
         
         
-    def fate_phase(self, xpos = FACTION_DECK_POSITION[0], ypos = FACTION_DECK_POSITION[1], repetitions = 3): #db, deck, player -> ("cards_a", "deck", "hand") //// xpos and ypos are the deck positions
-        
-        # FATE PHASE
-        # Draw 3 cards from your deck. 
-        # Max hand size = 5 cards.
-        # If the deck runs out, shuffle the discard and draw from it.
-        # Discard excess cards.
-        for i in range(repetitions):
-            
-            
-            sensible = card_counter(self.player_deck, "deck")
-            
-            if sensible == 0:
-
-                reshuffle_deck(self.player_deck)
-                deckmixer(self.player_deck)
-                print("reshufle")
-
-            drawer(self.player_deck, "hand", "deck")
-            self.hand_refresher(card_data_extractor(self.player_deck, "hand"), xpos, ypos, self.player_hand_objs)  
+    #def fate_phase(self, xpos = FACTION_DECK_POSITION[0], ypos = FACTION_DECK_POSITION[1], repetitions = 3): #db, deck, player -> ("cards_a", "deck", "hand") //// xpos and ypos are the deck positions
+    #    
+    #    # FATE PHASE
+    #    # Draw 3 cards from your deck. 
+    #    # Max hand size = 5 cards.
+    #    # If the deck runs out, shuffle the discard and draw from it.
+    #    # Discard excess cards.
+    #    for i in range(repetitions):
+    #        
+    #        
+    #        sensible = card_counter(self.player_deck, "deck")
+    #        
+    #        if sensible == 0:
+#
+    #            reshuffle_deck(self.player_deck)
+    #            deckmixer(self.player_deck)
+    #            print("reshufle")
+#
+    #        drawer(self.player_deck, "hand", "deck")
+    #        self.hand_refresher(card_data_extractor(self.player_deck, "hand"), xpos, ypos, self.player_hand_objs)  
     
     #### New Method with lists
     def fate_phase(self, xpos = FACTION_DECK_POSITION[0], ypos = FACTION_DECK_POSITION[1], repetitions = 3): #db, deck, player -> ("cards_a", "deck", "hand") //// xpos and ypos are the deck positions

@@ -6,7 +6,7 @@ pygame.display.init()
 DECKS = ["spells", "cards_a", "cards_b"]
 
 
-FACTIONS = ["INVESTIGATORS","DEEP_ONES", "CULTIST","SERPENT_PEOPLE"]
+FACTIONS = ["INVESTIGATORS", "DEEP_ONES", "CULTIST", "SERPENT_PEOPLE"]
 
 ROWS = 8
 COLUMNS = 8
@@ -69,7 +69,7 @@ GENERIC_FONT = pygame.font.SysFont("times", int(CELL*0.2))
 CARD_FONT = pygame.font.SysFont("times",int(CELL*0.18))
 
 GAME_SEQUENCE = ["a_fate", "a_move", "a_att", "b_def","b_fate", "b_move", "b_att", "a_def"]
-GAME_SEQUENCE = ["def", "clean", "fate", "move", "att"]
+GAME_SEQUENCE = ["fate", "move", "att"]
 
 
 ### Constants for object loaders
