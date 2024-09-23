@@ -16,7 +16,7 @@ from dbintermediatefunctions import card_data_extractor, discarder
 from functionsmodule import movement_blocker, available_movement_detector_pathfinding, available_movement_detector_linear_vector, available_attacks_detector_fixedrange, available_attacks_detector_maxrange_square
 from pregame_functions import player_token_assigner, starting_position_function
 
-from network import Network
+from game_network import Network
     
 
 def waving_func(time):
@@ -122,8 +122,8 @@ class Main():
         self.current_phase = GAME_SEQUENCE[0]
         self.phase_passer = 2
         #new_game_preparations("INVESTIGATORS","SERPENT_PEOPLE")
-        self.player_a = Player_Object("currentgame.db", "units_a" ,"cards_a", "player_a", "INVESTIGATORS")
-        self.player_b = Player_Object("currentgame.db", "units_b","cards_b", "player_b", "SERPENT_PEOPLE")
+        self.player_a = Player_Object("INVESTIGATORS")
+        self.player_b = Player_Object("SERPENT_PEOPLE")
         self.player_turn = True
         self.mousepos = pygame.mouse.get_pos()
         
@@ -146,6 +146,7 @@ class Main():
         self.ocupied_cell = None
         
         self.freezing_mouse_event = pygame.USEREVENT+1
+        
         
         #prueba = TokenObject(CELL, 0, 0, "token_1.png", "prueba1",1,"")
         prueba2 = TokenObject(CELL,CELL*3, CELL*4, "token_1.png", "prueba2", 1,"")
@@ -177,33 +178,92 @@ class Main():
         #self.player_b.player_tokens.append(enemy6)
         #self.player_b.player_tokens.append(enemy7)
         #self.player_b.player_tokens.append(enemy8)
-
-        #self.player_a.player_tokens = []   # testing pre-game
-        #self.player_b.player_tokens = []
-        #self.player_a.token_list_loader()
-        #print(self.player_a.player_tokens)
-        #self.pregame_mat_assigner()
+        self.scene = "client_test"
         
+        if self.scene == "pre_game":
+            self.player_a.player_tokens = []   # testing pre-game
+            self.player_b.player_tokens = []
+        if self.scene == "pre_game" or self.scene == "client_test":
+            #self.player_a.player_tokens = []   # testing pre-game
+            #self.player_b.player_tokens = []
+            self.player_a.token_list_loader()
+            #print(self.player_a.player_tokens)
+            if self.scene == "pre_game":
+                self.pregame_mat_assigner()
+        
+        if self.scene == "client_test":
         # Network Objects
         
-        #self.net = Network()
-        #self.p = self.net.getP()
+            self.net = Network()
+            self.player_a = self.net.getP()
         
     def main(self):
         
         #run = True
         #clock = pygame.time.Clock()
         
-        self.scene = "in_course"
+        self.scene = "client_test"
         
         while self.run:
             
             if self.scene == "pre_game":
                 self.pre_game()
             elif self.scene == "in_course":
-                self.in_course()            
+                self.in_course()    
+            elif self.scene == "client_test"  :
+                self.client_testing()      
             
         pygame.quit()
+    
+    def client_testing(self):
+        
+        self.clock.tick(FPS)
+        self.mousepos = pygame.mouse.get_pos()
+        #self.player_a = self.net.getP()
+        self.player_b = self.net.send(self.player_a)
+        
+        phase_informer = "testing server"
+    
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.run = False
+        
+            if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]:
+                if no_defense_button.collidepoint(self.mousepos):
+                    var = 0
+                    available_test = [(x,y) for x in range (8) for y in range(6, 8)]
+                    for token in self.player_a.player_tokens:
+                        token.vector_to_go = pygame.Vector2(available_test[var][0]*CELL, available_test[var][1]*CELL)
+                        var += 1
+                        
+                        
+        
+        WIN.fill(BACKGROUND_COLOR)
+        BOARD.fill("tan4")
+
+        for row in range(ROWS):
+            for col in range(row % 2, ROWS, 2):
+                pygame.draw.rect(BOARD, "grey3",(CELL*row, CELL*col, CELL,CELL))
+                
+        
+        #self.starting_positions()
+        #self.selected_token()
+        self.token_movement("in_course")
+         
+               
+        WIN.blit(BOARD,(0,0))    # actualizes BOARD -> always after all changes of it
+
+        pygame.draw.rect(WIN, "red", no_defense_button)
+        
+        
+
+        current_phase_informer = GENERIC_FONT.render(phase_informer, 1, "red")
+        WIN.blit(current_phase_informer, (CELL*10, 20))
+
+       
+        
+        pygame.display.update()   
+        
  
     def pre_game(self):
         
@@ -497,7 +557,7 @@ class Main():
                                             self.player_b.player_tokens[self.damaged_token].hits = self.player_b.player_tokens[self.damaged_token].hits - self.damage_in_course
                                             self.damage_in_course = 0
                                             #self.current_phase = "def"
-                                            pygame.time.wait(10000)
+                                            #pygame.time.wait(10000)
                                             pygame.time.set_timer(self.freezing_mouse_event, 1000, 1)
                                             #self.phase_passer_method()
                         
@@ -649,7 +709,7 @@ class Main():
 
         for obj in self.player_a.player_tokens:
             obj.token_object_drawer(BOARD)
-        if game_secene == "in_course":
+        if game_secene == "in_course" or game_secene == "client_test":
             
             for obj2 in self.player_b.player_tokens:
                 
