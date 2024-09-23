@@ -1,7 +1,3 @@
-import socket
-from _thread import *
-import sys
+import pygame
 
-hostname = socket.gethostname()
-IP_addr = socket.gethostbyname(hostname)
-print(IP_addr)
+pygame.font.init()

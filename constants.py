@@ -1,7 +1,8 @@
 import pygame
+import pyautogui
 
 pygame.font.init()
-pygame.display.init()
+#pygame.display.init()
 
 DECKS = ["spells", "cards_a", "cards_b"]
 
@@ -25,14 +26,14 @@ FPS = 60
 
 
 
-resolution_info = pygame.display.Info()
-WIDTH, HEIGHT = resolution_info.current_w-100, resolution_info.current_h-90
-HEIGHT = resolution_info.current_h -90
+resolution_info = pyautogui.size()
+WIDTH, HEIGHT = resolution_info.width-100, resolution_info.height-90
+HEIGHT = resolution_info.height -90
 CELL = round(HEIGHT/8,0)
 WIDTH = CELL*15
 CARD_WIDTH = CELL*4/5
 
-WIN = pygame.display.set_mode((WIDTH, HEIGHT))
+#WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 BOARD = pygame.Surface((CELL*8, CELL*8))
 
 

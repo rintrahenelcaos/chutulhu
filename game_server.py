@@ -1,6 +1,6 @@
 import socket
 from _thread import *
-from player import Player
+from player_turn_module import Player_Object
 import pickle
 
 
@@ -21,7 +21,7 @@ sock.listen(2)
 print("Waiting for a connection, Server Started")
 
 
-players = [Player(0,0,50,50,(255,0,0)), Player(100,100, 50,50, (0,0,255))]
+players = [Player_Object("INVESTIGATORS", test= True), Player_Object("SERPENT_PEOPLE", test= True)]
 
 def threaded_client(conn, player):
     conn.send(pickle.dumps(players[player]))
