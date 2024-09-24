@@ -11,6 +11,7 @@ class Network:
         self.p = self.connect()
 
     def getP(self):
+        print(self.p)
         return self.p
 
     def connect(self):

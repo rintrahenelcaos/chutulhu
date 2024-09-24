@@ -199,6 +199,7 @@ class Main():
         
             self.net = Network()
             self.player_a = self.net.getP()
+            print(self.player_a)
         
     def main(self):
         
@@ -220,6 +221,7 @@ class Main():
     
     def client_testing(self):
         
+        #self.player_a.token_list_loader()
         self.clock.tick(FPS)
         self.mousepos = pygame.mouse.get_pos()
         #self.player_a = self.net.getP()
@@ -251,7 +253,7 @@ class Main():
         
         #self.starting_positions()
         #self.selected_token()
-        self.token_movement("in_course")
+        self.token_movement("client_test")
          
                
         WIN.blit(BOARD,(0,0))    # actualizes BOARD -> always after all changes of it

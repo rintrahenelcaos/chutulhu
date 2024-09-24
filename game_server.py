@@ -7,7 +7,7 @@ import pickle
 hostname = socket.gethostname()
 IP_addr = socket.gethostbyname(hostname)
 server = IP_addr
-server = "10.160.4.213"
+server = "192.168.1.2"
 port = 5555
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
