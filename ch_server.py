@@ -11,49 +11,48 @@ PORT = 65432
 
 
 
+def handle_client(client_socket, addr):
+    try:
+        while True:
+            # receive and print client messages
+            request = client_socket.recv(1024).decode("utf-8")
+            if request.lower() == "close":
+                client_socket.send("closed".encode("utf-8"))
+                break
+            print(f"Received: {request}")
+            # convert and send accept response to the client
+            response = "accepted"
+            client_socket.send(response.encode("utf-8"))
+    except Exception as e:
+        print(f"Error when hanlding client: {e}")
+    finally:
+        client_socket.close()
+        print(f"Connection to client ({addr[0]}:{addr[1]}) closed")
+
 
 def run_server(server_ip, port):
+    #server_ip = "127.0.0.1"  # server hostname or IP address
+    #port = 8000  # server port number
     # create a socket object
-    
-
-    try: 
+    try:
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        # bind the socket to a specific address and port
+        # bind the socket to the host and port
         server.bind((server_ip, port))
         # listen for incoming connections
         server.listen()
         print(f"Listening on {server_ip}:{port}")
 
-        # accept incoming connections
-        
-
-    # receive data from the client
-    while True:
-        client_socket, client_address = server.accept()
-        print(f"Accepted connection from {client_address[0]}:{client_address[1]}")
-        request = client_socket.recv(1024)
-        request = request.decode("utf-8") # convert bytes to string
-        
-        # if we receive "close" from the client, then we break
-        # out of the loop and close the conneciton
-        if request.lower() == "close":
-            # send response to the client which acknowledges that the
-            # connection should be closed and break out of the loop
-            client_socket.send("closed".encode("utf-8"))
-            break
-
-        print(f"Received: {request}")
-
-        response = "accepted".encode("utf-8") # convert string to bytes
-        # convert and send accept response to the client
-        client_socket.send(response)
-
-    # close connection socket with the client
-    client_socket.close()
-    print("Connection to client closed")
-    # close server socket
-    server.close()
+        while True:
+            # accept a client connection
+            client_socket, addr = server.accept()
+            print(f"Accepted connection from {addr[0]}:{addr[1]}")
+            # start a new thread to handle the client
+            thread = threading.Thread(target=handle_client, args=(client_socket, addr,))
+            thread.start()
+    except Exception as e:
+        print(f"Error: {e}")
+    finally:
+        server.close()
 
 
 run_server(HOST, PORT)
-
