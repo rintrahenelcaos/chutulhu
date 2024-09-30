@@ -7,6 +7,7 @@ from gameobjects import CardObject, TokenObject
 from constants import DECKS, FACTIONS, CELL, CARD_WIDTH, FACTION_DECK_POSITION, SPELL_DECK_POSITION, GRID, PRE_GAME_TOKEN_MAT, REQ_FIELDS
 #from functionsmodule import movement_blocker
 #from pregame_functions import player_token_assigner
+from pickleobj import Exchange_object
 
 
 
@@ -43,8 +44,12 @@ class Player_Object():
         self.player_dead_tokens = []
         self.to_move_token = None
         
+        self.player_exchange_obj = Exchange_object(self.player_faction)
         #if test:
         #    self.token_list_loader()
+    def __str__(self) -> str:
+        return str(self.player_faction)
+    
         
     def token_list_loader(self): 
         
@@ -58,7 +63,26 @@ class Player_Object():
             self.player_tokens.append(TokenObject(CELL, 0, CELL,temp_list[0],temp_list[1],int(temp_list[2]), temp_list[3]))
             pos += 1
     
-            
+    def exchanger_method_forward(self):
+        
+        #player_exchange_object = Exchange_object(self.player_faction)
+        self.player_exchange_obj.load_exchange(self.player_faction_hand, self.player_hand, self.player_faction_discard,self.player_spell_deck, self.player_spell_hand, self.player_spell_discard, self.token_list, self.player_dead_tokens)
+        
+        return self.player_exchange_obj
+    
+    def exchanger_method_backward(self):
+        
+        self.player_faction_hand = self.player_exchange_obj.player_faction_hand 
+        self.player_hand = self.player_exchange_obj.player_hand 
+        self.player_faction_discard = self.player_exchange_obj.player_faction_discard
+        
+        self.player_spell_deck = self.player_exchange_obj.player_spell_deck
+        self.player_spell_hand = self.player_exchange_obj.player_spell_hand
+        self.player_spell_discard = self.player_exchange_obj.player_spell_discard
+        
+        self.token_list = self.player_exchange_obj.token_list
+        self.player_dead_tokens = self.player_exchange_obj.player_dead_tokens
+                
         
     #### New Method with lists
     def fate_phase(self, xpos = FACTION_DECK_POSITION[0], ypos = FACTION_DECK_POSITION[1], repetitions = 3): #db, deck, player -> ("cards_a", "deck", "hand") //// xpos and ypos are the deck positions
@@ -305,7 +329,36 @@ def attack_phase():
 def movement(range):
     print("movement: "+range)
   
-    
+class Player_Object_test():
+    def __init__(self, player_faction, test = False):
+        #self.spells_db = spells_db
+        #self.conector = conection_sql(database)
+        #self.pointer = self.conector.cursor()
+        #self.faction = faction # units_a or units_b
+        #self.player_deck = player_deck # cards_a or cards_b
+        #self.spell_player_hand = spell_player_hand # player_a or player_b
+        
+        self.player_faction = player_faction
+        
+        self.faction_card_fields, self.faction_deck = individual_list("cards.csv", self.player_faction)   # create reference fields and cards lists
+        self.player_faction_hand = []
+        self.player_hand_objs = []
+        self.player_hand = []
+        self.player_faction_discard = []
+        
+        self.spell_card_fields, self.player_spell_deck = individual_list("spells.csv")
+        #self.player_spell_deck = []
+        self.player_spell_hand_objs = []
+        self.player_spell_hand = []
+        self.player_spell_discard = []
+        
+        self.token_list_fields, self.token_list = individual_list("units.csv", self.player_faction)
+        self.player_tokens = []
+        self.player_dead_tokens = []
+        self.to_move_token = None
+        
+        #if test:
+        #    self.token_list_loader()    
 
 
 

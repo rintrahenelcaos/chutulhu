@@ -1,13 +1,14 @@
 import socket
 from _thread import *
-from player_turn_module import Player_Object
+from player_turn_module import Player_Object, Player_Object_test
 import pickle
+from pickleobj import Exchange_object
 
 
 hostname = socket.gethostname()
 IP_addr = socket.gethostbyname(hostname)
 server = IP_addr
-server = "10.160.4.213"
+server = "192.168.1.2"
 port = 5555
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -21,7 +22,8 @@ sock.listen(2)
 print("Waiting for a connection, Server Started")
 
 
-players = [Player_Object("INVESTIGATORS", test= True), Player_Object("SERPENT_PEOPLE", test= True)]
+players = [Exchange_object("INVESTIGATORS"), Exchange_object("SERPENT_PEOPLE")]
+print(players)
 
 def threaded_client(conn, player):
     conn.send(pickle.dumps(players[player]))
@@ -30,7 +32,7 @@ def threaded_client(conn, player):
         try:
             data = pickle.loads(conn.recv(2048))
             players[player] = data
-
+            
             if not data:
                 print("Disconnected")
                 break
@@ -57,3 +59,5 @@ while True:
 
     start_new_thread(threaded_client, (conn, currentPlayer))
     currentPlayer += 1
+    if currentPlayer > 1:
+        break

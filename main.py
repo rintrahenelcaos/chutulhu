@@ -186,7 +186,7 @@ class Main():
         if self.scene == "pre_game":
             self.player_a.player_tokens = []   # testing pre-game
             self.player_b.player_tokens = []
-        if self.scene == "pre_game": #or self.scene == "client_test":
+        if self.scene == "pre_game" or self.scene == "client_test":
             #self.player_a.player_tokens = []   # testing pre-game
             #self.player_b.player_tokens = []
             self.player_a.token_list_loader()
@@ -194,12 +194,12 @@ class Main():
             if self.scene == "pre_game":
                 self.pregame_mat_assigner()
         
-        """if self.scene == "client_test":
+        if self.scene == "client_test":
         # Network Objects
         
             self.net = Network()
             self.player_a = self.net.getP()
-            print(self.player_a)"""
+            print(self.player_a)
         
     def main(self):
         
@@ -207,9 +207,7 @@ class Main():
         #clock = pygame.time.Clock()
         
         self.scene = "client_test"
-        self.net = Network()
-        self.player_a = self.net.getP()
-        print(self.player_a)
+        self.player_a.token_list_loader()
         
         while self.run:
             
