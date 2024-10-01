@@ -1,45 +1,39 @@
-import socket
+# Python program to implement client side of chat room. 
+import socket 
+import select 
+import sys 
 
-HOST = "192.168.1.2"
-PORT = 65432
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
+if len(sys.argv) != 3: 
+	print ("Correct usage: script, IP address, port number")
+	exit() 
+IP_address = str(sys.argv[1]) 
+Port = int(sys.argv[2]) 
+server.connect((IP_address, Port)) 
 
-import socket
+while True: 
 
+	# maintains a list of possible input streams 
+	sockets_list = [sys.stdin, server] 
 
-def run_client(server_ip, server_port):
-    # create a socket object
-    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	""" There are two possible input situations. Either the 
+	user wants to give manual input to send to other people, 
+	or the server is sending a message to be printed on the 
+	screen. Select returns from sockets_list, the stream that 
+	is reader for input. So for example, if the server wants 
+	to send a message, then the if condition will hold true 
+	below.If the user wants to send a message, the else 
+	condition will evaluate as true"""
+	read_sockets,write_socket, error_socket = select.select(sockets_list,[],[]) 
 
-    #server_ip = "127.0.0.1"  # replace with the server's IP address
-    #server_port = 8000  # replace with the server's port number
-    # establish connection with server
-    client.connect((server_ip, server_port))
-
-    try:
-        while True:
-            # get input message from user and send it to the server
-            msg = input("Enter message: ")
-            client.send(msg.encode("utf-8")[:1024])
-
-            # receive message from the server
-            response = client.recv(1024)
-            response = response.decode("utf-8")
-
-            # if server sent us "closed" in the payload, we break out of
-            # the loop and close our socket
-            if response.lower() == "closed":
-                break
-
-            print(f"Received: {response}")
-    except Exception as e:
-        print(f"Error: {e}")
-    finally:
-        # close client socket (connection to the server)
-        client.close()
-        print("Connection to server closed")
-
-
-
-
-
-run_client(HOST, PORT)
+	for socks in read_sockets: 
+		if socks == server: 
+			message = socks.recv(2048) 
+			print (message) 
+		else: 
+			message = sys.stdin.readline() 
+			server.send(message) 
+			sys.stdout.write("<You>") 
+			sys.stdout.write(message) 
+			sys.stdout.flush() 
+server.close() 
