@@ -1,5 +1,6 @@
 import socket
 
+
 IP = socket.gethostbyname(socket.gethostname())
 IP = "192.168.1.2"
 PORT = 5566
