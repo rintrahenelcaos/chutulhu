@@ -24,7 +24,7 @@ def print_value():
 button = Button(
     win, 10, 10, 100, 50, text='Print Value', fontSize=30,
     margin=20, inactiveColour=(255, 0, 0), pressedColour=(0, 255, 0),
-    radius=5, onClick=print_value, font=pygame.font.SysFont('calibri', 10),
+    radius=5, onClick=lambda: print(dropdown.getSelected()), font=pygame.font.SysFont('calibri', 10),
     textVAlign='bottom'
 )
 
@@ -41,4 +41,3 @@ while run:
 
     pygame_widgets.update(events)
     pygame.display.update()
-

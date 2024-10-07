@@ -1,9 +1,10 @@
 import socket
 import threading
 import pickle
+from pickleobj import Exchange_object
 
 IP = socket.gethostbyname(socket.gethostname())
-IP = "192.168.1.2"
+IP = "10.160.4.213"
 PORT = 5566
 ADDR = (IP, PORT)
 SIZE = 40000
@@ -11,6 +12,8 @@ FORMAT = "utf-8"
 DISCONNECT_MSG = "!DISCONNECT"
 
 connected = True
+
+
 
 def listening(client):
     while connected:
@@ -31,6 +34,7 @@ def main():
     while connected:
         
         msg = input("> ")
+        
 
         client.send(msg.encode(FORMAT))
 

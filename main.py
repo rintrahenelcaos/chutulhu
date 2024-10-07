@@ -4,7 +4,7 @@ from pygame_widgets.button import Button
 from pygame_widgets.dropdown import Dropdown
 
 import math
-
+from multiprocessing import Process
 import os
 
 from constants import FACTIONS, ROWS, COLUMNS, GRID, FPS, BACKGROUND_COLOR, GRID_DIC, WIDTH, HEIGHT, CELL, GAME_SEQUENCE, CARD_WIDTH, BOARD, button2, no_defense_button
@@ -21,6 +21,8 @@ from pregame_functions import player_token_assigner, starting_position_function
 
 from game_network import Network
 from pickleobj import Exchange_object
+
+from game_server import main as server_main
 
 #self.WIN = pygame.display.set_mode((WIDTH, HEIGHT))  
 
@@ -201,11 +203,12 @@ class Main():
             if self.scene == "pre_game":
                 self.pregame_mat_assigner()
         
-        if self.scene == "client_test":
+        if self.scene == "client_test":pass
         # Network Objects
         
-            self.net = Network()
-            self.net.connect(self.faction)
+        self.net = Network()    
+            #self.net = Network()
+            #self.net.connect(self.faction)
             
         # Exchange objects
         
@@ -213,8 +216,12 @@ class Main():
         self.player_b_exchange = Exchange_object("player_b")
         
         # Main Menu Objects
-        self.faction_dropdown = Dropdown(self.WIN, CELL*5, CELL*5, CELL, CELL, "choose faction", FACTIONS)
-        self.host_button = Button(self.WIN, CELL*3, CELL*3, CELL, CELL, text = "host game")
+        self.faction_dropdown = Dropdown(self.WIN, CELL*8, CELL*3, CELL*3, CELL*4/5, "choose faction", FACTIONS)
+        self.faction_chosen_button = Button(self.WIN, CELL*3, CELL*3, CELL*3, CELL*4/5, text = "host game", onClick = print(self.faction_dropdown.getSelected))
+        self.host_button = Button(self.WIN, CELL*3, CELL*3, CELL*3, CELL*4/5, text = "host game", onClick = lambda: self.host_game_method())
+        self.join_button = Button(self.WIN, CELL*3, CELL*4, CELL*3, CELL*4/5, text = "Join game", onClick = lambda: self.net.connect(self.faction))
+    
+    
         
     def main(self):
         
@@ -253,6 +260,15 @@ class Main():
         pygame_widgets.update(events)
         pygame.display.update()
     
+    def host_game_method(self):
+        os.system("cls")
+        server = Process(target = server_main)
+        server.start()
+        self.net.connect(self.faction)
+    
+        
+        
+        
     def client_testing(self):
         bucle = 0
         
@@ -875,6 +891,8 @@ class Main():
 
 
 def main():
+    """server = Process(target = server_main)
+    server.start()"""
     count = 0
     while True:
         for faction in FACTIONS:

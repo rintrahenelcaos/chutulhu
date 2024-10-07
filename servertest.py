@@ -1,6 +1,6 @@
 import socket
 import threading
-import wikipedia
+#import wikipedia
 
 IP = socket.gethostbyname(socket.gethostname())
 PORT = 5566
