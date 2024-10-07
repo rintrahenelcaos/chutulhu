@@ -1,5 +1,8 @@
 import pygame
 import pyautogui
+import pygame_widgets
+from pygame_widgets.button import Button
+from pygame_widgets.dropdown import Dropdown
 
 pygame.font.init()
 #pygame.display.init()
@@ -58,6 +61,11 @@ spells_deck_drawer_button = pygame.Rect(SPELL_DECK_POSITION,(CARD_WIDTH,CARD_WID
 button2 = pygame.Rect((WIDTH-CELL, 20),(CELL,20))
 
 no_defense_button = pygame.Rect((WIDTH-CELL, CELL*2),(CELL,CELL))
+
+
+# MAIN MENU
+
+
 
 
 

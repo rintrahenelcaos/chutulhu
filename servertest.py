@@ -13,32 +13,44 @@ clients = []
 broadcast_msg = ""
 
 def broadcast(msg):
-    for ind_client in clients:
-        ind_client.send(msg.encode(FORMAT))
+    try:
+        for ind_client in clients:
+            ind_client.send(msg.encode(FORMAT))
+    except Exception as error:
+            print('Error :',error)
         
 def handle_client(conn, addr):
     print(f"[NEW CONNECTION] {addr} connected.")
 
     connected = True
     while connected:
-        msg = conn.recv(SIZE).decode(FORMAT)
-        if msg == DISCONNECT_MSG:
-            connected = False
+        try:
+            msg = conn.recv(SIZE).decode(FORMAT)
 
-        print(f"[{addr}] {msg}")
-        # msg = f"Msg received: {msg}"
-        #msg_server = f"recieved: {msg}"
-        #conn.send(msg_server.encode(FORMAT))
-        if msg != "":
-            
-            broadcast(msg)
+            if msg == DISCONNECT_MSG:
+                connected = False
+                
+
+            print(f"[{addr}] {msg}")
+
+            # msg = f"Msg received: {msg}"
+            #msg_server = f"recieved: {msg}"
+            #conn.send(msg_server.encode(FORMAT))
+            if msg != "":
+
+                broadcast(msg)
+        except Exception as error:
+            print('Error :',error)        
 
     conn.close()
 
 def main():
     print("[STARTING] Server is starting...")
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server.bind(ADDR)
+    try:
+        server.bind(ADDR)
+    except Exception as error:
+        print('Error :',error)
     server.listen()
     print(f"[LISTENING] Server is listening on {IP}:{PORT}")
 
