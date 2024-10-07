@@ -1,63 +1,101 @@
 import socket
-from _thread import *
-from player_turn_module import Player_Object, Player_Object_test
+import threading
 import pickle
 from pickleobj import Exchange_object
+import sys
 
 
-hostname = socket.gethostname()
-IP_addr = socket.gethostbyname(hostname)
-server = IP_addr
-server = "192.168.1.2"
-port = 5555
+IP = socket.gethostbyname(socket.gethostname())
+PORT = 5566
+ADDR = (IP, PORT)
+SIZE = 40000
+FORMAT = "utf-8"
+DISCONNECT_MSG = "!DISCONNECT"
 
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+clients = []
+broadcast_msg = ""
+data = ["str", "str"]
+data = [Exchange_object("NONE"), Exchange_object("NONE")]
+factions_code = ["NONE","NONE"]
 
-try:
-    sock.bind((server, port))
-except socket.error as e:
-    str(e)
+def broadcast(msg, player):
+    try:
+        for ind_client in clients:
+            if clients.index(ind_client) != player:
+                msg = msg + str(clients.index(ind_client))
+                ind_client.send(msg.encode(FORMAT))
+                
+    except Exception as error:
+            print('Error :',error)
+        
+def handle_client(conn, addr, player):
+    print(f"[NEW CONNECTION] {addr} connected.")
+    faction = conn.recv(SIZE).decode(FORMAT)
+    print(faction)
+    factions_code[player] = faction
 
-sock.listen(2)
-print("Waiting for a connection, Server Started")
-
-
-players = [Exchange_object("INVESTIGATORS"), Exchange_object("SERPENT_PEOPLE")]
-print(players)
-
-def threaded_client(conn, player):
-    conn.send(pickle.dumps(players[player]))
-    reply = ""
-    while True:
+    connected = True
+    while connected:
         try:
-            data = pickle.loads(conn.recv(2048))
-            players[player] = data
+            cargo = pickle.loads(conn.recv(SIZE))
+            #msg = conn.recv(SIZE).decode(FORMAT)
+
+            data[player] = cargo
+            #data[player] = msg
+            """if msg == DISCONNECT_MSG:
+                #conn.shutdown()
+                connected = False"""
+            if cargo== DISCONNECT_MSG:
+                print("player disconnected")
+                connected = False
+                
+            print(f"[{addr}] {cargo}")
+            #print(f"[{addr}] {msg}")
+            for dat in range(len(data)):
+                if dat == player:
+                    data[dat] = cargo
+                    #data[dat] = msg
+            for dat in range(len(data)):
+                if dat != player:
+                    conn.send(pickle.dumps(data[dat]))
+                    #conn.send((data[dat]).encode(FORMAT))
+            #msg = f"Msg received: {msg}"
+            #msg_server = f"recieved: {msg}"
             
-            if not data:
-                print("Disconnected")
-                break
-            else:
-                if player == 1:
-                    reply = players[0]
-                else:
-                    reply = players[1]
-
-                print("Received: ", data)
-                print("Sending : ", reply)
-
-            conn.sendall(pickle.dumps(reply))
-        except:
-            break
-
-    print("Lost connection")
+            """if msg != "":
+                pass
+                broadcast(msg, player)"""
+        except Exception as error:
+            #print('Error :',error)        
+            pass
+    #conn.shutdown()
     conn.close()
+    clients.remove(conn)
+    exit() 
 
-currentPlayer = 0
-while True:
-    conn, addr = sock.accept()
-    print("Connected to:", addr)
+def main():
+    
+    print("[STARTING] Server is starting...")
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        server.bind(ADDR)
+    except Exception as error:
+        print('Error :',error)
+    server.listen(2)
+    print(f"[LISTENING] Server is listening on {IP}:{PORT}")
 
-    start_new_thread(threaded_client, (conn, currentPlayer))
-    currentPlayer += 1
-    if currentPlayer > 1:
-        break
+    while True:
+        conn, addr = server.accept()
+        clients.append(conn)
+        thread = threading.Thread(target=handle_client, args=(conn, addr, clients.index(conn)))
+        thread.start()
+        
+       
+        print(f"[ACTIVE CONNECTIONS] {threading.activeCount() - 1}")
+        print("clients lenght: ", len(clients))
+
+
+        
+
+if __name__ == "__main__":
+    main()

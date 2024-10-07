@@ -1,6 +1,7 @@
 #import pygame
 import sqlite3
 import random
+import sys
 from dbcreator import alltablesconstructor, individual_list
 from dbintermediatefunctions import deckmixer, deck_assigner, drawer, reshuffle_deck, card_counter
 from gameobjects import CardObject, TokenObject
@@ -50,6 +51,12 @@ class Player_Object():
     def __str__(self) -> str:
         return str(self.player_faction)
     
+    def general_list_loader(self):
+        
+        self.faction_card_fields, self.faction_deck = individual_list("cards.csv", self.player_faction)
+        self.spell_card_fields, self.player_spell_deck = individual_list("spells.csv")
+        self.token_list_fields, self.token_list = individual_list("units.csv", self.player_faction)
+        
         
     def token_list_loader(self): 
         
@@ -66,11 +73,13 @@ class Player_Object():
     def exchanger_method_forward(self):
         
         #player_exchange_object = Exchange_object(self.player_faction)
-        self.player_exchange_obj.load_exchange(self.player_faction_hand, self.player_hand, self.player_faction_discard,self.player_spell_deck, self.player_spell_hand, self.player_spell_discard, self.token_list, self.player_dead_tokens)
+        self.player_exchange_obj.load_exchange(self.player_faction, self.player_faction_hand, self.player_hand, self.player_faction_discard,self.player_spell_deck, self.player_spell_hand, self.player_spell_discard, self.token_list, self.player_dead_tokens)
         
         return self.player_exchange_obj
     
     def exchanger_method_backward(self):
+        
+        self.player_faction = self.player_exchange_obj.player_faction
         
         self.player_faction_hand = self.player_exchange_obj.player_faction_hand 
         self.player_hand = self.player_exchange_obj.player_hand 
@@ -363,6 +372,12 @@ class Player_Object_test():
 
 
 def main():
+    from pympler import asizeof
+    pla = Player_Object("INVESTIGATORS")
+    print(asizeof.asizeof(pla))
+    pla.exchanger_method_forward()
+    exc = pla.player_exchange_obj
+    print(asizeof.asizeof(exc))
     
     pass
     

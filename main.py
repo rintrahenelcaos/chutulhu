@@ -1,4 +1,7 @@
 import pygame
+import pygame_widgets
+from pygame_widgets.button import Button
+from pygame_widgets.dropdown import Dropdown
 
 import math
 
@@ -17,8 +20,9 @@ from functionsmodule import movement_blocker, available_movement_detector_pathfi
 from pregame_functions import player_token_assigner, starting_position_function
 
 from game_network import Network
+from pickleobj import Exchange_object
 
-WIN = pygame.display.set_mode((WIDTH, HEIGHT))  
+#self.WIN = pygame.display.set_mode((WIDTH, HEIGHT))  
 
 def waving_func(time):
     z = 127*math.cos((2*math.pi/(FPS*40))*time)
@@ -26,7 +30,7 @@ def waving_func(time):
 
 
         
-def token_movement(player_tokens, player2_tokens):
+"""def token_movement(player_tokens, player2_tokens):
     
     #print("new token mov")
     
@@ -50,29 +54,29 @@ def faction_hand_controller(card, player_hand, current_phase):
         if current_phase == "move" and (crd.card_type == "M" or crd.card_type == "XS" or crd.card_type == "XF"):
             ypos = FACTION_HAND.y+CELL*0.3
             position = pygame.Vector2(FACTION_HAND.x+5+CELL*player_hand.index(crd)*0.7, ypos)
-            #crd.card_drawer(WIN,pygame.Vector2(FACTION_HAND.x+5+CELL*player_hand.index(crd)*0.7, ypos))
+            #crd.card_drawer(self.WIN,pygame.Vector2(FACTION_HAND.x+5+CELL*player_hand.index(crd)*0.7, ypos))
             
         elif current_phase == "att" and (crd.card_type == "A"):
             ypos = FACTION_HAND.y+CELL*0.3
             position = pygame.Vector2(FACTION_HAND.x+5+CELL*player_hand.index(crd)*0.7, ypos)
         
-            #crd.card_drawer(WIN, position)  
+            #crd.card_drawer(self.WIN, position)  
         elif current_phase == "def" and (crd.card_type == "D"):
             ypos = FACTION_HAND.y+CELL*0.3
             position = pygame.Vector2(FACTION_HAND.x+5+CELL*player_hand.index(crd)*0.7, ypos)
         
-            #crd.card_drawer(WIN, position)  
+            #crd.card_drawer(self.WIN, position)  
         elif current_phase == "fate":
             ypos = FACTION_HAND.y+CELL*0.7
             position = pygame.Vector2(FACTION_HAND.x+5+CELL*player_hand.index(crd)*0.7, ypos)
         else:
             ypos = FACTION_HAND.y+CELL*0.7
             position = pygame.Vector2(FACTION_HAND.x+5+CELL*player_hand.index(crd)*0.7, ypos)
-        crd.card_drawer(WIN, position)   
+        crd.card_drawer(self.WIN, position)   
         crd.card_positioner() # 
     if card != None: #focus card changes size/picture - prevents false overlaping
         try: 
-            player_hand[card].card_drawer(WIN)
+            player_hand[card].card_drawer(self.WIN)
             #print(player_hand[card].card_type)
         except: pass
         
@@ -85,12 +89,12 @@ def spells_hand_controller(scrd, spell_player_hand, current_phase):
         ypos = SPELLS_HAND.y+CELL*0.7
         position = pygame.Vector2(SPELLS_HAND.x+5+CELL*spell_player_hand.index(card)*0.7,ypos)
         
-        card.card_drawer(WIN, position)
+        card.card_drawer(self.WIN, position)
         card.card_positioner()
     
     if scrd != None:
         try:
-            spell_player_hand[scrd].card_drawer(WIN)
+            spell_player_hand[scrd].card_drawer(self.WIN)
         except: pass
     
     pass        
@@ -107,12 +111,14 @@ def available_attacks_function(available_attacks):
     for attack in available_attacks:
         color = (127+waving_func(pygame.time.get_ticks()), 0, 0)
         pygame.draw.rect(BOARD, color, attack, width=6,border_radius=10)
-    
+    """
 
 
 class Main():
-    def __init__(self) -> None:
+    def __init__(self, faction) -> None:
         
+        self.WIN = pygame.display.set_mode((WIDTH, HEIGHT))  
+        self.faction = faction
         pygame.display.init()
         pygame.font.init()
         pygame.display.set_caption("TO CHANGE")
@@ -125,8 +131,9 @@ class Main():
         self.current_phase = GAME_SEQUENCE[0]
         self.phase_passer = 2
         #new_game_preparations("INVESTIGATORS","SERPENT_PEOPLE")
-        self.player_a = Player_Object("INVESTIGATORS")
-        self.player_b = Player_Object("SERPENT_PEOPLE")
+        self.player_a = Player_Object(self.faction)
+        #self.player_a = Player_Object("INVESTIGATORS")
+        self.player_b = Player_Object("NONE")
         self.player_turn = True
         self.mousepos = pygame.mouse.get_pos()
         
@@ -170,10 +177,10 @@ class Main():
         
 
         #self.player_a.player_tokens.append(prueba)
-        self.player_a.player_tokens.append(prueba2)
-        self.player_a.player_tokens.append(prueba3) 
+        #self.player_a.player_tokens.append(prueba2)
+        #self.player_a.player_tokens.append(prueba3) 
 
-        self.player_b.player_tokens.append(enemy1) 
+        #self.player_b.player_tokens.append(enemy1) 
         #self.player_b.player_tokens.append(enemy2) 
         #self.player_b.player_tokens.append(enemy3)   
         #self.player_b.player_tokens.append(enemy4)
@@ -189,7 +196,7 @@ class Main():
         if self.scene == "pre_game" or self.scene == "client_test":
             #self.player_a.player_tokens = []   # testing pre-game
             #self.player_b.player_tokens = []
-            self.player_a.token_list_loader()
+            #self.player_a.token_list_loader()
             #print(self.player_a.player_tokens)
             if self.scene == "pre_game":
                 self.pregame_mat_assigner()
@@ -198,41 +205,81 @@ class Main():
         # Network Objects
         
             self.net = Network()
-            self.player_a = self.net.getP()
-            print(self.player_a)
+            self.net.connect(self.faction)
+            
+        # Exchange objects
+        
+        self.player_a_exchange = Exchange_object("player_a")
+        self.player_b_exchange = Exchange_object("player_b")
+        
+        # Main Menu Objects
+        self.faction_dropdown = Dropdown(self.WIN, CELL*5, CELL*5, CELL, CELL, "choose faction", FACTIONS)
+        self.host_button = Button(self.WIN, CELL*3, CELL*3, CELL, CELL, text = "host game")
         
     def main(self):
         
         #run = True
         #clock = pygame.time.Clock()
+        self.mousepos = pygame.mouse.get_pos()
+        
         
         self.scene = "client_test"
         self.player_a.token_list_loader()
         
+        
         while self.run:
             
-            if self.scene == "pre_game":
+            
+            self.main_menu()
+            #self.client_testing()
+            """if self.scene == "pre_game":
                 self.pre_game()
             elif self.scene == "in_course":
                 self.in_course()    
             elif self.scene == "client_test"  :
-                self.client_testing()      
+                self.client_testing()      """
             
         pygame.quit()
     
-    def client_testing(self):
+    def main_menu(self):
         
-        #self.player_a.token_list_loader()
-        self.clock.tick(FPS)
+        #self.clock.tick(1)
+        events = events = pygame.event.get()
+        for event in events:
+            if event.type == pygame.QUIT:
+                
+                self.net.send("!DISCONNECT")
+                self.run = False
+        pygame_widgets.update(events)
+        pygame.display.update()
+    
+    def client_testing(self):
+        bucle = 0
+        
+        self.clock.tick(1)
         self.mousepos = pygame.mouse.get_pos()
-        #self.player_a = self.net.getP()
-        self.player_b = self.net.send(self.player_a)
+        self.player_a_exchange = self.player_a.exchanger_method_forward()
+        
+        try:
+                
+            online = self.net.send(self.player_a.player_exchange_obj)
+            if online != "NONE":
+                self.player_b.player_exchange_obj = online
+                self.player_b.exchanger_method_backward()
+                print(self.player_b)
+            bucle += 1
+        except: print("waitng")
+        
+        #self.player_b = self.net.send(self.player_a)
         
         phase_informer = "testing server"
-    
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                
+                self.net.send("!DISCONNECT")
                 self.run = False
+                
         
             if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]:
                 if no_defense_button.collidepoint(self.mousepos):
@@ -244,7 +291,7 @@ class Main():
                         
                         
         
-        WIN.fill(BACKGROUND_COLOR)
+        self.WIN.fill(BACKGROUND_COLOR)
         BOARD.fill("tan4")
 
         for row in range(ROWS):
@@ -257,14 +304,14 @@ class Main():
         self.token_movement("client_test")
          
                
-        WIN.blit(BOARD,(0,0))    # actualizes BOARD -> always after all changes of it
+        self.WIN.blit(BOARD,(0,0))    # actualizes BOARD -> always after all changes of it
 
-        pygame.draw.rect(WIN, "red", no_defense_button)
+        pygame.draw.rect(self.WIN, "red", no_defense_button)
         
         
 
         current_phase_informer = GENERIC_FONT.render(phase_informer, 1, "red")
-        WIN.blit(current_phase_informer, (CELL*10, 20))
+        self.WIN.blit(current_phase_informer, (CELL*10, 20))
 
        
         
@@ -363,7 +410,7 @@ class Main():
             phase_informer = "a_"+self.current_phase
         else: phase_informer = "b_"+self.current_phase"""
         
-        WIN.fill(BACKGROUND_COLOR)
+        self.WIN.fill(BACKGROUND_COLOR)
         BOARD.fill("tan4")
 
         for row in range(ROWS):
@@ -387,13 +434,13 @@ class Main():
         self.token_movement("pre_game")
          
                
-        WIN.blit(BOARD,(0,0))    # actualizes BOARD -> always after all changes of it
+        self.WIN.blit(BOARD,(0,0))    # actualizes BOARD -> always after all changes of it
 
         
         
 #
         current_phase_informer = GENERIC_FONT.render(phase_informer, 1, "red")
-        WIN.blit(current_phase_informer, (CELL*10, 20))
+        self.WIN.blit(current_phase_informer, (CELL*10, 20))
 #
        
         
@@ -487,7 +534,7 @@ class Main():
                         if faction_deck_drawer_button.collidepoint(self.mousepos):
                             
                             self.player_a.fate_phase(repetitions = 3)
-                            pygame.time.set_timer(self.freezing_mouse_event, 1000, 1) # prevents hitting the cards when drawing
+                            pygame.time.set_timer(self.freezing_mouse_event, 1000, 1) # prevents hitting the cards when draself.WINg
                             
                             #self.phase_passer_method()
     
@@ -652,7 +699,7 @@ class Main():
             phase_informer = "Your trun: "+self.current_phase
         else: phase_informer = "Enemy's turn"+self.current_phase
 
-        WIN.fill(BACKGROUND_COLOR)
+        self.WIN.fill(BACKGROUND_COLOR)
         BOARD.fill("tan4")
 
         for row in range(ROWS):
@@ -666,31 +713,31 @@ class Main():
         
 
 
-        WIN.blit(BOARD,(0,0))    # actualizes BOARD -> always after all changes of it
+        self.WIN.blit(BOARD,(0,0))    # actualizes BOARD -> always after all changes of it
 
-        pygame.draw.rect(WIN, "pink",FACTION_HAND)
-        pygame.draw.rect(WIN, "red",SPELLS_HAND)
+        pygame.draw.rect(self.WIN, "pink",FACTION_HAND)
+        pygame.draw.rect(self.WIN, "red",SPELLS_HAND)
 
 
         faction_deck = pygame.image.load(os.path.join("images","faction_deck2.jpg")).convert_alpha() # load faction deck image
         faction_deck_scaled_image = pygame.transform.scale(faction_deck, (faction_deck_drawer_button.width, faction_deck_drawer_button.height))
-        WIN.blit(faction_deck_scaled_image, (faction_deck_drawer_button))
+        self.WIN.blit(faction_deck_scaled_image, (faction_deck_drawer_button))
 
-        pygame.draw.rect(WIN, "white", button2)
-        pygame.draw.rect(WIN, "red", no_defense_button)
+        pygame.draw.rect(self.WIN, "white", button2)
+        pygame.draw.rect(self.WIN, "red", no_defense_button)
 
         spells_deck = pygame.image.load(os.path.join("images","spells_deck_scaled.jpg")).convert_alpha() # load spells deck image
         spells_deck_scaled_image = pygame.transform.scale(spells_deck,(spells_deck_drawer_button.width, spells_deck_drawer_button.height))
-        WIN.blit(spells_deck_scaled_image, (spells_deck_drawer_button))
+        self.WIN.blit(spells_deck_scaled_image, (spells_deck_drawer_button))
 
         current_phase_informer = GENERIC_FONT.render(phase_informer, 1, "red")
-        WIN.blit(current_phase_informer, (CELL*10, 20))
+        self.WIN.blit(current_phase_informer, (CELL*10, 20))
 
         faction_hand_sign = GENERIC_FONT.render("Faction Hand", 1, "black")
-        WIN.blit(faction_hand_sign,(FACTION_HAND.x+5,FACTION_HAND.y))
+        self.WIN.blit(faction_hand_sign,(FACTION_HAND.x+5,FACTION_HAND.y))
 
         spells_hand_sign = GENERIC_FONT.render("Spells hand",1,"black")
-        WIN.blit(spells_hand_sign, (SPELLS_HAND.x+5,SPELLS_HAND.y))
+        self.WIN.blit(spells_hand_sign, (SPELLS_HAND.x+5,SPELLS_HAND.y))
         
         
             
@@ -769,29 +816,29 @@ class Main():
             if current_phase == "move" and (crd.card_type == "M" or crd.card_type == "XS" or crd.card_type == "XF"):
                 ypos = FACTION_HAND.y+CELL*0.3
                 position = pygame.Vector2(FACTION_HAND.x+5+CELL*self.player_a.player_hand_objs.index(crd)*0.7, ypos)
-                #crd.card_drawer(WIN,pygame.Vector2(FACTION_HAND.x+5+CELL*player_hand.index(crd)*0.7, ypos))
+                #crd.card_drawer(self.WIN,pygame.Vector2(FACTION_HAND.x+5+CELL*player_hand.index(crd)*0.7, ypos))
 
             elif current_phase == "att" and (crd.card_type == "A"):
                 ypos = FACTION_HAND.y+CELL*0.3
                 position = pygame.Vector2(FACTION_HAND.x+5+CELL*self.player_a.player_hand_objs.index(crd)*0.7, ypos)
 
-                #crd.card_drawer(WIN, position)  
+                #crd.card_drawer(self.WIN, position)  
             elif current_phase == "def" and (crd.card_type == "D"):
                 ypos = FACTION_HAND.y+CELL*0.3
                 position = pygame.Vector2(FACTION_HAND.x+5+CELL*self.player_a.player_hand_objs.index(crd)*0.7, ypos)
 
-                #crd.card_drawer(WIN, position)  
+                #crd.card_drawer(self.WIN, position)  
             elif current_phase == "fate":
                 ypos = FACTION_HAND.y+CELL*0.7
                 position = pygame.Vector2(FACTION_HAND.x+5+CELL*self.player_a.player_hand_objs.index(crd)*0.7, ypos)
             else:
                 ypos = FACTION_HAND.y+CELL*0.7
                 position = pygame.Vector2(FACTION_HAND.x+5+CELL*self.player_a.player_hand_objs.index(crd)*0.7, ypos)
-            crd.card_drawer(WIN, position)   
+            crd.card_drawer(self.WIN, position)   
             crd.card_positioner() # 
         if card != None: #focus card changes size/picture - prevents false overlaping
             try: 
-                self.player_a.player_hand_objs[card].card_drawer(WIN)
+                self.player_a.player_hand_objs[card].card_drawer(self.WIN)
                 #print(player_hand[card].card_type)
             except: pass
             
@@ -804,12 +851,12 @@ class Main():
             ypos = SPELLS_HAND.y+CELL*0.7
             position = pygame.Vector2(SPELLS_HAND.x+5+CELL*self.player_a.player_spell_hand_objs.index(card)*0.7,ypos)
 
-            card.card_drawer(WIN, position)
+            card.card_drawer(self.WIN, position)
             card.card_positioner()
 
         if scrd != None:
             try:
-                self.player_a.player_spell_hand_objs[scrd].card_drawer(WIN)
+                self.player_a.player_spell_hand_objs[scrd].card_drawer(self.WIN)
             except: pass
     
     def phase_passer_method(self):
@@ -827,12 +874,23 @@ class Main():
     
 
 
-
+def main():
+    count = 0
+    while True:
+        for faction in FACTIONS:
+            print(count,".",faction)
+        option = input("faction: ")
+        if option in FACTIONS:
+        
+            M = Main(option)
+            M.main()
+            break
     
 
 
 if __name__=="__main__":
     
+    main()
     
-    M = Main()
-    M.main()
+    #M = Main()
+    #M.main()
