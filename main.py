@@ -31,91 +31,6 @@ def waving_func(time):
     return z
 
 
-        
-"""def token_movement(player_tokens, player2_tokens):
-    
-    #print("new token mov")
-    
-    for obj in player_tokens:
-        obj.token_object_drawer(BOARD)
-    for obj2 in player2_tokens:
-        obj2.token_object_drawer(BOARD)
-            
-    
-    
-def faction_hand_controller(card, player_hand, current_phase):
-    
-            
-    for crd in player_hand:  # positions cardobject
-        
-        ypos = float
-        position = pygame.Vector2(0,0)
-        #crd.rec.x = FACTION_HAND.x+5+CELL*player_hand.index(crd)*0.7 # assigns position to the object in the hand
-        #crd.rec.y = FACTION_HAND.y+CELL*0.7
-        
-        if current_phase == "move" and (crd.card_type == "M" or crd.card_type == "XS" or crd.card_type == "XF"):
-            ypos = FACTION_HAND.y+CELL*0.3
-            position = pygame.Vector2(FACTION_HAND.x+5+CELL*player_hand.index(crd)*0.7, ypos)
-            #crd.card_drawer(self.WIN,pygame.Vector2(FACTION_HAND.x+5+CELL*player_hand.index(crd)*0.7, ypos))
-            
-        elif current_phase == "att" and (crd.card_type == "A"):
-            ypos = FACTION_HAND.y+CELL*0.3
-            position = pygame.Vector2(FACTION_HAND.x+5+CELL*player_hand.index(crd)*0.7, ypos)
-        
-            #crd.card_drawer(self.WIN, position)  
-        elif current_phase == "def" and (crd.card_type == "D"):
-            ypos = FACTION_HAND.y+CELL*0.3
-            position = pygame.Vector2(FACTION_HAND.x+5+CELL*player_hand.index(crd)*0.7, ypos)
-        
-            #crd.card_drawer(self.WIN, position)  
-        elif current_phase == "fate":
-            ypos = FACTION_HAND.y+CELL*0.7
-            position = pygame.Vector2(FACTION_HAND.x+5+CELL*player_hand.index(crd)*0.7, ypos)
-        else:
-            ypos = FACTION_HAND.y+CELL*0.7
-            position = pygame.Vector2(FACTION_HAND.x+5+CELL*player_hand.index(crd)*0.7, ypos)
-        crd.card_drawer(self.WIN, position)   
-        crd.card_positioner() # 
-    if card != None: #focus card changes size/picture - prevents false overlaping
-        try: 
-            player_hand[card].card_drawer(self.WIN)
-            #print(player_hand[card].card_type)
-        except: pass
-        
-def spells_hand_controller(scrd, spell_player_hand, current_phase): 
-    
-    for card in spell_player_hand: 
-        #ypos = float
-        #position = pygame.Vector2(0,0)
-        
-        ypos = SPELLS_HAND.y+CELL*0.7
-        position = pygame.Vector2(SPELLS_HAND.x+5+CELL*spell_player_hand.index(card)*0.7,ypos)
-        
-        card.card_drawer(self.WIN, position)
-        card.card_positioner()
-    
-    if scrd != None:
-        try:
-            spell_player_hand[scrd].card_drawer(self.WIN)
-        except: pass
-    
-    pass        
-
-def available_moves_function(available_moves):
-    #print(available_moves)
-    for move in available_moves:
-        color = (0,127+waving_func(pygame.time.get_ticks()),0)
-        #grid_move = pygame.Rect(move[0],move[1],CELL,CELL)
-        pygame.draw.rect(BOARD, color, move, width=6,border_radius=10)
-
-def available_attacks_function(available_attacks):
-    
-    for attack in available_attacks:
-        color = (127+waving_func(pygame.time.get_ticks()), 0, 0)
-        pygame.draw.rect(BOARD, color, attack, width=6,border_radius=10)
-    """
-
-
 class Main():
     def __init__(self, faction) -> None:
         
@@ -217,7 +132,7 @@ class Main():
         
         # Main Menu Objects
         self.faction_dropdown = Dropdown(self.WIN, CELL*8, CELL*3, CELL*3, CELL*4/5, "choose faction", FACTIONS)
-        self.faction_chosen_button = Button(self.WIN, CELL*3, CELL*3, CELL*3, CELL*4/5, text = "host game", onClick = print(self.faction_dropdown.getSelected))
+        self.faction_chosen_button = Button(self.WIN, CELL*8, CELL*2, CELL*3, CELL*4/5, text = "continue", onClick = lambda: self.faction_selector())
         self.host_button = Button(self.WIN, CELL*3, CELL*3, CELL*3, CELL*4/5, text = "host game", onClick = lambda: self.host_game_method())
         self.join_button = Button(self.WIN, CELL*3, CELL*4, CELL*3, CELL*4/5, text = "Join game", onClick = lambda: self.net.connect(self.faction))
     
@@ -254,8 +169,9 @@ class Main():
         events = events = pygame.event.get()
         for event in events:
             if event.type == pygame.QUIT:
-                
-                self.net.send("!DISCONNECT")
+                try:
+                    self.net.send("!DISCONNECT")
+                except: pass
                 self.run = False
         pygame_widgets.update(events)
         pygame.display.update()
@@ -266,6 +182,10 @@ class Main():
         server.start()
         self.net.connect(self.faction)
     
+    def faction_selector(self):
+
+            faction = self.faction_dropdown.getSelected()
+            print(faction)
         
         
         
