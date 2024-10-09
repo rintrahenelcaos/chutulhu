@@ -48,7 +48,7 @@ class Main():
         self.current_phase = GAME_SEQUENCE[0]
         self.phase_passer = 2
         #new_game_preparations("INVESTIGATORS","SERPENT_PEOPLE")
-        self.player_a = Player_Object(self.faction)
+        self.player_a = Player_Object("NONE")
         #self.player_a = Player_Object("INVESTIGATORS")
         self.player_b = Player_Object("NONE")
         self.player_turn = True
@@ -806,7 +806,24 @@ class Main():
         else:
             
             self.current_phase = GAME_SEQUENCE[GAME_SEQUENCE.index(self.current_phase)+1]
+
+def main_menu(window):
     
+    WIN = pygame.display.set_mode((WIDTH, HEIGHT))
+    pygame.display.init()
+    pygame.font.init()
+    pygame.display.set_caption("TO CHANGE")
+    
+    mousepos = pygame.mouse.get_pos()
+    clock = pygame.time.Clock()
+    run = True
+    
+    
+    
+    
+    
+    
+    pass    
     
 
 
