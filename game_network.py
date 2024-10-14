@@ -4,7 +4,7 @@ import pickle
 from pickleobj import Exchange_object
 
 IP = socket.gethostbyname(socket.gethostname())
-IP = "192.168.1.2"
+IP = "10.160.4.213"
 PORT = 5555
 ADDR = (IP, PORT)
 SIZE = 40000
@@ -12,15 +12,16 @@ FORMAT = "utf-8"
 DISCONNECT_MSG = "!DISCONNECT"
 
 connected = True
+recv_order = []*1
 
 
 
-def listening(client):
+"""def listening(client):
     while connected:
         msg = client.recv(SIZE).decode(FORMAT)
         if msg != "":
             print(f"[BROADCASTED]: {msg}")
-        return msg
+        return msg"""
 
 
 def main():
@@ -55,6 +56,7 @@ class Network:
     def connect(self, faction):
         self.client.connect(ADDR) 
         print(f"[CONNECTED] Client connected to server at {IP}:{PORT}")
+        
         self.client.send(faction.encode(FORMAT))
     
     def send(self, cargo):
@@ -87,13 +89,13 @@ class Network:
         try:
             self.client.send(cargo.encode(FORMAT))
             #self.client.send(msg.encode(FORMAT))
-            data = pickle.loads(self.client.recv(SIZE))
+            #data = pickle.loads(self.client.recv(SIZE))
             #rec_msg = self.client.recv(SIZE).decode(FORMAT)
-            print("in the network: ", data)
+            #print("in the network: ", data)
             
             """if msg == DISCONNECT_MSG:
                 self.client.close()"""
-            return data
+            #return data
         except socket.error as e:
             print(e)
             
@@ -101,8 +103,19 @@ def listening(client):
     while connected:
         msg = client.recv(SIZE).decode(FORMAT)
         if msg != "":
-            print(f"[BROADCASTED]: {msg}")
-            
+            recv_order[0] = msg
+            print(f"[RECIEVED]: {recv_order[0]}")
+
+
+def main():
+    connected =True
+    net = Network()
+    net.connect("player")      
+    while connected:
+        send_order = net.send(input("> "))  
+        if send_order == DISCONNECT_MSG:
+            connected = False
+            exit()
 
 if __name__ == "__main__":
     main()

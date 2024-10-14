@@ -36,7 +36,8 @@ def handle_client(conn, addr):
             # msg = f"Msg received: {msg}"
             #msg_server = f"recieved: {msg}"
             #conn.send(msg_server.encode(FORMAT))
-            if msg != "":
+            
+            if msg:
 
                 broadcast(msg)
         except Exception as error:
