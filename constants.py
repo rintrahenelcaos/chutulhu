@@ -1,8 +1,5 @@
 import pygame
 import pyautogui
-import pygame_widgets
-from pygame_widgets.button import Button
-from pygame_widgets.dropdown import Dropdown
 
 pygame.font.init()
 #pygame.display.init()

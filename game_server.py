@@ -6,7 +6,7 @@ import sys
 
 
 IP = socket.gethostbyname(socket.gethostname())
-PORT = 5566
+PORT = 5555
 ADDR = (IP, PORT)
 SIZE = 40000
 FORMAT = "utf-8"
@@ -77,6 +77,7 @@ def main():
     
     print("[STARTING] Server is starting...")
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     try:
         server.bind(ADDR)
     except Exception as error:

@@ -1,7 +1,8 @@
 import pygame
-import pygame_widgets
-from pygame_widgets.button import Button
-from pygame_widgets.dropdown import Dropdown
+#import pygame_menu
+#import pygame_widgets
+#from pygame_widgets.button import Button
+#from pygame_widgets.dropdown import Dropdown
 
 import math
 from multiprocessing import Process
@@ -23,6 +24,8 @@ from game_network import Network
 from pickleobj import Exchange_object
 
 from game_server import main as server_main
+
+from widgets import DropDown, Button
 
 #self.WIN = pygame.display.set_mode((WIDTH, HEIGHT))  
 
@@ -121,7 +124,9 @@ class Main():
         if self.scene == "client_test":pass
         # Network Objects
         
-        self.net = Network()    
+        self.net = Network()  
+        
+        self.server = Process(target = server_main)
             #self.net = Network()
             #self.net.connect(self.faction)
             
@@ -131,10 +136,10 @@ class Main():
         self.player_b_exchange = Exchange_object("player_b")
         
         # Main Menu Objects
-        self.faction_dropdown = Dropdown(self.WIN, CELL*8, CELL*3, CELL*3, CELL*4/5, "choose faction", FACTIONS)
-        self.faction_chosen_button = Button(self.WIN, CELL*8, CELL*2, CELL*3, CELL*4/5, text = "continue", onClick = lambda: self.faction_selector())
-        self.host_button = Button(self.WIN, CELL*3, CELL*3, CELL*3, CELL*4/5, text = "host game", onClick = lambda: self.host_game_method())
-        self.join_button = Button(self.WIN, CELL*3, CELL*4, CELL*3, CELL*4/5, text = "Join game", onClick = lambda: self.net.connect(self.faction))
+        self.faction_dropdown = DropDown(["white", "grey"], ["green", "blue"], CELL*6, CELL*5, CELL*3, CELL, GENERIC_FONT, "Select Faction", FACTIONS)
+        self.faction_chosen_button = Button(CELL*6, CELL*2, CELL*3, CELL,GENERIC_FONT, "continue","gray", lambda: self.dummy_method() )
+        self.host_button = Button(CELL*6, CELL*4, CELL*3, CELL,GENERIC_FONT, "HOST", "red",lambda: self.host_game_method() )
+        self.join_button = Button(CELL*6, CELL*6, CELL*3, CELL,GENERIC_FONT, "JOIN", "white", lambda: self.to_second_menu() )
     
     
         
@@ -146,13 +151,22 @@ class Main():
         
         
         self.scene = "client_test"
-        self.player_a.token_list_loader()
-        
+        #self.player_a.token_list_loader()
+        self.scene = "first_menu"
         
         while self.run:
             
-            
-            self.main_menu()
+            if self.scene == "first_menu":
+                self.main_menu()
+            elif self.scene == "second_menu":
+                self.main_menu()
+            elif self.scene == "pre_game":
+                self.pre_game()
+            elif self.scene == "in_course":
+                self.in_course()
+            elif self.scene == "client_test":
+                self.client_testing()
+            #self.pre_game()
             #self.client_testing()
             """if self.scene == "pre_game":
                 self.pre_game()
@@ -163,36 +177,84 @@ class Main():
             
         pygame.quit()
     
+    ### MAIN MANEU BLOCK ###
+    
+    
+    
     def main_menu(self):
         
-        #self.clock.tick(1)
-        events = events = pygame.event.get()
+        self.clock.tick(FPS)
+        
+        events = pygame.event.get()
         for event in events:
             if event.type == pygame.QUIT:
                 try:
                     self.net.send("!DISCONNECT")
+                    self.server.terminate()
                 except: pass
+                
                 self.run = False
-        pygame_widgets.update(events)
-        pygame.display.update()
+            if self.scene == "first_menu":
+                self.host_button.update(events)
+                self.join_button.update(events)
+            elif self.scene == "second_menu":
+                selected_faction = self.faction_dropdown.update(events)
+                
+                if selected_faction >= 0:
+                    self.faction_dropdown.main = self.faction_dropdown.options[selected_faction]
+                    self.faction_chosen_button.action = lambda: self.faction_selector(self.faction_dropdown.main)
+                self.faction_chosen_button.update(events)
+        
+        self.menu_draw()
+        
+        
     
     def host_game_method(self):
         os.system("cls")
-        server = Process(target = server_main)
-        server.start()
-        self.net.connect(self.faction)
-    
-    def faction_selector(self):
-
-            faction = self.faction_dropdown.getSelected()
-            print(faction)
+        self.server.start()
+        self.to_second_menu()
         
+    def to_second_menu(self):
+        self.scene = "second_menu"
+    
+    def faction_selector(self, selection):
+        self.faction = selection
+        print(self.faction)
+        self.player_a.player_faction = self.faction
+        self.player_a.general_list_loader()
+        self.player_a.token_list_loader()
+        self.scene = "client_test"
+        self.net.connect(self.faction)
+        
+    def dummy_method(self):
+        pass
+        
+    
+    def menu_draw(self):
+        
+        phase_informer = "pre-game"
+    
+        """if self.player:
+            phase_informer = "a_"+self.current_phase
+        else: phase_informer = "b_"+self.current_phase"""
+        
+        self.WIN.fill(BACKGROUND_COLOR)
+        if self.scene == "first_menu":
+            self.host_button.draw(self.WIN)
+            self.join_button.draw(self.WIN)
+        elif self.scene == "second_menu":
+            self.faction_dropdown.draw(self.WIN)
+            self.faction_chosen_button.draw(self.WIN)
+        
+        pygame.display.update()
+        
+            
         
         
     def client_testing(self):
         bucle = 0
         
-        self.clock.tick(1)
+        self.clock.tick(FPS)
         self.mousepos = pygame.mouse.get_pos()
         self.player_a_exchange = self.player_a.exchanger_method_forward()
         
@@ -202,6 +264,7 @@ class Main():
             if online != "NONE":
                 self.player_b.player_exchange_obj = online
                 self.player_b.exchanger_method_backward()
+                self.player_b.token_list_loader()
                 print(self.player_b)
             bucle += 1
         except: print("waitng")
@@ -212,8 +275,11 @@ class Main():
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                try:
+                    self.net.send("!DISCONNECT")
+                    self.server.terminate()
+                except: pass
                 
-                self.net.send("!DISCONNECT")
                 self.run = False
                 
         
@@ -298,6 +364,10 @@ class Main():
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                try:
+                    self.net.send("!DISCONNECT")
+                    self.server.terminate()
+                except: pass
                 self.run = False
         
             if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]:
@@ -823,23 +893,19 @@ def main_menu(window):
     
     
     
-    pass    
+    pass 
+
+def main_menu(window):
+    pass
     
 
 
 def main():
     """server = Process(target = server_main)
     server.start()"""
-    count = 0
-    while True:
-        for faction in FACTIONS:
-            print(count,".",faction)
-        option = input("faction: ")
-        if option in FACTIONS:
-        
-            M = Main(option)
-            M.main()
-            break
+    M = Main("NONE")
+    M.main()
+    
     
 
 
