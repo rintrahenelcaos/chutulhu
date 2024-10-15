@@ -14,15 +14,15 @@ DISCONNECT_MSG = "!DISCONNECT"
 
 clients = []
 broadcast_msg = ""
-data = ["str", "str"]
-data = [Exchange_object("NONE"), Exchange_object("NONE")]
+data = ["", ""]
+#data = [Exchange_object("NONE"), Exchange_object("NONE")]
 factions_code = ["NONE","NONE"]
 
 def broadcast(msg, player):
     try:
         for ind_client in clients:
             if clients.index(ind_client) != player:
-                msg = msg + str(clients.index(ind_client))
+                #msg = msg + str(clients.index(ind_client))
                 ind_client.send(msg.encode(FORMAT))
                 
     except Exception as error:
@@ -37,28 +37,30 @@ def handle_client(conn, addr, player):
     connected = True
     while connected:
         try:
-            cargo = pickle.loads(conn.recv(SIZE))
-            #msg = conn.recv(SIZE).decode(FORMAT)
+            #cargo = pickle.loads(conn.recv(SIZE))
+            cargo = conn.recv(SIZE).decode(FORMAT)
 
             data[player] = cargo
             #data[player] = msg
-            """if msg == DISCONNECT_MSG:
-                #conn.shutdown()
-                connected = False"""
-            if cargo== DISCONNECT_MSG:
+            if cargo == DISCONNECT_MSG:
+                conn.shutdown()
                 print("player disconnected")
                 connected = False
-                
+                            
             print(f"[{addr}] {cargo}")
-            #print(f"[{addr}] {msg}")
+            
             for dat in range(len(data)):
                 if dat == player:
                     data[dat] = cargo
                     #data[dat] = msg
-            for dat in range(len(data)):
+            """if cargo:
+                broadcast(data[player], player)"""
+            broadcast(data[player], player)
+            """for dat in range(len(data)):
                 if dat != player:
-                    conn.send(pickle.dumps(data[dat]))
-                    #conn.send((data[dat]).encode(FORMAT))
+                    #conn.send(pickle.dumps(data[dat]))
+                    broadcast((data[dat]).encode(FORMAT), )
+                    conn.send((data[dat]).encode(FORMAT))"""
             #msg = f"Msg received: {msg}"
             #msg_server = f"recieved: {msg}"
             

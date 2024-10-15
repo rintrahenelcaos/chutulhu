@@ -5,7 +5,7 @@ import pickle
 
 
 IP = socket.gethostbyname(socket.gethostname())
-IP = "10.160.4.213"
+IP = "192.168.1.2"
 PORT = 5566
 ADDR = (IP, PORT)
 SIZE = 1024
