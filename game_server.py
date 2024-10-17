@@ -14,7 +14,7 @@ DISCONNECT_MSG = "!DISCONNECT"
 
 clients = []
 broadcast_msg = ""
-data = ["", ""]
+data = ["NONE","NONE"]
 #data = [Exchange_object("NONE"), Exchange_object("NONE")]
 factions_code = ["NONE","NONE"]
 
@@ -32,45 +32,47 @@ def handle_client(conn, addr, player):
     print(f"[NEW CONNECTION] {addr} connected.")
     faction = conn.recv(SIZE).decode(FORMAT)
     print(faction)
-    factions_code[player] = faction
+    data[player] = faction
+    for cl in range(len(data)):
+        if cl != player:
+            conn.send(data[cl].encode(FORMAT))
 
     connected = True
+    enemy_on_line = False
     while connected:
         try:
-            #cargo = pickle.loads(conn.recv(SIZE))
+            
             cargo = conn.recv(SIZE).decode(FORMAT)
-
+            
             data[player] = cargo
-            #data[player] = msg
+            
+            
+            
             if cargo == DISCONNECT_MSG:
-                conn.shutdown()
+                
                 print("player disconnected")
                 connected = False
+            
                             
-            print(f"[{addr}] {cargo}")
+            #print(f"[{addr}] {cargo}")
             
             for dat in range(len(data)):
                 if dat == player:
                     data[dat] = cargo
-                    #data[dat] = msg
-            """if cargo:
-                broadcast(data[player], player)"""
-            broadcast(data[player], player)
-            """for dat in range(len(data)):
+                    
+           
+            for dat in range(len(data)):
                 if dat != player:
-                    #conn.send(pickle.dumps(data[dat]))
-                    broadcast((data[dat]).encode(FORMAT), )
-                    conn.send((data[dat]).encode(FORMAT))"""
-            #msg = f"Msg received: {msg}"
-            #msg_server = f"recieved: {msg}"
+                    
+                    conn.send((data[dat]).encode(FORMAT))
+                    #if data[dat] != "NONE":   # prevent repeated msg, dissable due to rapid fire msg
+                    #    
+                    #    data[dat] = ""
             
-            """if msg != "":
-                pass
-                broadcast(msg, player)"""
         except Exception as error:
-            #print('Error :',error)        
+                 
             pass
-    #conn.shutdown()
+    
     conn.close()
     clients.remove(conn)
     exit() 

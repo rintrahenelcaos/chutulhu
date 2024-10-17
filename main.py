@@ -1,8 +1,5 @@
 import pygame
-#import pygame_menu
-#import pygame_widgets
-#from pygame_widgets.button import Button
-#from pygame_widgets.dropdown import Dropdown
+
 
 import math
 from multiprocessing import Process
@@ -166,6 +163,9 @@ class Main():
                 self.in_course()
             elif self.scene == "client_test":
                 self.client_testing()
+            elif self.scene == "wait_enemy":
+                self.waiting_enemy()
+                
             #self.pre_game()
             #self.client_testing()
             """if self.scene == "pre_game":
@@ -223,8 +223,19 @@ class Main():
         self.player_a.player_faction = self.faction
         self.player_a.general_list_loader()
         self.player_a.token_list_loader()
-        self.scene = "client_test"
-        self.net.connect(self.faction)
+        enemy_faction = self.net.connect(self.faction)
+        if enemy_faction == "NONE":
+            print("waiting enemy")
+            self.scene = "wait_enemy"
+        else: 
+            
+            self.player_b.player_faction = enemy_faction
+            self.player_b.general_list_loader()
+            self.player_b.token_list_loader()  
+            print("enemy: ",self.player_b)
+            self.scene = "client_test"
+            
+        
         
     def dummy_method(self):
         pass
@@ -247,7 +258,49 @@ class Main():
             self.faction_chosen_button.draw(self.WIN)
         
         pygame.display.update()
+    
+    def waiting_enemy(self):
         
+        self.clock.tick(FPS)
+        
+        events = pygame.event.get()
+        for event in events:
+            if event.type == pygame.QUIT:
+                try:
+                    self.net.send("!DISCONNECT")
+                    self.server.terminate()
+                except: pass
+                
+                self.run = False
+        
+        response = self.net.send_recv(self.player_a.player_faction)
+        
+        if response != "NONE":
+            self.player_b.player_faction = response
+            print("enemy faction:",self.player_b.player_faction)
+            self.player_b.general_list_loader()
+            self.player_b.token_list_loader()
+            self.scene = "client_test"
+        else: pass 
+            
+        
+        
+        self.WIN.fill(BACKGROUND_COLOR)
+        
+        phase_informer = "Waiting Enemy to Connect"
+        current_phase_informer = GENERIC_FONT.render(phase_informer, 1, "red")
+        self.WIN.blit(current_phase_informer, (CELL*10, 20))
+#
+       
+        
+        pygame.display.update()
+        
+        
+            
+        
+        
+        
+          
             
         
         
@@ -256,18 +309,16 @@ class Main():
         
         self.clock.tick(FPS)
         self.mousepos = pygame.mouse.get_pos()
-        self.player_a_exchange = self.player_a.exchanger_method_forward()
         
-        try:
-                
-            online = self.net.send(self.player_a.player_exchange_obj)
-            if online != "NONE":
-                self.player_b.player_exchange_obj = online
-                self.player_b.exchanger_method_backward()
-                self.player_b.token_list_loader()
-                print(self.player_b)
-            bucle += 1
-        except: print("waitng")
+        tosend = "NONE"
+        enemy_pos = "NONE"
+        #try:
+            #enemy_pos = self.net.send_recv("vector_to_go:["+str(0)+"]:"+str(self.player_a.player_tokens[0].vector_to_go.x)+":"+str(self.player_a.token_list[0].vector_to_go.y))    
+            #enemy_pos = self.net.send_recv("vector_to_go:["+str(0)+"]:"+str(self.player_a.player_tokens[0].vector_to_go[0])+":"+str(self.player_a.token_list[0].vector_to_go[1]))
+            #print(enemy_pos)
+            #self.player_b.token_list[0].vector_to_go = enemy_pos
+            #bucle += 1
+        #except: pass
         
         #self.player_b = self.net.send(self.player_a)
         
@@ -276,7 +327,7 @@ class Main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 try:
-                    self.net.send("!DISCONNECT")
+                    self.net.send_recv("!DISCONNECT")
                     self.server.terminate()
                 except: pass
                 
@@ -290,8 +341,29 @@ class Main():
                     for token in self.player_a.player_tokens:
                         token.vector_to_go = pygame.Vector2(available_test[var][0]*CELL, available_test[var][1]*CELL)
                         var += 1
-                        
-                        
+                    print("vector_to_go[0]: ",self.player_a.player_tokens[0].vector_to_go[0])
+                    print(str(self.player_a.player_tokens[0].vector_to_go[0]))
+                    vector_to_go0 = str(self.player_a.player_tokens[0].vector_to_go[0])
+                    vector_to_go1 = str(self.player_a.player_tokens[0].vector_to_go[1])
+                    tosend = "vector_to_go["+str(0)+"]("+vector_to_go0+","+vector_to_go1+")"
+                    tosend = vector_to_go0+":"+vector_to_go1
+                    print(tosend)
+                    #enemy_pos = self.net.send_recv(tosend)
+                    #print(enemy_pos)
+        try:
+            
+            enemy_pos = self.net.send_recv(tosend)
+            if enemy_pos != "NONE":
+                separator = enemy_pos.index(":")
+                xpos = float(enemy_pos[:separator])
+                ypos = float(enemy_pos[separator+1:])
+                self.player_b.player_tokens[0].vector_to_go[:] = xpos, ypos
+        
+        except:
+            print("problems in enemy_pos")
+        
+            
+            
         
         self.WIN.fill(BACKGROUND_COLOR)
         BOARD.fill("tan4")
@@ -303,8 +375,9 @@ class Main():
         
         #self.starting_positions()
         #self.selected_token()
-        self.token_movement("client_test")
-         
+        #self.token_movement("client_test")
+        self.player_a.player_tokens[0].token_object_drawer(BOARD)
+        self.player_b.player_tokens[0].token_object_drawer(BOARD, turner = True)
                
         self.WIN.blit(BOARD,(0,0))    # actualizes BOARD -> always after all changes of it
 

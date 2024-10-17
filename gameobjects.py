@@ -116,3 +116,13 @@ class TokenObject:
             self.rec.y = self.go_pos[1]
         board.blit(self.scaled_image, (self.rec))
         
+        
+def main():
+    pygame.display.set_mode((10, 10))
+    pygame.display.init()
+    token = TokenObject(10,1,2,"token_2.png","one",2,"dfgdf")
+    print(token.vector_to_go)
+    print(type(token.vector_to_go))
+    print(type(token.vector_to_go[0]))
+
+#main()
