@@ -284,7 +284,7 @@ class Main():
             print("enemy faction:",self.player_b.player_faction)
             self.player_b.general_list_loader()
             self.player_b.token_list_loader()
-            self.net.send_recv("NONE")
+            #self.net.send_recv("NONE")
             self.scene = "client_test"
         else: pass 
             
