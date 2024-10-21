@@ -237,7 +237,7 @@ class Main():
             self.player_b.general_list_loader()
             self.player_b.token_list_loader()  
             print("enemy: ",self.player_b)
-            
+            self.net.send_recv("NONE")
             self.scene = "client_test"
             
         
