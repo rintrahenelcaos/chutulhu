@@ -386,11 +386,12 @@ class Main():
                 while enemy_pos != "RECIEVED":
                     enemy_pos = self.net.send_recv(tosend)
             if enemy_pos != "NONE":
-                self.net.send_recv("RECIEVED")
+                #self.net.send_recv("RECIEVED")
                 print("enemy_pos: ", enemy_pos)
                 if enemy_pos != "RECIEVED":
                     code, target, order = recv_msg_translator(enemy_pos)
                     self.orders_interpreter_method(code, target, order)
+                self.net.send_recv("RECIEVED")
                 """if code == "VECTORTOGO":
                     for token in self.player_b.player_tokens:
                         if str(token) == target:
