@@ -237,6 +237,7 @@ class Main():
             self.player_b.general_list_loader()
             self.player_b.token_list_loader()  
             print("enemy: ",self.player_b)
+            
             self.scene = "client_test"
             
         
@@ -249,9 +250,7 @@ class Main():
         
         phase_informer = "pre-game"
     
-        """if self.player:
-            phase_informer = "a_"+self.current_phase
-        else: phase_informer = "b_"+self.current_phase"""
+        
         
         self.WIN.fill(BACKGROUND_COLOR)
         if self.scene == "first_menu":
@@ -284,6 +283,7 @@ class Main():
             print("enemy faction:",self.player_b.player_faction)
             self.player_b.general_list_loader()
             self.player_b.token_list_loader()
+            self.net.send_recv("NONE")
             self.scene = "client_test"
         else: pass 
             
