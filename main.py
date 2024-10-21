@@ -382,7 +382,11 @@ class Main():
         try:
             
             enemy_pos = self.net.send_recv(tosend)
+            if tosend != "NONE":
+                while enemy_pos != "RECIEVED":
+                    enemy_pos = self.net.send_recv(tosend)
             if enemy_pos != "NONE":
+                self.net.send_recv("RECIEVED")
                 print("enemy_pos: ", enemy_pos)
                 code, target, order = recv_msg_translator(enemy_pos)
                 self.orders_interpreter_method(code, target, order)
