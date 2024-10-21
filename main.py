@@ -306,7 +306,7 @@ class Main():
             #print("initial deploy")
             
             for indicator in range(len(self.player_b.player_tokens)):
-                xpos, ypos = order[0][0], order[0][1]
+                xpos, ypos = order[indicator][0], order[indicator][1]
                 self.player_b.player_tokens[indicator].vector_to_go[:] = xpos, ypos 
                 
         
