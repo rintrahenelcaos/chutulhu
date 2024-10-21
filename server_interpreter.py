@@ -66,3 +66,5 @@ def main():
     print(code)
     print(target)
     print(order) 
+
+main()

@@ -348,11 +348,16 @@ class Main():
             
             enemy_pos = self.net.send_recv(tosend)
             if enemy_pos != "NONE":
-                
-                separator = enemy_pos.index(":")
-                xpos = float(enemy_pos[:separator])
-                ypos = float(enemy_pos[separator+1:])
-                self.player_b.player_tokens[0].vector_to_go[:] = xpos, ypos
+                code, target, order = recv_msg_translator(enemy_pos)
+                if code == "VECTORTOGO":
+                    for token in self.player_b.player_tokens:
+                        if str(token) == target:
+                            xpos, ypos = order[0][0], order[0][1]
+                            token.vector_to_go[:] = xpos, ypos
+                #separator = enemy_pos.index(":")
+                #xpos = float(enemy_pos[:separator])
+                #ypos = float(enemy_pos[separator+1:])
+                #self.player_b.player_tokens[0].vector_to_go[:] = xpos, ypos
         
         except:
             print("problems in enemy_pos")
