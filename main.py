@@ -232,12 +232,12 @@ class Main():
             print("waiting enemy")
             self.scene = "wait_enemy"
         else: 
-            
+            #self.net.send_recv("NONE")
             self.player_b.player_faction = enemy_faction
             self.player_b.general_list_loader()
             self.player_b.token_list_loader()  
             print("enemy: ",self.player_b)
-            self.net.send_recv("NONE")
+            #self.net.send_recv("NONE")
             self.scene = "client_test"
             
         
@@ -279,6 +279,7 @@ class Main():
         response = self.net.send_recv(self.player_a.player_faction)
         
         if response != "NONE":
+            self.net.send_recv("NONE")
             self.player_b.player_faction = response
             print("enemy faction:",self.player_b.player_faction)
             self.player_b.general_list_loader()
