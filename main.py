@@ -342,12 +342,13 @@ class Main():
                     vector_to_go1 = str(self.player_a.player_tokens[0].vector_to_go[1])
                     tosend = "VECTORTOGO]"+str(self.player_a.player_tokens[0])+":"+vector_to_go0+","+vector_to_go1
                     #tosend = vector_to_go0+":"+vector_to_go1
-                    print(tosend)
+                    print("tosend: ",tosend)
                     
         try:
             
             enemy_pos = self.net.send_recv(tosend)
             if enemy_pos != "NONE":
+                print("enemy_pos: ", enemy_pos)
                 code, target, order = recv_msg_translator(enemy_pos)
                 if code == "VECTORTOGO":
                     for token in self.player_b.player_tokens:
