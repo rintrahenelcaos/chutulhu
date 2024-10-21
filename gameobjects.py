@@ -127,6 +127,7 @@ def main():
     print(type(token.vector_to_go[0]))
     if str(token) == "one":
         print("recognizes by string")
+        
     else: print("failed identification")
 
-main()
+#main()

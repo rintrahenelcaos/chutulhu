@@ -340,14 +340,15 @@ class Main():
                     print(str(self.player_a.player_tokens[0].vector_to_go[0]))
                     vector_to_go0 = str(self.player_a.player_tokens[0].vector_to_go[0])
                     vector_to_go1 = str(self.player_a.player_tokens[0].vector_to_go[1])
-                    tosend = "VECTORTOGO]"+str(0)+":"+vector_to_go0+","+vector_to_go1
-                    tosend = vector_to_go0+":"+vector_to_go1
+                    tosend = "VECTORTOGO]"+str(self.player_a.player_tokens[0])+":"+vector_to_go0+","+vector_to_go1
+                    #tosend = vector_to_go0+":"+vector_to_go1
                     print(tosend)
                     
         try:
             
             enemy_pos = self.net.send_recv(tosend)
             if enemy_pos != "NONE":
+                
                 separator = enemy_pos.index(":")
                 xpos = float(enemy_pos[:separator])
                 ypos = float(enemy_pos[separator+1:])

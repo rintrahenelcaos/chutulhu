@@ -372,14 +372,12 @@ class Player_Object_test():
 
 
 def main():
-    from pympler import asizeof
-    pla = Player_Object("INVESTIGATORS")
-    print(asizeof.asizeof(pla))
-    pla.exchanger_method_forward()
-    exc = pla.player_exchange_obj
-    print(asizeof.asizeof(exc))
     
-    pass
+    pla = Player_Object("INVESTIGATORS")
+    pla.general_list_loader()
+    pla.token_list_loader()
+    print(pla.player_tokens[0])
+    
     
 def grid_position(position):
     """translates clicks into discrete cell positions
@@ -402,5 +400,5 @@ def to_grid(position):
     
 if __name__ == "__main__":
     
-    main()
-    
+    #main()
+    pass
