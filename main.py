@@ -364,14 +364,18 @@ class Main():
                 if no_defense_button.collidepoint(self.mousepos):
                     var = 0
                     available_test = [(x,y) for x in range (8) for y in range(6, 8)]
+                    order = "BATCH]all:"
                     for token in self.player_a.player_tokens:
                         token.vector_to_go = pygame.Vector2(available_test[var][0]*CELL, available_test[var][1]*CELL)
+                        order += str(available_test[var][0]*CELL)+","+str(available_test[var][1]*CELL)+";"
                         var += 1
-                    print("vector_to_go[0]: ",self.player_a.player_tokens[0].vector_to_go[0])
-                    print(str(self.player_a.player_tokens[0].vector_to_go[0]))
-                    vector_to_go0 = str(self.player_a.player_tokens[0].vector_to_go[0])
-                    vector_to_go1 = str(self.player_a.player_tokens[0].vector_to_go[1])
-                    tosend = "VECTORTOGO]"+str(self.player_a.player_tokens[0])+":"+vector_to_go0+","+vector_to_go1
+                    order = order[:-1]
+                    tosend = order    
+                    #print("vector_to_go[0]: ",self.player_a.player_tokens[0].vector_to_go[0])
+                    #print(str(self.player_a.player_tokens[0].vector_to_go[0]))
+                    #vector_to_go0 = str(self.player_a.player_tokens[0].vector_to_go[0])
+                    #vector_to_go1 = str(self.player_a.player_tokens[0].vector_to_go[1])
+                    #tosend = "VECTORTOGO]"+str(self.player_a.player_tokens[0])+":"+vector_to_go0+","+vector_to_go1
                     #tosend = vector_to_go0+":"+vector_to_go1
                     print("tosend: ",tosend)
                     
@@ -405,8 +409,9 @@ class Main():
             for col in range(row % 2, ROWS, 2):
                 pygame.draw.rect(BOARD, "grey3",(CELL*row, CELL*col, CELL,CELL))
         
-        self.player_a.player_tokens[0].token_object_drawer(BOARD)
-        self.player_b.player_tokens[0].token_object_drawer(BOARD, turner = True)
+        #self.player_a.player_tokens[0].token_object_drawer(BOARD)
+        #self.player_b.player_tokens[0].token_object_drawer(BOARD, turner = True)
+        self.token_movement(self.scene)
                
         self.WIN.blit(BOARD,(0,0))    # actualizes BOARD -> always after all changes of it
 

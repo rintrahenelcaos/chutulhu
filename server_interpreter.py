@@ -66,5 +66,8 @@ def main():
     print(code)
     print(target)
     print(order) 
+    trying = "something"
+    trying += " else"
+    print(trying)
 
 main()
