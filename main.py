@@ -10,6 +10,7 @@ from constants import PRE_GAME_TOKEN_MAT, pre_game_cancel_button, pre_game_ok_bu
 from constants import FACTION_HAND, FACTION_DECK_POSITION, faction_deck_drawer_button
 from constants import SPELLS_HAND, SPELL_DECK_POSITION, spells_deck_drawer_button
 from constants import GENERIC_FONT, CARD_FONT
+
 from gameobjects import TokenObject, CardObject
 from player_turn_module import Player_Object
 from dbcreator import conection_sql
@@ -18,11 +19,14 @@ from functionsmodule import movement_blocker, available_movement_detector_pathfi
 from pregame_functions import player_token_assigner, starting_position_function
 
 from game_network import Network
+
 from pickleobj import Exchange_object
 
 from game_server import main as server_main
 
 from widgets import DropDown, Button
+
+from server_interpreter import recv_msg_translator, send_msg_translator
 
 #self.WIN = pygame.display.set_mode((WIDTH, HEIGHT))  
 
@@ -312,16 +316,7 @@ class Main():
         
         tosend = "NONE"
         enemy_pos = "NONE"
-        #try:
-            #enemy_pos = self.net.send_recv("vector_to_go:["+str(0)+"]:"+str(self.player_a.player_tokens[0].vector_to_go.x)+":"+str(self.player_a.token_list[0].vector_to_go.y))    
-            #enemy_pos = self.net.send_recv("vector_to_go:["+str(0)+"]:"+str(self.player_a.player_tokens[0].vector_to_go[0])+":"+str(self.player_a.token_list[0].vector_to_go[1]))
-            #print(enemy_pos)
-            #self.player_b.token_list[0].vector_to_go = enemy_pos
-            #bucle += 1
-        #except: pass
-        
-        #self.player_b = self.net.send(self.player_a)
-        
+                
         phase_informer = "testing server"
 
         for event in pygame.event.get():
@@ -345,11 +340,10 @@ class Main():
                     print(str(self.player_a.player_tokens[0].vector_to_go[0]))
                     vector_to_go0 = str(self.player_a.player_tokens[0].vector_to_go[0])
                     vector_to_go1 = str(self.player_a.player_tokens[0].vector_to_go[1])
-                    tosend = "vector_to_go["+str(0)+"]("+vector_to_go0+","+vector_to_go1+")"
+                    tosend = "VECTORTOGO]"+str(0)+":"+vector_to_go0+","+vector_to_go1
                     tosend = vector_to_go0+":"+vector_to_go1
                     print(tosend)
-                    #enemy_pos = self.net.send_recv(tosend)
-                    #print(enemy_pos)
+                    
         try:
             
             enemy_pos = self.net.send_recv(tosend)
@@ -371,11 +365,7 @@ class Main():
         for row in range(ROWS):
             for col in range(row % 2, ROWS, 2):
                 pygame.draw.rect(BOARD, "grey3",(CELL*row, CELL*col, CELL,CELL))
-                
         
-        #self.starting_positions()
-        #self.selected_token()
-        #self.token_movement("client_test")
         self.player_a.player_tokens[0].token_object_drawer(BOARD)
         self.player_b.player_tokens[0].token_object_drawer(BOARD, turner = True)
                
@@ -400,9 +390,7 @@ class Main():
         self.scene = "pre_game"
         
         self.movement_indicator = 1
-        #self.player_a.token_list_loader()
-        #print(self.player_a.player_tokens)
-        
+                
         self.available_moves = starting_position_function(self.player_a.player_tokens)
         if self.ocupied_cell != None:   # overlapping tokens prevention
             try:

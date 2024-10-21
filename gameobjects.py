@@ -121,8 +121,12 @@ def main():
     pygame.display.set_mode((10, 10))
     pygame.display.init()
     token = TokenObject(10,1,2,"token_2.png","one",2,"dfgdf")
+    print(token)
     print(token.vector_to_go)
     print(type(token.vector_to_go))
     print(type(token.vector_to_go[0]))
+    if str(token) == "one":
+        print("recognizes by string")
+    else: print("failed identification")
 
-#main()
+main()

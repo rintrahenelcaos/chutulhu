@@ -135,7 +135,7 @@ class Network:
         try: 
             self.client.connect(ADDR) 
             print(f"[CONNECTED] Client connected to server at {IP}:{PORT}")
-            self.client.send(faction.encode(FORMAT))
+            self.client.sendall(faction.encode(FORMAT))
             return self.client.recv(SIZE).decode(FORMAT)
         except:
             pass
@@ -144,13 +144,13 @@ class Network:
         try: 
             
                 
-            self.client.send(cargo.encode(FORMAT))
+            self.client.sendall(cargo.encode(FORMAT))
             return self.client.recv(SIZE).decode(FORMAT)
         except: pass
         
     def closing(self):
         try: 
-            self.client.send(DISCONNECT_MSG.encode(FORMAT))
+            self.client.sendall(DISCONNECT_MSG.encode(FORMAT))
             self.client.shutdown()
             self.client.close()
         except:

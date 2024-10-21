@@ -64,7 +64,7 @@ def handle_client(conn, addr, player):
             for dat in range(len(data)):
                 if dat != player:
                     
-                    conn.send((data[dat]).encode(FORMAT))
+                    conn.sendall((data[dat]).encode(FORMAT))
                     #if data[dat] != "NONE":   # prevent repeated msg, dissable due to rapid fire msg
                     #    
                     #    data[dat] = ""
