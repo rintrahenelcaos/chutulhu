@@ -300,7 +300,37 @@ class Main():
         
         pygame.display.update()
         
+    def orders_interpreter_method(self, code, target, order):
         
+        if code == "BATCH":  # initial deploy order. Structure: "BATCH]all:xpos1,ypos1;xpos2,ypos;..."
+            #print("initial deploy")
+            
+            for indicator in range(len(self.player_b.player_tokens)):
+                xpos, ypos = order[0][0], order[0][1]
+                self.player_b.player_tokens[indicator].vector_to_go[:] = xpos, ypos 
+                
+        
+        elif code == "VECTORTOGO":
+            
+            for token in self.player_b.player_tokens:
+                if str(token) == target:
+                    xpos, ypos = order[0][0], order[0][1]
+                    token.vector_to_go[:] = xpos, ypos
+            
+            
+            
+        elif code == "CARDSDRAWN":
+            print("cards drawn")
+        elif code == "MCARDPLAYED":
+            print("card played")
+        elif code == "ACARDPLAYED":
+            print("move token")
+        elif code == "XCARDPLAYED":
+            print("move token")
+        elif code == "SCARDPLAYED":
+            print("move token")
+        
+               
             
         
         
@@ -351,11 +381,12 @@ class Main():
             if enemy_pos != "NONE":
                 print("enemy_pos: ", enemy_pos)
                 code, target, order = recv_msg_translator(enemy_pos)
-                if code == "VECTORTOGO":
+                self.orders_interpreter_method(code, target, order)
+                """if code == "VECTORTOGO":
                     for token in self.player_b.player_tokens:
                         if str(token) == target:
                             xpos, ypos = order[0][0], order[0][1]
-                            token.vector_to_go[:] = xpos, ypos
+                            token.vector_to_go[:] = xpos, ypos"""
                 #separator = enemy_pos.index(":")
                 #xpos = float(enemy_pos[:separator])
                 #ypos = float(enemy_pos[separator+1:])
@@ -946,27 +977,9 @@ class Main():
             
             self.current_phase = GAME_SEQUENCE[GAME_SEQUENCE.index(self.current_phase)+1]
 
-def main_menu(window):
-    
-    WIN = pygame.display.set_mode((WIDTH, HEIGHT))
-    pygame.display.init()
-    pygame.font.init()
-    pygame.display.set_caption("TO CHANGE")
-    
-    mousepos = pygame.mouse.get_pos()
-    clock = pygame.time.Clock()
-    run = True
-    
-    
-    
-    
-    
-    
-    pass 
 
-def main_menu(window):
-    pass
-    
+
+
 
 
 def main():
