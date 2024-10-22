@@ -384,6 +384,7 @@ class Main():
             enemy_pos = self.net.send_recv(tosend)
             if tosend != "NONE":
                 while enemy_pos != "RECIEVED":
+                    print(tosend)
                     enemy_pos = self.net.send_recv(tosend)
             if enemy_pos != "NONE":
                 #self.net.send_recv("RECIEVED")
