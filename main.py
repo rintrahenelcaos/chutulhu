@@ -65,6 +65,8 @@ class Main():
         self.moving_tokens = False # tokens are to be moved
         self.available_moves = []
 
+        # Attack phase variables
+        
         self.attack_indicator = None
         self.attacking_tokens = False
         self.available_attacks = []
@@ -74,12 +76,15 @@ class Main():
         
         self.defense_indicator = False
         
+        # pre-game / deploy phase variables
         self.chosen_token = None
         self.pos = None
         self.ocupied_cell = None
         
         self.freezing_mouse_event = pygame.USEREVENT+1
         
+        
+        # test variables
         
         #prueba = TokenObject(CELL, 0, 0, "token_1.png", "prueba1",1,"")
         prueba2 = TokenObject(CELL,CELL*3, CELL*4, "token_1.png", "prueba2", 1,"")
@@ -111,7 +116,9 @@ class Main():
         #self.player_b.player_tokens.append(enemy6)
         #self.player_b.player_tokens.append(enemy7)
         #self.player_b.player_tokens.append(enemy8)
-        self.scene = "client_test"
+        
+        
+        
         
         if self.scene == "pre_game":
             self.player_a.player_tokens = []   # testing pre-game
@@ -130,19 +137,20 @@ class Main():
         self.net = Network()  
         
         self.server = Process(target = server_main)
-            #self.net = Network()
-            #self.net.connect(self.faction)
-            
-        # Exchange objects
         
-        self.player_a_exchange = Exchange_object("player_a")
-        self.player_b_exchange = Exchange_object("player_b")
+        self.order_to_send = "NONE" # msg send to server
+        self.recieved_order = "NONE" # msg recieved from the server 
         
-        # Main Menu Objects
+        
+        # Main Menu Widgets
         self.faction_dropdown = DropDown(["white", "grey"], ["green", "blue"], CELL*6, CELL*5, CELL*3, CELL, GENERIC_FONT, "Select Faction", FACTIONS)
         self.faction_chosen_button = Button(CELL*6, CELL*2, CELL*3, CELL,GENERIC_FONT, "continue","gray", lambda: self.dummy_method() )
         self.host_button = Button(CELL*6, CELL*4, CELL*3, CELL,GENERIC_FONT, "HOST", "red",lambda: self.host_game_method() )
         self.join_button = Button(CELL*6, CELL*6, CELL*3, CELL,GENERIC_FONT, "JOIN", "white", lambda: self.to_second_menu() )
+        
+        # Pregame Scene Widgets
+        self.pre_game_cancel_button = Button(CELL, CELL//4*3, CELL*2,CELL//2, GENERIC_FONT, "Cancel Deploy", "red", lambda: self.pregame_mat_assigner())
+        self.pre_game_ok_button = Button(CELL*4, CELL//4*3, CELL*2,CELL//2, GENERIC_FONT, "Confirm Deploy", "darkgreen", lambda: self.pregame_mat_assigner())
     
     
         
@@ -240,7 +248,7 @@ class Main():
             self.player_b.token_list_loader()  
             print("enemy: ",self.player_b)
             #self.net.send_recv("NONE")
-            self.scene = "client_test"
+            self.scene = "pre_game"
             
         
         
@@ -287,7 +295,7 @@ class Main():
             self.player_b.general_list_loader()
             self.player_b.token_list_loader()
             #self.net.send_recv("NONE")
-            self.scene = "client_test"
+            self.scene = "pre_game"
         else: pass 
             
         
@@ -441,8 +449,8 @@ class Main():
         self.clock.tick(FPS)
         self.mousepos = pygame.mouse.get_pos()
         #self.scene = "pre_game"
-        tosend = "NONE"
-        enemy_deploy = "NONE"
+        self.order_to_send = "NONE"
+        self.recieved_order = "NONE"
         
         
         self.movement_indicator = 1
@@ -478,8 +486,8 @@ class Main():
         
         else:
             pygame.mouse.set_cursor(pygame.cursors.arrow) # standard        
-        
-        for event in pygame.event.get():
+        events = pygame.event.get()
+        for event in events:
             if event.type == pygame.QUIT:
                 try:
                     self.net.send("!DISCONNECT")
@@ -488,24 +496,24 @@ class Main():
                 self.run = False
         
             if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]:
-                if pre_game_cancel_button.collidepoint(self.mousepos): # cancel initial placement
-                    self.pregame_mat_assigner()
-                    self.moving_tokens = False
-                    self.chosen_token = None
+                #if pre_game_cancel_button.collidepoint(self.mousepos): # cancel initial placement
+                    #self.pregame_mat_assigner()
+                    #self.moving_tokens = False
+                    #self.chosen_token = None
                 
-                if pre_game_ok_button.collidepoint(self.mousepos) and len(self.available_moves) == 0:
-                    print("next scene")
-                    #var = 0
-                    #available_test = [(x,y) for x in range (8) for y in range(6, 8)]
-                    order = "BATCH]all:"
-                    for token in self.player_a.player_tokens:
-                        order += str(token.vector_to_go[0])+","+str(token.vector_to_go[1])+";"
-                                                
-                    order = order[:-1]
-                    tosend = order    
-                    
-                    print("tosend: ",tosend)
-                    #self.net.send_recv(tosend)
+                #if pre_game_ok_button.collidepoint(self.mousepos) and len(self.available_moves) == 0:
+                #    print("next scene")
+                #    #var = 0
+                #    #available_test = [(x,y) for x in range (8) for y in range(6, 8)]
+                #    order = "BATCH]all:"
+                #    for token in self.player_a.player_tokens:
+                #        order += str(token.vector_to_go[0])+","+str(token.vector_to_go[1])+";"
+                #                                
+                #    order = order[:-1]
+                #    tosend = order    
+                #    
+                #    print("tosend: ",tosend)
+                #    #self.net.send_recv(tosend)
                     
                     
                 
@@ -530,13 +538,18 @@ class Main():
                             self.moving_tokens = False
                             self.chosen_token = None
                             self.ocupied_cell = move
+            
+            # Widgets
+            if not self.player_ready: # prevent redeploy after finnished 
+                self.pre_game_cancel_button.update(events)
+            self.pre_game_ok_button.update(events)
+            
         
+        self.recieved_order = self.net.send_recv(self.order_to_send)
         
-        enemy_deploy = self.net.send_recv(tosend)
-        
-        if enemy_deploy != "NONE":
+        if self.recieved_order != "NONE":
             try:
-                code, target, order = recv_msg_translator(enemy_deploy)
+                code, target, order = recv_msg_translator(self.recieved_order)
                 self.orders_interpreter_method(code, target, order)
                 self.enemy_ready = True
             except: pass
@@ -549,7 +562,7 @@ class Main():
         if self.scene == "pre_game":
             self.draw_window_pregame()
         else: 
-            pass
+            print("CHANGING SCENE OK")
         
     
     def draw_window_pregame(self):   
@@ -575,8 +588,10 @@ class Main():
         BOARD.blit(locate_token_text,(CELL, CELL//4))
         
         pygame.draw.rect(BOARD, "red", pre_game_cancel_button)
+        self.pre_game_cancel_button.draw(BOARD)
         if len(self.available_moves) == 0:
-            pygame.draw.rect(BOARD, "darkgreen", pre_game_ok_button)
+            self.pre_game_ok_button.draw(BOARD)
+            #pygame.draw.rect(BOARD, "darkgreen", pre_game_ok_button)
         """else: 
             pygame.draw.rect(BOARD, "darkgreen", pre_game_ok_button)"""
         self.starting_positions()
@@ -941,6 +956,22 @@ class Main():
             vector2 = pygame.Vector2(pregame_positions[count][0]*CELL, pregame_positions[count][1]*CELL+2*CELL)
             token.vector_to_go = vector2
             count += 1
+        self.moving_tokens = False
+        self.chosen_token = None
+        
+    def confirm_deployment(self):
+        
+        print("next scene")
+        
+        order = "BATCH]all:"
+        for token in self.player_a.player_tokens:
+            order += str(token.vector_to_go[0])+","+str(token.vector_to_go[1])+";"
+                                    
+        order = order[:-1]
+        self.order_to_send = order    
+        
+        print("tosend: ",self.order_to_send)
+        
        
     def starting_positions(self):
         
