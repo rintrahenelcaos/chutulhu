@@ -51,6 +51,8 @@ class Main():
         self.scene = "pre_game"
         self.current_phase = GAME_SEQUENCE[0]
         self.phase_passer = 2
+        self.enemy_ready = False
+        self.player_ready = False
         #new_game_preparations("INVESTIGATORS","SERPENT_PEOPLE")
         self.player_a = Player_Object("NONE")
         #self.player_a = Player_Object("INVESTIGATORS")
@@ -438,7 +440,10 @@ class Main():
         
         self.clock.tick(FPS)
         self.mousepos = pygame.mouse.get_pos()
-        self.scene = "pre_game"
+        #self.scene = "pre_game"
+        tosend = "NONE"
+        enemy_deploy = "NONE"
+        
         
         self.movement_indicator = 1
                 
@@ -490,7 +495,19 @@ class Main():
                 
                 if pre_game_ok_button.collidepoint(self.mousepos) and len(self.available_moves) == 0:
                     print("next scene")
-                    self.scene = "in_course"
+                    #var = 0
+                    #available_test = [(x,y) for x in range (8) for y in range(6, 8)]
+                    order = "BATCH]all:"
+                    for token in self.player_a.player_tokens:
+                        order += str(token.vector_to_go[0])+","+str(token.vector_to_go[1])+";"
+                                                
+                    order = order[:-1]
+                    tosend = order    
+                    
+                    print("tosend: ",tosend)
+                    #self.net.send_recv(tosend)
+                    
+                    
                 
                 if pygame.mouse.get_cursor() == pygame.cursors.diamond:
                     for token in self.player_a.player_tokens:
@@ -513,6 +530,21 @@ class Main():
                             self.moving_tokens = False
                             self.chosen_token = None
                             self.ocupied_cell = move
+        
+        
+        enemy_deploy = self.net.send_recv(tosend)
+        
+        if enemy_deploy != "NONE":
+            try:
+                code, target, order = recv_msg_translator(enemy_deploy)
+                self.orders_interpreter_method(code, target, order)
+                self.enemy_ready = True
+            except: pass
+        
+        if self.player_ready and self.enemy_ready:
+            
+            self.scene = "in_course"   
+            
                 
         if self.scene == "pre_game":
             self.draw_window_pregame()
