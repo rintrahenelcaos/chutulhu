@@ -248,6 +248,7 @@ class Main():
             self.player_b.token_list_loader()  
             print("enemy: ",self.player_b)
             #self.net.send_recv("NONE")
+            self.pregame_mat_assigner()
             self.scene = "pre_game"
             
         
@@ -295,6 +296,7 @@ class Main():
             self.player_b.general_list_loader()
             self.player_b.token_list_loader()
             #self.net.send_recv("NONE")
+            self.pregame_mat_assigner() # assigns starting positions to each player token before launching the deploy phase
             self.scene = "pre_game"
         else: pass 
             
