@@ -5,11 +5,12 @@ import math
 from multiprocessing import Process
 import os
 
-from constants import FACTIONS, ROWS, COLUMNS, GRID, FPS, BACKGROUND_COLOR, GRID_DIC, WIDTH, HEIGHT, CELL, GAME_SEQUENCE, CARD_WIDTH, BOARD, button2, no_defense_button
+from constants import FACTIONS, ROWS, COLUMNS, GRID, FPS, BACKGROUND_COLOR, GRID_DIC, WIDTH, HEIGHT, CELL, GAME_SEQUENCE, CARD_WIDTH, BOARD, button2, no_defense_button, temporal_change_turn_button
 from constants import PRE_GAME_TOKEN_MAT, pre_game_cancel_button, pre_game_ok_button
 from constants import FACTION_HAND, FACTION_DECK_POSITION, faction_deck_drawer_button
 from constants import SPELLS_HAND, SPELL_DECK_POSITION, spells_deck_drawer_button
 from constants import GENERIC_FONT, CARD_FONT
+from constants import ENEMY_FACTION_HAND, ENEMY_SPELLS_HAND
 
 from gameobjects import TokenObject, CardObject
 from player_turn_module import Player_Object
@@ -150,8 +151,11 @@ class Main():
         
         # Pregame Scene Widgets
         self.pre_game_cancel_button = Button(CELL, CELL//4*3, CELL*2,CELL//2, GENERIC_FONT, "Cancel Deploy", "red", lambda: self.pregame_mat_assigner())
-        self.pre_game_ok_button = Button(CELL*4, CELL//4*3, CELL*2,CELL//2, GENERIC_FONT, "Confirm Deploy", "darkgreen", lambda: self.pregame_mat_assigner())
-    
+        self.pre_game_ok_button = Button(CELL*4, CELL//4*3, CELL*2,CELL//2, GENERIC_FONT, "Confirm Deploy", "darkgreen", lambda: self.confirm_deployment())
+        
+        # Game perse Widgets
+        
+        
     
         
     def main(self):
@@ -191,7 +195,7 @@ class Main():
             
         pygame.quit()
     
-    ### MAIN MANEU BLOCK ###
+    ### MAIN MENU BLOCK ###
     
     
     
@@ -243,6 +247,7 @@ class Main():
             self.scene = "wait_enemy"
         else: 
             #self.net.send_recv("NONE")
+            self.player_turn = False
             self.player_b.player_faction = enemy_faction
             self.player_b.general_list_loader()
             self.player_b.token_list_loader()  
@@ -341,15 +346,11 @@ class Main():
             print("move token")
         elif code == "SCARDPLAYED":
             print("move token")
+        elif code == "TURN_CHANGE":
+            print("turn change")
+            self.player_turn = not self.player_turn
         
-               
-            
-        
-        
-        
-          
-            
-        
+
         
     def client_testing(self):
         bucle = 0
@@ -554,10 +555,13 @@ class Main():
                 code, target, order = recv_msg_translator(self.recieved_order)
                 self.orders_interpreter_method(code, target, order)
                 self.enemy_ready = True
+                
             except: pass
         
         if self.player_ready and self.enemy_ready:
             
+            self.order_to_send = "NONE"
+            self.recieved_order = "NONE"
             self.scene = "in_course"   
             
                 
@@ -621,10 +625,11 @@ class Main():
         focus_faction_card = None
         focus_spell_card = None
         
-        # Network 
+        # Network orders cleaner
         
-        #self.p2 = self.net.send(self.p)
+        self.order_to_send = "NONE"
         
+                
         ### cursor's management ###
         
         if BOARD.get_rect().collidepoint(self.mousepos):
@@ -686,6 +691,12 @@ class Main():
                     
                 
                 if self.player_turn:
+                    
+                    if temporal_change_turn_button.collidepoint(self.mousepos):
+                        
+                        self.player_turn = not self.player_turn
+                        print("player turn change",self.player_turn)
+                        self.order_to_send = "TURN_CHANGE]all:0"
 
                     ### SPELL CARDS EVENTS ###
     
@@ -713,19 +724,20 @@ class Main():
                         if pygame.mouse.get_cursor() == pygame.cursors.broken_x: 
                             for move in self.available_moves:
                                 if move.collidepoint(self.mousepos):
-                                
-                                    self.pos = (move.x, move.y)
-                                    #print("move to: ", self.pos)
-                                    self.position = pygame.Vector2(self.pos[0], self.pos[1])
-                                    self.chosen_token.vector_to_go = self.position
-                                    ### resetting values to prevent various movements over the same card ###
-                                    self.available_moves = [] 
-                                    self.pos = None
-                                    self.movement_indicator = None
-                                    self.moving_tokens = False
-                                    pygame.time.set_timer(self.freezing_mouse_event, 1000, 1)
-                                    #self.phase_passer_method()
-                                    
+                                    self.movement_activation(move)
+                                    """
+                                    #self.pos = (move.x, move.y)
+                                    ##print("move to: ", self.pos)
+                                    #self.position = pygame.Vector2(self.pos[0], self.pos[1])
+                                    #self.chosen_token.vector_to_go = self.position
+                                    #### resetting values to prevent various movements over the same card ###
+                                    #self.available_moves = [] 
+                                    #self.pos = None
+                                    #self.movement_indicator = None
+                                    #self.moving_tokens = False
+                                    #pygame.time.set_timer(self.freezing_mouse_event, 1000, 1)
+                                    ##self.phase_passer_method()
+                                    """
     
                         elif pygame.mouse.get_cursor() == pygame.cursors.diamond:
                         
@@ -736,24 +748,26 @@ class Main():
                                     self.available_moves = available_movement_detector_linear_vector(token, self.movement_indicator ,self.player_a.player_tokens, self.player_b.player_tokens)
                                     #print("self.available_moves",self.available_moves)
                         else:
-                            for crd in self.player_a.player_hand_objs:
-                                if crd.rec.collidepoint(self.mousepos):
-                                    if (crd.card_type == "M" or crd.card_type == "XS" or crd.card_type == "XF"):
-                                        code = crd.activate_card()
-                                        #discarder("cards_a", str(crd.identif))
-                                        
-                                        self.player_a.faction_card_discard(crd)
-                                        #self.player_a.player_hand_objs.remove(crd)
+                            self.card_picker()
+                            """
+                            #for crd in self.player_a.player_hand_objs:
+                            #    if crd.rec.collidepoint(self.mousepos):
+                            #        if (crd.card_type == "M" or crd.card_type == "XS" or crd.card_type == "XF"):
+                            #            code = crd.activate_card()
+                            #            #discarder("cards_a", str(crd.identif))
+                            #            
+                            #            self.player_a.faction_card_discard(crd)
+                            #            #self.player_a.player_hand_objs.remove(crd)
     
-                                        self.movement_indicator = self.player_a.move_phase(code)
+                            #            self.movement_indicator = self.player_a.move_phase(code)
     
-                                        if self.movement_indicator != None: self.moving_tokens = True
-                                        #print("self.moving_tokens: ",self.moving_tokens)  # CONTROL
+                            #            if self.movement_indicator != None: self.moving_tokens = True
+                            #            #print("self.moving_tokens: ",self.moving_tokens)  # CONTROL
     
-                            for crd in self.player_a.player_spell_hand_objs:
-                                if crd.rec.collidepoint(self.mousepos):
-                                    self.player_a.spell_card_discard(crd)
-    
+                            #for crd in self.player_a.player_spell_hand_objs:
+                            #    if crd.rec.collidepoint(self.mousepos):
+                            #        self.player_a.spell_card_discard(crd)
+                            """
                     ### ATTACK PHASE EVENT ###
     
                     if self.current_phase == "att": 
@@ -814,11 +828,13 @@ class Main():
     
     
                     ### DEFENSE PHASE EVENT ###
-                    #if self.defense_indicator:
-                    if self.current_phase == "def" and self.damaged_token != None: # test function
-                        pass
+                    if self.defense_indicator and self.player_turn == False:
+                        
+                        
+                    #if self.current_phase == "def" and self.damaged_token != None: # test function
+                        
                         #self.player_turn = False
-                        """for crd in self.player_a.player_hand_objs:
+                        for crd in self.player_a.player_hand_objs:
                             if crd.rec.collidepoint(self.mousepos):        
                             
                                 if crd.card_type == "D":
@@ -827,7 +843,7 @@ class Main():
                                     self.damage_in_course = 0
                                     self.damaged_token = None
                                     self.player_a.faction_card_discard(crd)
-                                    self.player_turn = True
+                                    #self.player_turn = True
                                     self.defense_indicator = False
                                     #discarder("cards_a", str(crd.identif))
                                     #self.player_a.player_hand_objs.remove(crd)
@@ -837,10 +853,18 @@ class Main():
                             self.player_b.player_tokens[self.damaged_token].hits = self.player_b.player_tokens[self.damaged_token].hits - self.damage_in_course
                             self.damage_in_course = 0
                             self.damaged_token = None
-                            self.player_turn = True
-                            self.defense_indicator = False"""
-                        
-                                
+                            #self.player_turn = True
+                            self.defense_indicator = False
+                        pass
+        
+        self.recieved_order = self.net.send_recv(self.order_to_send)
+        
+        if self.recieved_order != "NONE":
+            try:
+                code, target, order = recv_msg_translator(self.recieved_order)
+                self.orders_interpreter_method(code, target, order)
+                self.enemy_ready = True
+            except: pass                        
                 
         # surviving tokens control
         
@@ -884,6 +908,8 @@ class Main():
 
         pygame.draw.rect(self.WIN, "pink",FACTION_HAND)
         pygame.draw.rect(self.WIN, "red",SPELLS_HAND)
+        pygame.draw.rect(self.WIN, "pink",ENEMY_FACTION_HAND)
+        pygame.draw.rect(self.WIN, "red",ENEMY_SPELLS_HAND)
 
 
         faction_deck = pygame.image.load(os.path.join("images","faction_deck2.jpg")).convert_alpha() # load faction deck image
@@ -892,6 +918,7 @@ class Main():
 
         pygame.draw.rect(self.WIN, "white", button2)
         pygame.draw.rect(self.WIN, "red", no_defense_button)
+        pygame.draw.rect(self.WIN, "yellow", temporal_change_turn_button)
 
         spells_deck = pygame.image.load(os.path.join("images","spells_deck_scaled.jpg")).convert_alpha() # load spells deck image
         spells_deck_scaled_image = pygame.transform.scale(spells_deck,(spells_deck_drawer_button.width, spells_deck_drawer_button.height))
@@ -974,6 +1001,8 @@ class Main():
         
         print("tosend: ",self.order_to_send)
         
+        self.player_ready = True
+        
        
     def starting_positions(self):
         
@@ -1042,6 +1071,16 @@ class Main():
                 self.player_a.player_spell_hand_objs[scrd].card_drawer(self.WIN)
             except: pass
     
+    def enemy_faction_hand_controller(self):
+        available_space = (ENEMY_FACTION_HAND.width-8)//(len(self.player_b.player_hand_objs)+1)
+        for crd in self.player_b.player_hand_objs:
+            ypos = int
+            
+            position = pygame.Vector2(ENEMY_FACTION_HAND.x+available_space*self.player_b.player_hand_objs.index(crd), ENEMY_FACTION_HAND.y+4)
+            
+            crd.
+        
+    
     def phase_passer_method(self):
         
         
@@ -1054,8 +1093,48 @@ class Main():
             
             self.current_phase = GAME_SEQUENCE[GAME_SEQUENCE.index(self.current_phase)+1]
 
+    def movement_activation(self, move):
+        
+        self.pos = (move.x, move.y)
+        #print("move to: ", self.pos)
+        self.position = pygame.Vector2(self.pos[0], self.pos[1])
+        self.chosen_token.vector_to_go = self.position
+        # sending order to server
+        self.order_to_send = send_msg_translator("VECTORTOGO",self.chosen_token,self.pos)
+        ### resetting values to prevent various movements over the same card ###
+        self.available_moves = [] 
+        self.pos = None
+        self.movement_indicator = None
+        self.moving_tokens = False
+        
+        pygame.time.set_timer(self.freezing_mouse_event, 1000, 1)
+        
+        #self.phase_passer_method()
 
-
+    def card_picker(self):
+        if self.current_phase == "move":
+            for crd in self.player_a.player_hand_objs:
+                if crd.rec.collidepoint(self.mousepos):
+                    if (crd.card_type == "M" or crd.card_type == "XS" or crd.card_type == "XF"):
+                        code = crd.activate_card()
+                        #discarder("cards_a", str(crd.identif))
+                        if crd.card_type == "M":
+                            self.order_to_send = "MCARDPLAYED]:"+str(crd)+":all"
+                        elif crd.card_type == "XS" or crd.card_type == "XF":
+                            self.order_to_send = "XCARDPLAYED]:"+str(crd)+":"+crd.card_type
+                        self.player_a.faction_card_discard(crd)
+                        #self.player_a.player_hand_objs.remove(crd)
+    
+                        self.movement_indicator = self.player_a.move_phase(code)
+    
+                        if self.movement_indicator != None: self.moving_tokens = True
+                        #print("self.moving_tokens: ",self.moving_tokens)  # CONTROL
+    
+            for crd in self.player_a.player_spell_hand_objs:
+                if crd.rec.collidepoint(self.mousepos):
+                    self.player_a.spell_card_discard(crd)
+            
+        
 
 
 

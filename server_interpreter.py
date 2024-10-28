@@ -30,6 +30,7 @@ def recv_msg_translator(cargo):
             order.append((coord_tuple))
         elif code == "CARDSDRAWN":
             print("cards drawn")
+            
         elif code == "MCARDPLAYED":
             print("card played")
         elif code == "ACARDPLAYED":
@@ -48,8 +49,23 @@ def recv_msg_translator(cargo):
 
 def send_msg_translator(code, target, order):
     
-    
-    send_msg = code+"]"+target+":"+order
+    if code == "VECTORTOGO":
+        orderx = order[0]
+        ordery = order[1]
+        send_msg = code+"]"+str(target)+":"+str(orderx)+","+str(ordery)
+    elif code == "CARDSDRAWN":
+        send_msg = code+"]"+target+":"+order
+    elif code == "MCARDPLAYED":
+        send_msg = code+"]"+target+":"+order
+    elif code == "ACARDPLAYED":
+        print("card played: "+str(target))
+    elif code == "XCARDPLAYED":
+        print("move token")
+    elif code == "SCARDPLAYED":
+        print("move token")
+        
+    else:
+        send_msg = code+"]"+target+":"+order
     
     return send_msg
 
