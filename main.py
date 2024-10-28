@@ -337,6 +337,9 @@ class Main():
             
             
         elif code == "CARDSDRAWN":
+            
+            for card in self.player_b.faction_deck:
+                
             print("cards drawn")
         elif code == "MCARDPLAYED":
             print("card played")
@@ -902,6 +905,7 @@ class Main():
         self.token_movement("in_course")
         self.available_attacks_method()
         
+        
 
 
         self.WIN.blit(BOARD,(0,0))    # actualizes BOARD -> always after all changes of it
@@ -937,7 +941,7 @@ class Main():
             
         self.faction_hand_controller(focus_faction_card, self.current_phase)
         self.spells_hand_controller(focus_spell_card, self.current_phase)
-
+        self.enemy_faction_hand_controller()
 
 
 
@@ -1078,7 +1082,7 @@ class Main():
             
             position = pygame.Vector2(ENEMY_FACTION_HAND.x+available_space*self.player_b.player_hand_objs.index(crd), ENEMY_FACTION_HAND.y+4)
             
-            crd.
+            crd.card_drawer(self.WIN, position)
         
     
     def phase_passer_method(self):

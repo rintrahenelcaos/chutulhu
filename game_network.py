@@ -4,7 +4,7 @@ import pickle
 from pickleobj import Exchange_object
 
 IP = socket.gethostbyname(socket.gethostname())
-IP = "192.168.1.2"
+IP = "10.160.4.213"
 PORT = 5555
 ADDR = (IP, PORT)
 SIZE = 40000
@@ -36,6 +36,16 @@ class Network:
             
                 
             self.client.sendall(cargo.encode(FORMAT))
+            return self.client.recv(SIZE).decode(FORMAT)
+        except: pass
+    
+    def send_only(self, cargo):
+        try:
+            self.client.sendall(cargo.encode(FORMAT))
+        except: pass
+    
+    def recieve_only(self):
+        try:
             return self.client.recv(SIZE).decode(FORMAT)
         except: pass
         

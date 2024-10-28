@@ -29,6 +29,10 @@ def recv_msg_translator(cargo):
             coord_tuple = (xpos, ypos)
             order.append((coord_tuple))
         elif code == "CARDSDRAWN":
+            cards_list = order.rsplit(";")
+            order = []
+            for card in cards_list:
+                order.append(card)
             print("cards drawn")
             
         elif code == "MCARDPLAYED":
