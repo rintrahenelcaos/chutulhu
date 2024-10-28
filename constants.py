@@ -16,7 +16,7 @@ COLUMNS = 8
 
 BACKGROUND_COLOR = (0,0,0)
 
-GRID = [(x, y) for x in range(8) for y in range(8)]
+GRID = [(x, y) for x in range(COLUMNS) for y in range(ROWS)]
 GRID_DIC = {}
 for cell in GRID:
     GRID_DIC.update({cell:"None"})
@@ -49,6 +49,11 @@ SPELL_DECK_POSITION = (WIDTH-CELL,SPELLS_HAND.y+CELL/2)
 
 PRE_GAME_TOKEN_MAT = pygame.Rect((0,0),(CELL*8, CELL*5))
 
+# enemy positions
+
+ENEMY_FACTION_HAND = pygame.Rect((BOARD.width,CELL),((WIDTH-BOARD.width)//2, CELL))
+ENEMY_SPELLS_HAND = pygame.Rect((BOARD.width+ENEMY_FACTION_HAND.width,CELL),(WIDTH-ENEMY_FACTION_HAND.width, CELL))
+
 # Buttons
 
 pre_game_cancel_button = pygame.Rect((CELL, CELL//4*3),(CELL*2,CELL//2))
@@ -59,6 +64,8 @@ spells_deck_drawer_button = pygame.Rect(SPELL_DECK_POSITION,(CARD_WIDTH,CARD_WID
 button2 = pygame.Rect((WIDTH-CELL, 20),(CELL,20))
 
 no_defense_button = pygame.Rect((WIDTH-CELL, CELL*2),(CELL,CELL))
+
+temporal_change_turn_button = pygame.Rect((WIDTH-CELL*2, CELL*2),(CELL,CELL))
 
 
 # MAIN MENU

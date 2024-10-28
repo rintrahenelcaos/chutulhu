@@ -159,7 +159,7 @@ class Player_Object():
         
         pass   
     
-    def hand_refresher(self, drawn_cards, xpos, ypos, card_obj_list):  
+    def hand_refresher(self, drawn_cards, xpos, ypos, card_obj_list):  # old method, delete
         
         """print("drawn_cards in hande refresher: ",drawn_cards)
         for drawn in drawn_cards:
