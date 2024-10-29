@@ -58,7 +58,11 @@ def send_msg_translator(code, target, order):
         ordery = order[1]
         send_msg = code+"]"+str(target)+":"+str(orderx)+","+str(ordery)
     elif code == "CARDSDRAWN":
-        send_msg = code+"]"+target+":"+order
+        temporal_order = ""
+        for ind_order in order:
+            temporal_order = temporal_order + ind_order + ";"
+        temporal_order = temporal_order[:-1]
+        send_msg = code+"]"+target+":"+temporal_order
     elif code == "MCARDPLAYED":
         send_msg = code+"]"+target+":"+order
     elif code == "ACARDPLAYED":

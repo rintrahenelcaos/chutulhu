@@ -337,8 +337,16 @@ class Main():
             
             
         elif code == "CARDSDRAWN":
-            
+            name_index = self.player_b.faction_card_fields.index("Card_Name")
             for card in self.player_b.faction_deck:
+                if card[name_index] in order:
+                    req_info = ["Card_Name","Type","Range","Notes","Images"]
+                    drawn_card_info = []
+                    for info in req_info:
+                        drawn_card_info.append(card[(self.player_b.faction_card_fields.index(info))])
+                    self.player_b.hand_refresher(drawn_card_info, ENEMY_FACTION_HAND.x, ENEMY_FACTION_HAND.y, self.player_b.player_hand_objs)
+                        
+                
                 
             print("cards drawn")
         elif code == "MCARDPLAYED":
@@ -714,7 +722,9 @@ class Main():
                     
                         if faction_deck_drawer_button.collidepoint(self.mousepos):
                             
-                            self.player_a.fate_phase(repetitions = 3)
+                            drawn_cards = self.player_a.fate_phase(repetitions = 3)
+                            self.order_to_send = send_msg_translator("CARDSDRAWN", "faction", drawn_cards)
+                            print(self.order_to_send)
                             pygame.time.set_timer(self.freezing_mouse_event, 1000, 1) # prevents hitting the cards when draself.WINg
                             
                             #self.phase_passer_method()
