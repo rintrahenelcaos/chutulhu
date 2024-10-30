@@ -337,19 +337,29 @@ class Main():
             
             
         elif code == "CARDSDRAWN":
-            name_index = self.player_b.faction_card_fields.index("Card_Name")
-            for card in self.player_b.faction_deck:
-                if card[name_index] in order:
-                    req_info = ["Card_Name","Type","Range","Notes","Images"]
-                    drawn_card_info = []
-                    for info in req_info:
-                        drawn_card_info.append(card[(self.player_b.faction_card_fields.index(info))])
-                    self.player_b.hand_refresher(drawn_card_info, ENEMY_FACTION_HAND.x, ENEMY_FACTION_HAND.y, self.player_b.player_hand_objs)
-                        
+            self.player_b.enemy_fate_phase(order)
+            """
+            #name_index = self.player_b.faction_card_fields.index("Card_Name")
+            #for card in self.player_b.faction_deck:
+            #    if card[name_index] in order:
+            #        req_info = ["Card_Name","Type","Range","Notes","Images"]
+            #        drawn_card_info = []
+            #        for info in req_info:
+            #            drawn_card_info.append(card[(self.player_b.faction_card_fields.index(info))])
+            #        self.player_b.hand_refresher(drawn_card_info, ENEMY_FACTION_HAND.x, ENEMY_FACTION_HAND.y, self.player_b.player_hand_objs)
+            """            
                 
                 
             print("cards drawn")
-        elif code == "MCARDPLAYED":
+        elif code == "CARDPLAYED":
+            if target == "faction":
+                try: 
+                    self.player_b.player_hand_objs.remove(order)
+                except: print("failed at identifying spell card")
+            elif target == "spell":
+                try: 
+                    self.player_b.player_spell_hand_objs.remove(order)
+                except: print("failed at identifying faction card")
             print("card played")
         elif code == "ACARDPLAYED":
             print("move token")
@@ -761,7 +771,8 @@ class Main():
                                     self.available_moves = available_movement_detector_linear_vector(token, self.movement_indicator ,self.player_a.player_tokens, self.player_b.player_tokens)
                                     #print("self.available_moves",self.available_moves)
                         else:
-                            self.card_picker()
+                            card_selected = self.card_picker()
+                            send_msg_translator("CARDPLAYED", )
                             """
                             #for crd in self.player_a.player_hand_objs:
                             #    if crd.rec.collidepoint(self.mousepos):
@@ -1147,7 +1158,9 @@ class Main():
             for crd in self.player_a.player_spell_hand_objs:
                 if crd.rec.collidepoint(self.mousepos):
                     self.player_a.spell_card_discard(crd)
-            
+        
+        
+        return str(crd)    
         
 
 
