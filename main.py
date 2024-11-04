@@ -338,28 +338,11 @@ class Main():
             
         elif code == "CARDSDRAWN":
             self.player_b.enemy_fate_phase(order)
-            """
-            #name_index = self.player_b.faction_card_fields.index("Card_Name")
-            #for card in self.player_b.faction_deck:
-            #    if card[name_index] in order:
-            #        req_info = ["Card_Name","Type","Range","Notes","Images"]
-            #        drawn_card_info = []
-            #        for info in req_info:
-            #            drawn_card_info.append(card[(self.player_b.faction_card_fields.index(info))])
-            #        self.player_b.hand_refresher(drawn_card_info, ENEMY_FACTION_HAND.x, ENEMY_FACTION_HAND.y, self.player_b.player_hand_objs)
-            """            
-                
+            
                 
             print("cards drawn")
         elif code == "CARDPLAYED":
-            if target == "faction":
-                try: 
-                    self.player_b.player_hand_objs.remove(order)
-                except: print("failed at identifying spell card")
-            elif target == "spell":
-                try: 
-                    self.player_b.player_spell_hand_objs.remove(order)
-                except: print("failed at identifying faction card")
+            card_info_name, card_type_info, card_info_image = self.player_b.enemy_card_played(target, order)
             print("card played")
         elif code == "ACARDPLAYED":
             print("move token")
@@ -604,8 +587,8 @@ class Main():
         BOARD.fill("tan4")
 
         for row in range(ROWS):
-            for col in range(row % 2, ROWS, 2):
-                pygame.draw.rect(BOARD, "grey3",(CELL*row, CELL*col, CELL,CELL))
+            for col in range(row % 2, COLUMNS, 2):
+                pygame.draw.rect(BOARD, "grey3",(CELL*col, CELL*row, CELL,CELL))
                 
         pygame.draw.rect(BOARD,"green", PRE_GAME_TOKEN_MAT) 
         
@@ -616,7 +599,7 @@ class Main():
         
         pygame.draw.rect(BOARD, "red", pre_game_cancel_button)
         self.pre_game_cancel_button.draw(BOARD)
-        if len(self.available_moves) == 0:
+        if len(self.available_moves) == (2*COLUMNS)-len(self.player_a.player_tokens):
             self.pre_game_ok_button.draw(BOARD)
             #pygame.draw.rect(BOARD, "darkgreen", pre_game_ok_button)
         """else: 
@@ -732,7 +715,7 @@ class Main():
                     
                         if faction_deck_drawer_button.collidepoint(self.mousepos):
                             
-                            drawn_cards = self.player_a.fate_phase(repetitions = 3)
+                            drawn_cards = self.player_a.fate_phase(repetitions = 9)
                             self.order_to_send = send_msg_translator("CARDSDRAWN", "faction", drawn_cards)
                             print(self.order_to_send)
                             pygame.time.set_timer(self.freezing_mouse_event, 1000, 1) # prevents hitting the cards when draself.WINg
@@ -772,7 +755,7 @@ class Main():
                                     #print("self.available_moves",self.available_moves)
                         else:
                             card_selected = self.card_picker()
-                            send_msg_translator("CARDPLAYED", )
+                            self.order_to_send = send_msg_translator("CARDPLAYED", "faction", card_selected)
                             """
                             #for crd in self.player_a.player_hand_objs:
                             #    if crd.rec.collidepoint(self.mousepos):
@@ -887,8 +870,9 @@ class Main():
             try:
                 code, target, order = recv_msg_translator(self.recieved_order)
                 self.orders_interpreter_method(code, target, order)
-                self.enemy_ready = True
-            except: pass                        
+                #self.enemy_ready = True
+            except: 
+                print("Failed interpretation of order")                       
                 
         # surviving tokens control
         
@@ -918,8 +902,8 @@ class Main():
         BOARD.fill("tan4")
 
         for row in range(ROWS):
-            for col in range(row % 2, ROWS, 2):
-                pygame.draw.rect(BOARD, "grey3",(CELL*row, CELL*col, CELL,CELL))
+            for col in range(row % 2, COLUMNS, 2):
+                pygame.draw.rect(BOARD, "grey3",(CELL*col, CELL*row, CELL,CELL))
     
         
         self.available_moves_method()   
@@ -1041,36 +1025,50 @@ class Main():
     
             
     def faction_hand_controller(self, card,  current_phase):
-    
+        
+        available_space = (FACTION_HAND.height-8)//(len(self.player_a.player_hand_objs)+1)
             
         for crd in self.player_a.player_hand_objs:  # positions cardobject
-
+            
+            xpos = float
             ypos = float
             position = pygame.Vector2(0,0)
+            
             #crd.rec.x = FACTION_HAND.x+5+CELL*player_hand.index(crd)*0.7 # assigns position to the object in the hand
             #crd.rec.y = FACTION_HAND.y+CELL*0.7
 
             if current_phase == "move" and (crd.card_type == "M" or crd.card_type == "XS" or crd.card_type == "XF"):
-                ypos = FACTION_HAND.y+CELL*0.3
-                position = pygame.Vector2(FACTION_HAND.x+5+CELL*self.player_a.player_hand_objs.index(crd)*0.7, ypos)
+                xpos = FACTION_HAND.x+CELL*0.3
+                position = pygame.Vector2(xpos, FACTION_HAND.y+5+available_space*self.player_a.player_hand_objs.index(crd))
+                
+                #ypos = FACTION_HAND.y+CELL*0.3
+                #position = pygame.Vector2(FACTION_HAND.x+5+CELL*self.player_a.player_hand_objs.index(crd)*0.7, ypos)
                 #crd.card_drawer(self.WIN,pygame.Vector2(FACTION_HAND.x+5+CELL*player_hand.index(crd)*0.7, ypos))
 
             elif current_phase == "att" and (crd.card_type == "A"):
-                ypos = FACTION_HAND.y+CELL*0.3
-                position = pygame.Vector2(FACTION_HAND.x+5+CELL*self.player_a.player_hand_objs.index(crd)*0.7, ypos)
+                xpos = FACTION_HAND.x+CELL*0.3
+                position = pygame.Vector2(xpos, FACTION_HAND.y+5+available_space*self.player_a.player_hand_objs.index(crd))
+                #ypos = FACTION_HAND.y+CELL*0.3
+                #position = pygame.Vector2(FACTION_HAND.x+5+CELL*self.player_a.player_hand_objs.index(crd)*0.7, ypos)
 
                 #crd.card_drawer(self.WIN, position)  
             elif current_phase == "def" and (crd.card_type == "D"):
-                ypos = FACTION_HAND.y+CELL*0.3
-                position = pygame.Vector2(FACTION_HAND.x+5+CELL*self.player_a.player_hand_objs.index(crd)*0.7, ypos)
+                xpos = FACTION_HAND.x+CELL*0.3
+                position = pygame.Vector2(xpos, FACTION_HAND.y+5+available_space*self.player_a.player_hand_objs.index(crd))
+                #ypos = FACTION_HAND.y+CELL*0.3
+                #position = pygame.Vector2(FACTION_HAND.x+5+CELL*self.player_a.player_hand_objs.index(crd)*0.7, ypos)
 
                 #crd.card_drawer(self.WIN, position)  
             elif current_phase == "fate":
-                ypos = FACTION_HAND.y+CELL*0.7
-                position = pygame.Vector2(FACTION_HAND.x+5+CELL*self.player_a.player_hand_objs.index(crd)*0.7, ypos)
+                xpos = FACTION_HAND.x+CELL*0.7
+                position = pygame.Vector2(xpos, FACTION_HAND.y+5+available_space*self.player_a.player_hand_objs.index(crd))
+                #ypos = FACTION_HAND.y+CELL*0.7
+                #position = pygame.Vector2(FACTION_HAND.x+5+CELL*self.player_a.player_hand_objs.index(crd)*0.7, ypos)
             else:
-                ypos = FACTION_HAND.y+CELL*0.7
-                position = pygame.Vector2(FACTION_HAND.x+5+CELL*self.player_a.player_hand_objs.index(crd)*0.7, ypos)
+                xpos = FACTION_HAND.x+CELL*0.7
+                position = pygame.Vector2(xpos, FACTION_HAND.y+5+available_space*self.player_a.player_hand_objs.index(crd))
+                #ypos = FACTION_HAND.y+CELL*0.7
+                #position = pygame.Vector2(FACTION_HAND.x+5+CELL*self.player_a.player_hand_objs.index(crd)*0.7, ypos)
             crd.card_drawer(self.WIN, position)   
             crd.card_positioner() # 
         if card != None: #focus card changes size/picture - prevents false overlaping
@@ -1103,8 +1101,13 @@ class Main():
             
             position = pygame.Vector2(ENEMY_FACTION_HAND.x+available_space*self.player_b.player_hand_objs.index(crd), ENEMY_FACTION_HAND.y+4)
             
-            crd.card_drawer(self.WIN, position)
+            crd.card_drawer(self.WIN, position, enemy = True)
         
+    def enemy_card_played_shower(self):
+        
+        
+        
+        pass
     
     def phase_passer_method(self):
         
@@ -1143,10 +1146,10 @@ class Main():
                     if (crd.card_type == "M" or crd.card_type == "XS" or crd.card_type == "XF"):
                         code = crd.activate_card()
                         #discarder("cards_a", str(crd.identif))
-                        if crd.card_type == "M":
-                            self.order_to_send = "MCARDPLAYED]:"+str(crd)+":all"
-                        elif crd.card_type == "XS" or crd.card_type == "XF":
-                            self.order_to_send = "XCARDPLAYED]:"+str(crd)+":"+crd.card_type
+                        #if crd.card_type == "M":
+                        #    self.order_to_send = "MCARDPLAYED]:"+str(crd)+":all"
+                        #elif crd.card_type == "XS" or crd.card_type == "XF":
+                        #    self.order_to_send = "XCARDPLAYED]:"+str(crd)+":"+crd.card_type
                         self.player_a.faction_card_discard(crd)
                         #self.player_a.player_hand_objs.remove(crd)
     

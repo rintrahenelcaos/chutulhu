@@ -1,6 +1,6 @@
 import pygame
 
-from constants import CELL, PRE_GAME_TOKEN_MAT, BOARD
+from constants import CELL, PRE_GAME_TOKEN_MAT, BOARD, ROWS, COLUMNS
 from gameobjects import TokenObject
 from dbintermediatefunctions import token_extractor
 
@@ -15,7 +15,7 @@ def player_token_assigner(token_origin, player_object):
         
 def starting_position_function(token_list):
     
-    available_positions = [(x,y) for x in range (8) for y in range(6, 8)]
+    available_positions = [(x,y) for x in range (COLUMNS) for y in range(6, 8)]
     available_moves = []
     
     for token in token_list:

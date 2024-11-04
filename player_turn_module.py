@@ -123,11 +123,36 @@ class Player_Object():
                 drawn_card_info = []
                 for info in req_info:
                     drawn_card_info.append(card[(self.faction_card_fields.index(info))])
-                self.hand_refresher(drawn_card_info, ENEMY_FACTION_HAND.x, ENEMY_FACTION_HAND.y, self.player_hand_objs)
+                self.hand_refresher(drawn_card_info, ENEMY_FACTION_HAND.x, ENEMY_FACTION_HAND.y, self.player_hand_objs, ENEMY_FACTION_HAND.height*0.5)
+    
+    def enemy_card_played(self, target, order):
+        
+        try:
+                
+            if target == "faction":
+                 
+                print("order :",order)
+                for card in self.player_hand_objs:
+                    if str(card) == order:
+                        card_info_name, card_type_info, card_info_image = card.name_show, card.card_type, card.image
+                        self.player_hand_objs.remove(card)
+                        
+            elif target == "spell":
+            
+                print("order :",order)
+                for card in self.player_spell_hand_objs():
+                    if str(card) == order:
+                        self.player_spell_hand_objs.remove(card)
+            
+            return card_info_name, card_type_info, card_info_image
+                     
+        except: print("failed at identifying faction card")
+        
+           
         
         
         
-        pass     
+          
     
     def move_phase(self, codes_tuple):
     
@@ -175,26 +200,7 @@ class Player_Object():
     def defense_phase(self):
         
         pass   
-    
-    def hand_refresher(self, drawn_cards, xpos, ypos, card_obj_list):  # old method, delete
-        
-        """print("drawn_cards in hande refresher: ",drawn_cards)
-        for drawn in drawn_cards:
-            print(drawn)
-        #drawn_cards = card_data_extractor(self.player_deck, "hand")
-        for drawn in drawn_cards:
-            identif_list = []   # list of identifiers of cardobjects
-            for crd in card_obj_list:
-                identif_list.append(crd.identif)
-            try: 
-                identif_list.index(drawn[0]) # checks if cardobject already added
-            except:
-                card_obj_list.append(CardObject(CARD_WIDTH,xpos,ypos,drawn[4],drawn[0],drawn[1],drawn[2])) #adds cardobject
-            #hand_card_list = list(set(hand_card_list))"""
-        pass
-    
-    
-    
+   
     ### New Method with lists 
     def xs_card_activation(self, xpos = SPELL_DECK_POSITION[0], ypos = SPELL_DECK_POSITION[1], repetitions = 1):
         
@@ -234,9 +240,9 @@ class Player_Object():
         return drawn_card
     
     ### New Method for lists
-    def hand_refresher(self, drawn_cards, xpos, ypos, card_obj_list):  
+    def hand_refresher(self, drawn_cards, xpos, ypos, card_obj_list, card_size = CARD_WIDTH):  
         
-        print("drawn_cards in hande refresher: ",drawn_cards)
+        print("drawn_cards in hand refresher: ",drawn_cards)
         for drawn in drawn_cards:
             print(drawn)
         #drawn_cards = card_data_extractor(self.player_deck, "hand")
@@ -246,7 +252,7 @@ class Player_Object():
         try: 
             identif_list.index(drawn_cards[0]) # checks if cardobject already added
         except:
-            card_obj_list.append(CardObject(CARD_WIDTH,xpos,ypos,drawn_cards[4],drawn_cards[0],drawn_cards[1],drawn_cards[2])) #adds cardobject
+            card_obj_list.append(CardObject(card_size,xpos,ypos,drawn_cards[4],drawn_cards[0],drawn_cards[1],drawn_cards[2])) #adds cardobject
             
         print(card_obj_list)  
         

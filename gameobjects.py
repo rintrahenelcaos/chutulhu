@@ -9,7 +9,7 @@ from functionsmodule import movement_activation, x_activation, attack_activation
 class CardObject(pygame.sprite.Sprite):
     
     
-    def __init__(self, size, xpos, ypos, image, identif, card_type, range, damage = 1) -> None:
+    def __init__(self, size, xpos, ypos, image, identif, card_type, range, damage = 1, card_back = "faction_deck.png") -> None:
         pygame.sprite.Sprite.__init__(self)
         self.size = size*1
         self.sizeheight = size*5/3
@@ -19,6 +19,8 @@ class CardObject(pygame.sprite.Sprite):
         self.rec = pygame.Rect(self.go_pos[0], self.go_pos[1], self.size, self.size)
         self.image = pygame.image.load(os.path.join("images",str(image))).convert_alpha()
         self.scaled_image = pygame.transform.scale(self.image, (self.size, self.size))
+        self.back_image = pygame.image.load(os.path.join("images",str(card_back))).convert_alpha()
+        self.scaled_back_image = pygame.transform.scale(self.back_image, (self.size, self.sizeheight))
         self.moving = False
         self.identif = identif
         self.looked_on = False
@@ -34,19 +36,24 @@ class CardObject(pygame.sprite.Sprite):
     def __repr__(self) -> str:
         return self.identif
         
-    def card_drawer(self, board, vector = None):
+    def card_drawer(self, board, vector = None, enemy = False):
         if vector != None:
             self.go_pos = self.go_pos.move_towards(vector, 6)
             self.rec.x = self.go_pos[0]
             self.rec.y = self.go_pos[1]
         
-        if self.looked_on:
-            self.card_info_shower(board) 
-            #self.scaled_image = pygame.transform.scale(self.image,(self.size*1.2, self.size*1.2))
-        else: 
-            #print(type(self.image))
-            self.scaled_image = pygame.transform.scale(self.image, (self.size, self.sizeheight))
-            board.blit(self.scaled_image, (self.rec))
+        if enemy:
+            board.blit(self.scaled_back_image, (self.rec))
+        else:
+        
+            if self.looked_on:
+                self.card_info_shower(board) 
+                #self.scaled_image = pygame.transform.scale(self.image,(self.size*1.2, self.size*1.2))
+            else: 
+                #print(type(self.image))
+                self.scaled_image = pygame.transform.scale(self.image, (self.size, self.sizeheight))
+                board.blit(self.scaled_image, (self.rec))
+        
     
     def card_positioner(self,  top = False):
         

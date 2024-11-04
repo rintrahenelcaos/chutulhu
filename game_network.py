@@ -4,7 +4,7 @@ import pickle
 from pickleobj import Exchange_object
 
 IP = socket.gethostbyname(socket.gethostname())
-IP = "10.160.4.213"
+IP = "192.168.1.2"
 PORT = 5555
 ADDR = (IP, PORT)
 SIZE = 40000
@@ -54,6 +54,8 @@ class Network:
             self.client.sendall(DISCONNECT_MSG.encode(FORMAT))
             self.client.shutdown()
             self.client.close()
+            exit()
+            
         except:
             print("Unable to disconnect")
 
@@ -70,6 +72,8 @@ def main():
         if msg == DISCONNECT_MSG:
             net.closing()
             conn = False
+            exit()
+        
         else: 
             print(net.send_recv(msg))
     exit()
