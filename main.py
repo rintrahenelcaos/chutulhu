@@ -930,7 +930,8 @@ class Main():
         pygame.draw.rect(self.WIN, "yellow", temporal_change_turn_button)
 
         spells_deck = pygame.image.load(os.path.join("images","spells_deck_scaled.jpg")).convert_alpha() # load spells deck image
-        spells_deck_scaled_image = pygame.transform.scale(spells_deck,(spells_deck_drawer_button.width, spells_deck_drawer_button.height))
+        spells_deck_scaled_image = pygame.transform.rotate(spells_deck, 90.0)
+        spells_deck_scaled_image = pygame.transform.scale(spells_deck_scaled_image,(spells_deck_drawer_button.width, spells_deck_drawer_button.height))
         self.WIN.blit(spells_deck_scaled_image, (spells_deck_drawer_button))
 
         current_phase_informer = GENERIC_FONT.render(phase_informer, 1, "red")

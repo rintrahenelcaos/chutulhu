@@ -41,13 +41,14 @@ BOARD = pygame.Surface((CELL*COLUMNS, CELL*ROWS))
 #positions
 
 FACTION_HAND = pygame.Rect((BOARD.get_width(),HEIGHT-CELL*3),((WIDTH-BOARD.get_width())//2, CELL*3))
-SPELLS_HAND = pygame.Rect((WIDTH-FACTION_HAND.width,  HEIGHT-CELL*3),(WIDTH-BOARD.get_width()//2,CELL*3))
+SPELLS_HAND = pygame.Rect((WIDTH-FACTION_HAND.width,  HEIGHT-CELL*3),((WIDTH-BOARD.get_width())//2,CELL*3))
 
 
-FACTION_DECK_POSITION = (FACTION_HAND.x+FACTION_HAND.width-CELL, FACTION_HAND.y+CELL/4)
+#FACTION_DECK_POSITION = (FACTION_HAND.x+FACTION_HAND.width-CELL, FACTION_HAND.y+CELL/4)
 SPELL_DECK_POSITION = (SPELLS_HAND.x+CELL//4, SPELLS_HAND.y+CELL/4)
 
-
+FACTION_DECK_POSITION = (FACTION_HAND.x+FACTION_HAND.width/2-(CARD_WIDTH*5/3)/2, FACTION_HAND.y+FACTION_HAND.height-CELL)
+SPELL_DECK_POSITION = (SPELLS_HAND.x+SPELLS_HAND.width/2-(CARD_WIDTH*5/3)/2, SPELLS_HAND.y+SPELLS_HAND.height-CELL)
 
 PRE_GAME_TOKEN_MAT = pygame.Rect((0,0),(BOARD.get_width(), CELL*5))
 
@@ -61,8 +62,12 @@ ENEMY_SPELLS_HAND = pygame.Rect((BOARD.get_width()+ENEMY_FACTION_HAND.width,0),(
 pre_game_cancel_button = pygame.Rect((CELL, CELL//4*3),(CELL*2,CELL//2))
 pre_game_ok_button = pygame.Rect((CELL*4, CELL//4*3),(CELL*2,CELL//2))
 
-faction_deck_drawer_button = pygame.Rect(FACTION_DECK_POSITION,(CARD_WIDTH,CARD_WIDTH*5/3))
-spells_deck_drawer_button = pygame.Rect(SPELL_DECK_POSITION,(CARD_WIDTH,CARD_WIDTH*5/3))
+#faction_deck_drawer_button = pygame.Rect(FACTION_DECK_POSITION,(CARD_WIDTH,CARD_WIDTH*5/3))
+#spells_deck_drawer_button = pygame.Rect(SPELL_DECK_POSITION,(CARD_WIDTH,CARD_WIDTH*5/3))
+
+faction_deck_drawer_button = pygame.Rect(FACTION_DECK_POSITION,(CARD_WIDTH*5/3,CARD_WIDTH))
+spells_deck_drawer_button = pygame.Rect(SPELL_DECK_POSITION,(CARD_WIDTH*5/3,CARD_WIDTH))
+
 button2 = pygame.Rect((WIDTH-CELL, 20),(CELL,20))
 
 no_defense_button = pygame.Rect((WIDTH-CELL, CELL*2),(CELL,CELL))
