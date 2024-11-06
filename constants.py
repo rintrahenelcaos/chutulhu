@@ -41,6 +41,7 @@ BOARD = pygame.Surface((CELL*COLUMNS, CELL*ROWS))
 #positions
 
 FACTION_HAND = pygame.Rect((BOARD.get_width(),HEIGHT-CELL*3),((WIDTH-BOARD.get_width())//2, CELL*3))
+#FACTION_HAND = pygame.Rect((BOARD.get_width(),))
 SPELLS_HAND = pygame.Rect((WIDTH-FACTION_HAND.width,  HEIGHT-CELL*3),((WIDTH-BOARD.get_width())//2,CELL*3))
 
 

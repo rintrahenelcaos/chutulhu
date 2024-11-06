@@ -28,6 +28,11 @@ while run:
     pygame.draw.rect(WIN, "pink",ENEMY_FACTION_HAND)
     pygame.draw.rect(WIN, "red",ENEMY_SPELLS_HAND)
     pygame.draw.rect(WIN,"white",faction_deck_drawer_button)
+    faction_deck = pygame.image.load(os.path.join("images","faction_deck2.jpg")).convert_alpha() # load faction deck image
+    faction_deck_scaled_image = pygame.transform.rotate(faction_deck, 90.0)
+    faction_deck_scaled_image = pygame.transform.scale(faction_deck_scaled_image, (faction_deck_drawer_button.width, faction_deck_drawer_button.height))
+    WIN.blit(faction_deck_scaled_image, (faction_deck_drawer_button))
+
     pygame.draw.rect(WIN,"white",spells_deck_drawer_button)
     spells_deck = pygame.image.load(os.path.join("images","spells_deck_scaled.jpg")).convert_alpha() # load spells deck image
     spells_deck_scaled_image = pygame.transform.rotate(spells_deck, 90.0)
