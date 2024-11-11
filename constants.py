@@ -28,12 +28,13 @@ FPS = 60
 
 
 resolution_info = pyautogui.size()
-WIDTH, HEIGHT = resolution_info.width-100, resolution_info.height-90
-HEIGHT = resolution_info.height -90
-BASIC_UNIT = round(HEIGHT)
+WIDTH, HEIGHT = resolution_info.width-100, resolution_info.height-150
+HEIGHT = resolution_info.height -100
+BASIC_UNIT = round(HEIGHT/8,0)
 CELL = round(HEIGHT/8,0)
-WIDTH = CELL*15
-CARD_WIDTH = CELL*4/5
+CELL = BASIC_UNIT
+WIDTH = resolution_info.width - BASIC_UNIT
+CARD_WIDTH = BASIC_UNIT*4/5
 
 #WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 BOARD = pygame.Surface((CELL*COLUMNS, CELL*ROWS))
@@ -49,6 +50,8 @@ SPELLS_HAND = pygame.Rect((BOARD.get_width(),  HEIGHT-FACTION_HAND.height*2),((W
 FACTION_DECK_POSITION = (FACTION_HAND.x+FACTION_HAND.width-CARD_WIDTH*1.1, FACTION_HAND.y+CELL/4)
 SPELL_DECK_POSITION = (SPELLS_HAND.x+SPELLS_HAND.width-CARD_WIDTH*1.1, SPELLS_HAND.y+CELL/4)
 
+
+
 #FACTION_DECK_POSITION = (FACTION_HAND.x+FACTION_HAND.width/2-(CARD_WIDTH*5/3)/2, FACTION_HAND.y+FACTION_HAND.height-CELL)
 #SPELL_DECK_POSITION = (SPELLS_HAND.x+SPELLS_HAND.width/2-(CARD_WIDTH*5/3)/2, SPELLS_HAND.y+SPELLS_HAND.height-CELL)
 
@@ -58,6 +61,7 @@ PRE_GAME_TOKEN_MAT = pygame.Rect((0,0),(BOARD.get_width(), CELL*5))
 
 ENEMY_FACTION_HAND = pygame.Rect((BOARD.get_width(),0),((WIDTH-BOARD.get_width())//2, CELL//2))
 ENEMY_SPELLS_HAND = pygame.Rect((BOARD.get_width()+ENEMY_FACTION_HAND.width,0),(WIDTH-ENEMY_FACTION_HAND.width, CELL//2))
+INFORMATION_FRAME = pygame.Rect((BOARD.get_width(),HEIGHT-CELL*3.6),((WIDTH-BOARD.get_width()),CELL*3.6))
 
 # Buttons
 
