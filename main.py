@@ -1027,7 +1027,7 @@ class Main():
             
     def faction_hand_controller(self, card,  current_phase):
         
-        available_space = (FACTION_HAND.height-8)//(len(self.player_a.player_hand_objs)+1)
+        available_space = (FACTION_HAND.width-8-CARD_WIDTH*1.1*2)//(len(self.player_a.player_hand_objs)+2)
             
         for crd in self.player_a.player_hand_objs:  # positions cardobject
             
@@ -1039,37 +1039,37 @@ class Main():
             #crd.rec.y = FACTION_HAND.y+CELL*0.7
 
             if current_phase == "move" and (crd.card_type == "M" or crd.card_type == "XS" or crd.card_type == "XF"):
-                xpos = FACTION_HAND.x+CELL*0.3
-                position = pygame.Vector2(xpos, FACTION_HAND.y+5+available_space*self.player_a.player_hand_objs.index(crd))
+                #xpos = FACTION_HAND.x+CELL*0.2
+                #position = pygame.Vector2(xpos, FACTION_HAND.y+5+available_space*self.player_a.player_hand_objs.index(crd))
                 
-                #ypos = FACTION_HAND.y+CELL*0.3
-                #position = pygame.Vector2(FACTION_HAND.x+5+CELL*self.player_a.player_hand_objs.index(crd)*0.7, ypos)
+                ypos = FACTION_HAND.y+CELL*0.2
+                position = pygame.Vector2(FACTION_HAND.x+5+available_space*self.player_a.player_hand_objs.index(crd), ypos)
                 #crd.card_drawer(self.WIN,pygame.Vector2(FACTION_HAND.x+5+CELL*player_hand.index(crd)*0.7, ypos))
 
             elif current_phase == "att" and (crd.card_type == "A"):
-                xpos = FACTION_HAND.x+CELL*0.3
-                position = pygame.Vector2(xpos, FACTION_HAND.y+5+available_space*self.player_a.player_hand_objs.index(crd))
-                #ypos = FACTION_HAND.y+CELL*0.3
-                #position = pygame.Vector2(FACTION_HAND.x+5+CELL*self.player_a.player_hand_objs.index(crd)*0.7, ypos)
+                #xpos = FACTION_HAND.x+CELL*0.2
+                #position = pygame.Vector2(xpos, FACTION_HAND.y+5+available_space*self.player_a.player_hand_objs.index(crd))
+                ypos = FACTION_HAND.y+CELL*0.2
+                position = pygame.Vector2(FACTION_HAND.x+5+available_space*self.player_a.player_hand_objs.index(crd), ypos)
 
                 #crd.card_drawer(self.WIN, position)  
             elif current_phase == "def" and (crd.card_type == "D"):
-                xpos = FACTION_HAND.x+CELL*0.3
-                position = pygame.Vector2(xpos, FACTION_HAND.y+5+available_space*self.player_a.player_hand_objs.index(crd))
-                #ypos = FACTION_HAND.y+CELL*0.3
-                #position = pygame.Vector2(FACTION_HAND.x+5+CELL*self.player_a.player_hand_objs.index(crd)*0.7, ypos)
+                #xpos = FACTION_HAND.x+CELL*0.3
+                #position = pygame.Vector2(xpos, FACTION_HAND.y+5+available_space*self.player_a.player_hand_objs.index(crd))
+                ypos = FACTION_HAND.y+CELL*0.2
+                position = pygame.Vector2(FACTION_HAND.x+5+available_space*self.player_a.player_hand_objs.index(crd), ypos)
 
                 #crd.card_drawer(self.WIN, position)  
             elif current_phase == "fate":
-                xpos = FACTION_HAND.x+CELL*0.7
-                position = pygame.Vector2(xpos, FACTION_HAND.y+5+available_space*self.player_a.player_hand_objs.index(crd))
-                #ypos = FACTION_HAND.y+CELL*0.7
-                #position = pygame.Vector2(FACTION_HAND.x+5+CELL*self.player_a.player_hand_objs.index(crd)*0.7, ypos)
+                #xpos = FACTION_HAND.x+CELL*0.7
+                #position = pygame.Vector2(xpos, FACTION_HAND.y+5+available_space*self.player_a.player_hand_objs.index(crd))
+                ypos = FACTION_HAND.y+CELL*0.7
+                position = pygame.Vector2(FACTION_HAND.x+5+available_space*self.player_a.player_hand_objs.index(crd), ypos)
             else:
-                xpos = FACTION_HAND.x+CELL*0.7
-                position = pygame.Vector2(xpos, FACTION_HAND.y+5+available_space*self.player_a.player_hand_objs.index(crd))
-                #ypos = FACTION_HAND.y+CELL*0.7
-                #position = pygame.Vector2(FACTION_HAND.x+5+CELL*self.player_a.player_hand_objs.index(crd)*0.7, ypos)
+                #xpos = FACTION_HAND.x+CELL*0.7
+                #position = pygame.Vector2(xpos, FACTION_HAND.y+5+available_space*self.player_a.player_hand_objs.index(crd))
+                ypos = FACTION_HAND.y+CELL*0.7
+                position = pygame.Vector2(FACTION_HAND.x+5+available_space*self.player_a.player_hand_objs.index(crd), ypos)
             crd.card_drawer(self.WIN, position)   
             crd.card_positioner() # 
         if card != None: #focus card changes size/picture - prevents false overlaping
