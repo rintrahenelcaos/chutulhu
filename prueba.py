@@ -28,7 +28,7 @@ while run:
     pygame.draw.rect(WIN, "pink",ENEMY_FACTION_HAND)
     pygame.draw.rect(WIN, "red",ENEMY_SPELLS_HAND)
     pygame.draw.rect(WIN,"white",faction_deck_drawer_button)
-    #pygame.draw.rect(WIN,"white", INFORMATION_FRAME)
+    pygame.draw.rect(WIN,"white", INFORMATION_FRAME)
     faction_deck = pygame.image.load(os.path.join("images","faction_deck2.jpg")).convert_alpha() # load faction deck image
     #faction_deck_scaled_image = pygame.transform.rotate(faction_deck, 90.0)
     faction_deck_scaled_image = pygame.transform.scale(faction_deck, (faction_deck_drawer_button.width, faction_deck_drawer_button.height))
@@ -40,7 +40,7 @@ while run:
     spells_deck_scaled_image = pygame.transform.scale(spells_deck,(spells_deck_drawer_button.width, spells_deck_drawer_button.height))
     WIN.blit(spells_deck_scaled_image, (spells_deck_drawer_button))
     current_phase_informer = GENERIC_FONT.render("phase_informer", 1, "red")
-    WIN.blit(current_phase_informer, (BOARD.get_width()+20, CELL*1.2))
+    WIN.blit(current_phase_informer, (BOARD.get_width()+20, CELL*0.6))
     
     pygame.display.update()
     

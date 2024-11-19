@@ -79,4 +79,25 @@ class Button():
                 if hover and event.button == 1:
                     self.action()
         self.image = self.hover_image if hover else self.button_image
+        
+        
+### Deployable block ###
+
+class Deployable_block():
+    def __init__(self, x, y, w, h, expx, expy, expw, exph, color):
+        self.x = x
+        self.y = y
+        self.w = w
+        self.h = h
+        self.minirect = pygame.Rect(self.x, self.y,self.w, self.h)
+        self.exprect = pygame.Rect(self.x, self.y,self.w, self.h)
+        self.expx = expx
+        self.expy = expy
+        self.expw = expw
+        self.exph = exph
+        self.color = color
+    
+    def draw(self, surface):
+        pygame.draw.rect(surface, self.color, self.minirect)
+        
 

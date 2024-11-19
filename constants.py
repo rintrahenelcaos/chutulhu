@@ -42,10 +42,10 @@ BOARD = pygame.Surface((CELL*COLUMNS, CELL*ROWS))
 
 #positions
 
-FACTION_HAND = pygame.Rect((BOARD.get_width(),HEIGHT-CELL*1.8),((WIDTH-BOARD.get_width()), CELL*1.8))
-#FACTION_HAND = pygame.Rect((BOARD.get_width(),))
-SPELLS_HAND = pygame.Rect((BOARD.get_width(),  HEIGHT-FACTION_HAND.height*2),((WIDTH-BOARD.get_width()),CELL*1.8))
 
+#FACTION_HAND = pygame.Rect((BOARD.get_width(),))
+SPELLS_HAND = pygame.Rect((BOARD.get_width(),  HEIGHT-CELL*1.8),((WIDTH-BOARD.get_width()),CELL*1.8))
+FACTION_HAND = pygame.Rect((BOARD.get_width(),HEIGHT-SPELLS_HAND.height*2),((WIDTH-BOARD.get_width()), CELL*1.8))
 
 FACTION_DECK_POSITION = (FACTION_HAND.x+FACTION_HAND.width-CARD_WIDTH*1.1, FACTION_HAND.y+CELL/4)
 SPELL_DECK_POSITION = (SPELLS_HAND.x+SPELLS_HAND.width-CARD_WIDTH*1.1, SPELLS_HAND.y+CELL/4)
@@ -61,7 +61,7 @@ PRE_GAME_TOKEN_MAT = pygame.Rect((0,0),(BOARD.get_width(), CELL*5))
 
 ENEMY_FACTION_HAND = pygame.Rect((BOARD.get_width(),0),((WIDTH-BOARD.get_width())//2, CELL//2))
 ENEMY_SPELLS_HAND = pygame.Rect((BOARD.get_width()+ENEMY_FACTION_HAND.width,0),(WIDTH-ENEMY_FACTION_HAND.width, CELL//2))
-INFORMATION_FRAME = pygame.Rect((BOARD.get_width(),HEIGHT-CELL*3.6),((WIDTH-BOARD.get_width()),CELL*3.6))
+INFORMATION_FRAME = pygame.Rect((BOARD.get_width(),CELL*1),((WIDTH-BOARD.get_width()),CELL*3))
 
 # Buttons
 
