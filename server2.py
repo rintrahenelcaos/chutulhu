@@ -1,6 +1,6 @@
 from socket import socket , AF_INET , SOCK_STREAM  #IT is use for the main communication part
 from threading import Thread #Use for concurent thread here 
-IP_ADD = "192.168.1.2" #It has to be string
+IP_ADD = "10.160.4.213" #It has to be string
 PORT = 5555
 
 LIMIT = 5

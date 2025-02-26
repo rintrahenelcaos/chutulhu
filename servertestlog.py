@@ -12,13 +12,11 @@ DISCONNECT_MSG = "!DISCONNECT"
 clients = []
 broadcast_msg = ""
 
-log = []
-
-
-def broadcast(msg):
+def broadcast(msg, conn):
     try:
         for ind_client in clients:
-            ind_client.send(msg.encode(FORMAT))
+            if conn != ind_client:
+                ind_client.send(msg.encode(FORMAT))
     except Exception as error:
             print('Error :',error)
         
@@ -33,7 +31,7 @@ def handle_client(conn, addr):
             if msg == DISCONNECT_MSG:
                 connected = False
                 
-            log.append(f"[{addr}] {msg}")
+
             print(f"[{addr}] {msg}")
 
             # msg = f"Msg received: {msg}"
@@ -42,7 +40,7 @@ def handle_client(conn, addr):
             
             if msg:
 
-                broadcast(msg)
+                broadcast(str(conn)+msg, conn)
         except Exception as error:
             print('Error :',error)        
 

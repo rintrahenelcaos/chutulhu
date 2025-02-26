@@ -1,7 +1,7 @@
 from socket import socket, SOCK_STREAM , AF_INET
 from threading import Thread
 
-IP_ADD = "192.168.1.2" #It has to be string
+IP_ADD = "10.160.4.213" #It has to be string
 PORT = 5555
 
 def listen_to_msg(client):

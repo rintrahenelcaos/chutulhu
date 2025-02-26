@@ -4,7 +4,7 @@ import pickle
 from pickleobj import Exchange_object
 
 IP = socket.gethostbyname(socket.gethostname())
-IP = "192.168.1.2"
+IP = "10.160.26.82"
 PORT = 5555
 ADDR = (IP, PORT)
 SIZE = 40000

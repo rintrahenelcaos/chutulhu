@@ -5,7 +5,7 @@ import pickle
 
 
 IP = socket.gethostbyname(socket.gethostname())
-IP = "192.168.1.2"
+IP = "10.160.4.213"
 PORT = 5566
 ADDR = (IP, PORT)
 SIZE = 1024
@@ -20,7 +20,8 @@ def listening(client):
     while connected:
         msg = client.recv(SIZE).decode(FORMAT)
         if msg != "":
-            print(f"[BROADCASTED]: {msg}")
+            #print(f"[BROADCASTED]: {msg}")
+            print(msg)
 
 
 def main():
