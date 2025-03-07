@@ -566,7 +566,9 @@ class Main():
             
             self.order_to_send = "NONE"
             self.recieved_order = "NONE"
-            self.scene = "in_course"   
+            self.available_moves = []
+            self.scene = "in_course"  
+             
             
                 
         if self.scene == "pre_game":

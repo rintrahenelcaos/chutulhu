@@ -1,5 +1,6 @@
 import socket
 import threading
+import pprint
 #import wikipedia
 
 IP = socket.gethostbyname(socket.gethostname())
@@ -11,14 +12,18 @@ DISCONNECT_MSG = "!DISCONNECT"
 
 clients = []
 broadcast_msg = ""
+log = []
 
 def broadcast(msg, conn):
     try:
         for ind_client in clients:
             if conn != ind_client:
                 ind_client.send(msg.encode(FORMAT))
+        log.append([msg]) 
+        pprint.pp(log)       
     except Exception as error:
             print('Error :',error)
+    
         
 def handle_client(conn, addr):
     print(f"[NEW CONNECTION] {addr} connected.")
@@ -32,7 +37,7 @@ def handle_client(conn, addr):
                 connected = False
                 
 
-            print(f"[{addr}] {msg}")
+            print(f"[{conn}] {msg}")
 
             # msg = f"Msg received: {msg}"
             #msg_server = f"recieved: {msg}"
