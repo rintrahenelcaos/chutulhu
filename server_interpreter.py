@@ -36,6 +36,10 @@ def recv_msg_translator(cargo):
             
             
             print("card played")
+        elif code == "DAMAGE":
+            print("damage dealt to token")
+            order = int(order)    
+        
         elif code == "ACARDPLAYED":
             print("move token")
         elif code == "XCARDPLAYED":
@@ -64,6 +68,8 @@ def send_msg_translator(code, target, order):
         send_msg = code+"]"+target+":"+temporal_order
     elif code == "CARDPLAYED":
         send_msg = code+"]"+target+":"+order
+    elif code == "DAMAGE":
+        send_msg = code+"]"+str(target)+":"+str(order)
     elif code == "ACARDPLAYED":
         print("card played: "+str(target))
     elif code == "XCARDPLAYED":

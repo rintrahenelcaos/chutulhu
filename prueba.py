@@ -1,7 +1,7 @@
 import pygame
 import os
 
-from constants import WIDTH, HEIGHT,FACTION_DECK_POSITION, FACTION_HAND, SPELL_DECK_POSITION, SPELLS_HAND, BOARD, BACKGROUND_COLOR, ENEMY_FACTION_HAND, ENEMY_SPELLS_HAND, ROWS, COLUMNS ,CELL, GENERIC_FONT, faction_deck_drawer_button, spells_deck_drawer_button, INFORMATION_FRAME
+from constants import WIDTH, HEIGHT,FACTION_DECK_POSITION, FACTION_HAND, SPELL_DECK_POSITION, SPELLS_HAND, BOARD, BACKGROUND_COLOR, ENEMY_FACTION_HAND, ENEMY_SPELLS_HAND, ROWS, COLUMNS ,CELL, GENERIC_FONT, faction_deck_drawer_button, spells_deck_drawer_button, INFORMATION_FRAME, PHASE_INFORMER_RECT
 pygame.init()
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))  
 pygame.display.init()
@@ -40,7 +40,7 @@ while run:
     spells_deck_scaled_image = pygame.transform.scale(spells_deck,(spells_deck_drawer_button.width, spells_deck_drawer_button.height))
     WIN.blit(spells_deck_scaled_image, (spells_deck_drawer_button))
     current_phase_informer = GENERIC_FONT.render("phase_informer", 1, "red")
-    WIN.blit(current_phase_informer, (BOARD.get_width()+20, CELL*0.6))
+    WIN.blit(current_phase_informer, PHASE_INFORMER_RECT)
     
     pygame.display.update()
     

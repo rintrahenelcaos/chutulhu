@@ -9,7 +9,7 @@ from constants import FACTIONS, ROWS, COLUMNS, GRID, FPS, BACKGROUND_COLOR, GRID
 from constants import PRE_GAME_TOKEN_MAT, pre_game_cancel_button, pre_game_ok_button
 from constants import FACTION_HAND, FACTION_DECK_POSITION, faction_deck_drawer_button
 from constants import SPELLS_HAND, SPELL_DECK_POSITION, spells_deck_drawer_button
-from constants import GENERIC_FONT, CARD_FONT
+from constants import GENERIC_FONT, CARD_FONT, PHASE_INFORMER_RECT
 from constants import ENEMY_FACTION_HAND, ENEMY_SPELLS_HAND
 
 from gameobjects import TokenObject, CardObject
@@ -119,20 +119,6 @@ class Main():
         #self.player_b.player_tokens.append(enemy8)
         
         
-        
-        
-        if self.scene == "pre_game":
-            self.player_a.player_tokens = []   # testing pre-game
-            self.player_b.player_tokens = []
-        if self.scene == "pre_game" or self.scene == "client_test":
-            #self.player_a.player_tokens = []   # testing pre-game
-            #self.player_b.player_tokens = []
-            #self.player_a.token_list_loader()
-            #print(self.player_a.player_tokens)
-            if self.scene == "pre_game":
-                self.pregame_mat_assigner()
-        
-        if self.scene == "client_test":pass
         # Network Objects
         
         self.net = Network()  
@@ -341,6 +327,12 @@ class Main():
             
                 
             print("cards drawn")
+        
+        elif code == "DAMAGE":
+            for token in self.player_a.player_tokens:
+                if str(token) == target:
+                    token.hits = token.hits - order
+                    
         elif code == "CARDPLAYED":
             card_info_name, card_type_info, card_info_image = self.player_b.enemy_card_played(target, order)
             print("card played")
@@ -617,7 +609,7 @@ class Main():
         
 #
         current_phase_informer = GENERIC_FONT.render(phase_informer, 1, "red")
-        self.WIN.blit(current_phase_informer, (CELL*10, 20))
+        self.WIN.blit(current_phase_informer, PHASE_INFORMER_RECT)
 #
        
         
@@ -798,6 +790,12 @@ class Main():
                                             self.attacking_tokens = False
                                             self.defense_indicator = True
                                             self.player_b.player_tokens[self.damaged_token].hits = self.player_b.player_tokens[self.damaged_token].hits - self.damage_in_course
+                                            
+                                            
+                                            
+                                            self.order_to_send = send_msg_translator("DAMAGE", self.player_b.player_tokens[self.damaged_token], self.damage_in_course)
+                                            print("Damage msg : ", self.order_to_send)
+                                            
                                             self.damage_in_course = 0
                                             #self.current_phase = "def"
                                             #pygame.time.wait(10000)
@@ -937,7 +935,7 @@ class Main():
         self.WIN.blit(spells_deck_scaled_image, (spells_deck_drawer_button))
 
         current_phase_informer = GENERIC_FONT.render(phase_informer, 1, "red")
-        self.WIN.blit(current_phase_informer, (CELL*10, 20))
+        self.WIN.blit(current_phase_informer, PHASE_INFORMER_RECT)
 
         faction_hand_sign = GENERIC_FONT.render("Faction Hand", 1, "black")
         self.WIN.blit(faction_hand_sign,(FACTION_HAND.x+5,FACTION_HAND.y))
@@ -1002,18 +1000,21 @@ class Main():
         
     def confirm_deployment(self):
         
-        print("next scene")
+        if self.player_ready == False:
         
-        order = "BATCH]all:"
-        for token in self.player_a.player_tokens:
-            order += str(token.vector_to_go[0])+","+str(token.vector_to_go[1])+";"
-                                    
-        order = order[:-1]
-        self.order_to_send = order    
-        
-        print("tosend: ",self.order_to_send)
-        
-        self.player_ready = True
+            print("next scene")
+
+            order = "BATCH]all:"
+            for token in self.player_a.player_tokens:
+                order += str(token.vector_to_go[0])+","+str(token.vector_to_go[1])+";"
+
+            order = order[:-1]
+            self.order_to_send = order    
+
+            print("tosend: ",self.order_to_send)
+
+            self.player_ready = True
+        else: pass
         
        
     def starting_positions(self):

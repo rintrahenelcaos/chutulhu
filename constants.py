@@ -30,7 +30,7 @@ FPS = 60
 resolution_info = pyautogui.size()
 WIDTH, HEIGHT = resolution_info.width-100, resolution_info.height-150
 HEIGHT = resolution_info.height -100
-BASIC_UNIT = round(HEIGHT/8,0)
+BASIC_UNIT = round(HEIGHT/12,0)
 CELL = round(HEIGHT/8,0)
 CELL = BASIC_UNIT
 WIDTH = resolution_info.width - BASIC_UNIT
@@ -47,9 +47,14 @@ BOARD = pygame.Surface((CELL*COLUMNS, CELL*ROWS))
 SPELLS_HAND = pygame.Rect((BOARD.get_width(),  HEIGHT-CELL*1.8),((WIDTH-BOARD.get_width()),CELL*1.8))
 FACTION_HAND = pygame.Rect((BOARD.get_width(),HEIGHT-SPELLS_HAND.height*2),((WIDTH-BOARD.get_width()), CELL*1.8))
 
+FACTION_HAND = pygame.Rect((0, BOARD.get_height()),((BOARD.get_width()/2), CELL*1.8))
+SPELLS_HAND = pygame.Rect((FACTION_HAND.width, BOARD.get_height()),((BOARD.get_width()/2),CELL*1.8))
+
 FACTION_DECK_POSITION = (FACTION_HAND.x+FACTION_HAND.width-CARD_WIDTH*1.1, FACTION_HAND.y+CELL/4)
 SPELL_DECK_POSITION = (SPELLS_HAND.x+SPELLS_HAND.width-CARD_WIDTH*1.1, SPELLS_HAND.y+CELL/4)
 
+
+PHASE_INFORMER_RECT = (BOARD.get_width()+20, CELL*0.6)
 
 
 #FACTION_DECK_POSITION = (FACTION_HAND.x+FACTION_HAND.width/2-(CARD_WIDTH*5/3)/2, FACTION_HAND.y+FACTION_HAND.height-CELL)
