@@ -29,8 +29,13 @@ FPS = 60
 
 resolution_info = pyautogui.size()
 WIDTH, HEIGHT = resolution_info.width-100, resolution_info.height-150
+<<<<<<< HEAD
 HEIGHT = resolution_info.height -100
 BASIC_UNIT = round(HEIGHT/12,0)
+=======
+HEIGHT = resolution_info.height -150
+BASIC_UNIT = round(HEIGHT/8,0)
+>>>>>>> c047e74557d5c1398f57c648d842264e33cca4c8
 CELL = round(HEIGHT/8,0)
 CELL = BASIC_UNIT
 WIDTH = resolution_info.width - BASIC_UNIT
@@ -38,6 +43,7 @@ CARD_WIDTH = BASIC_UNIT*4/5
 
 #WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 BOARD = pygame.Surface((CELL*COLUMNS, CELL*ROWS))
+
 
 
 #positions
