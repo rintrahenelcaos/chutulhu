@@ -711,8 +711,8 @@ class Main():
                             
                             drawn_cards = self.player_a.fate_phase(repetitions = 9)
                             self.order_to_send = send_msg_translator("CARDSDRAWN", "faction", drawn_cards)
-                            print(self.order_to_send)
-                            pygame.time.set_timer(self.freezing_mouse_event, 1000, 1) # prevents hitting the cards when draself.WINg
+                            #print(self.order_to_send)
+                            pygame.time.set_timer(self.freezing_mouse_event, 50, 1) # prevents hitting the cards when draself.WINg
                             
                             #self.phase_passer_method()
     
@@ -779,7 +779,9 @@ class Main():
                                    for enemy in self.player_b.player_tokens:
                                        if enemy.rec.collidepoint(self.mousepos):
                                             ### hit the enemy
-                                            self.damaged_token = self.player_b.player_tokens.index(enemy) # to use
+                                            self.damage_activation(enemy)
+                                            
+                                            """self.damaged_token = self.player_b.player_tokens.index(enemy) # to use
                                             
                                             #self.damage_dealt = self.damage_in_course
                                             #enemy.hits = enemy.hits - self.damage_in_course
@@ -799,8 +801,8 @@ class Main():
                                             self.damage_in_course = 0
                                             #self.current_phase = "def"
                                             #pygame.time.wait(10000)
-                                            pygame.time.set_timer(self.freezing_mouse_event, 1000, 1)
-                                            #self.phase_passer_method()
+                                            pygame.time.set_timer(self.freezing_mouse_event, 50, 1)
+                                            #self.phase_passer_method()"""
                         
                                             
     
@@ -815,7 +817,9 @@ class Main():
     
     
                         else:
-                            for crd in self.player_a.player_hand_objs:
+                            card_selected = self.card_picker()
+                            self.order_to_send = send_msg_translator("CARDPLAYED", "faction", card_selected)
+                            """for crd in self.player_a.player_hand_objs:
                                 if crd.rec.collidepoint(self.mousepos):
                                     if (crd.card_type == "A"):
                                         self.attack_indicator = crd.activate_card()[1]
@@ -828,7 +832,7 @@ class Main():
                                         #self.player_a.attack_phase()
     
                                         if self.attack_indicator != None: 
-                                            self.attacking_tokens = True
+                                            self.attacking_tokens = True"""
                                             
     
     
@@ -1139,11 +1143,39 @@ class Main():
         self.movement_indicator = None
         self.moving_tokens = False
         
-        pygame.time.set_timer(self.freezing_mouse_event, 1000, 1)
+        pygame.time.set_timer(self.freezing_mouse_event, 50, 1)
         
         #self.phase_passer_method()
+        
+    def damage_activation(self, enemy):
+        
+        self.damaged_token = self.player_b.player_tokens.index(enemy) # to use
+                                            
+        #self.damage_dealt = self.damage_in_course
+        #enemy.hits = enemy.hits - self.damage_in_course
+    
+        ### resetting values to prevent various attacks over the same card ###
+        self.available_attacks = []
+        self.attack_indicator = None
+        self.attacking_tokens = False
+        self.defense_indicator = True
+        self.player_b.player_tokens[self.damaged_token].hits = self.player_b.player_tokens[self.damaged_token].hits - self.damage_in_course
+        
+        
+        
+        self.order_to_send = send_msg_translator("DAMAGE", self.player_b.player_tokens[self.damaged_token], self.damage_in_course)
+        print("Damage msg : ", self.order_to_send)
+        
+        self.damage_in_course = 0
+        #self.current_phase = "def"
+        #pygame.time.wait(10000)
+        pygame.time.set_timer(self.freezing_mouse_event, 50, 1)
+        #self.phase_passer_method()
+    
+        pass
 
     def card_picker(self):
+        card_picked = str
         if self.current_phase == "move":
             for crd in self.player_a.player_hand_objs:
                 if crd.rec.collidepoint(self.mousepos):
@@ -1154,6 +1186,7 @@ class Main():
                         #    self.order_to_send = "MCARDPLAYED]:"+str(crd)+":all"
                         #elif crd.card_type == "XS" or crd.card_type == "XF":
                         #    self.order_to_send = "XCARDPLAYED]:"+str(crd)+":"+crd.card_type
+                        card_picked = str(crd)
                         self.player_a.faction_card_discard(crd)
                         #self.player_a.player_hand_objs.remove(crd)
     
@@ -1165,9 +1198,28 @@ class Main():
             for crd in self.player_a.player_spell_hand_objs:
                 if crd.rec.collidepoint(self.mousepos):
                     self.player_a.spell_card_discard(crd)
+                    
+        elif self.current_phase == "att":
+            for crd in self.player_a.player_hand_objs:
+                if crd.rec.collidepoint(self.mousepos):
+                    if (crd.card_type == "A"):
+                        self.attack_indicator = crd.activate_card()[1]
+                        
+                        #discarder("cards_a", str(crd.identif))
+                        self.damage_in_course = crd.damage
+                        card_picked = str(crd)
+                        self.player_a.faction_card_discard(crd)
+                        #self.player_a.player_hand_objs.remove(crd)
+    
+    
+                        #self.player_a.attack_phase()
+    
+                        if self.attack_indicator != None: 
+                            self.attacking_tokens = True
+            
         
-        
-        return str(crd)    
+        print("returning card in card_picker :" ,card_picked)
+        return card_picked    
         
 
 
