@@ -877,7 +877,40 @@ class Main():
                     #        #self.player_turn = True
                     #        self.defense_indicator = False
                     #    pass
+
+                elif not self.player_turn and self.defense_indicator:
+                    for crd in self.player_a.player_hand_objs:
+                        if crd.rec.collidepoint(self.mousepos):        
+                        
+                            if crd.card_type == "D":
+
+                                crd.activate_card()
+                                self.damage_in_course = 0
+                                #self.damaged_token = None
+                                damage_to_deal = 0
+                                self.player_a.faction_card_discard(crd)
+                                #self.player_turn = True
+                                self.defense_indicator = False
+                                #discarder("cards_a", str(crd.identif))
+                                #self.player_a.player_hand_objs.remove(crd)
+                                self.order_to_send = send_msg_translator("DEFENSE", damaged_token, damage_to_deal)
+                        
+                    if no_defense_button.collidepoint(self.mousepos):
+                        
+                        #self.player_b.player_tokens[self.damaged_token].hits = self.player_b.player_tokens[self.damaged_token].hits - self.damage_in_course
+                        self.damage_in_course = 0
+                        #self.damaged_token = None
+                        #self.player_turn = True
+                        self.defense_indicator = False
+                        for token in self.player_a.player_tokens:
+                            if str(token) == damaged_token:
+                                token.hits = token.hits - damage_to_deal
+                                self.order_to_send = send_msg_translator("DEFENSE", damaged_token, damage_to_deal)
         
+                
+        
+                    
+                    
         self.recieved_order = self.net.send_recv(self.order_to_send)
         
         if self.recieved_order != "NONE":
