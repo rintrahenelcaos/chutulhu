@@ -334,8 +334,11 @@ class Main():
         #            token.hits = token.hits - order
         
         elif code == "DAMAGE":
+            self.defense_indicator = True
+            #self.defense_activation(target, int(order))
+            self.damaged_token = target
+            self.damage_dealt = int(order)
             
-            self.defense_activation(target, int(order))
         
         elif code == "DEFENSE":
             for token in self.player_a.player_tokens:
@@ -849,68 +852,43 @@ class Main():
     
     
                     ### DEFENSE PHASE EVENT ###
-                    #if self.defense_indicator and self.player_turn == False:
+                    if self.defense_indicator and self.player_turn == False:
+                        
+                        self.defense_activation(self.damaged_token, self.damage_dealt)
                         
                         
                     #if self.current_phase == "def" and self.damaged_token != None: # test function
                         
                         #self.player_turn = False
-                    #    for crd in self.player_a.player_hand_objs:
-                    #        if crd.rec.collidepoint(self.mousepos):        
-                    #        
-                    #            if crd.card_type == "D":
-                    #                
-                    #                crd.activate_card()
-                    #                self.damage_in_course = 0
-                    #                self.damaged_token = None
-                    #                self.player_a.faction_card_discard(crd)
-                    #                #self.player_turn = True
-                    #                self.defense_indicator = False
-                    #                #discarder("cards_a", str(crd.identif))
-                    #                #self.player_a.player_hand_objs.remove(crd)
-                    #                
-                    #    if no_defense_button.collidepoint(self.mousepos):
-                    #        
-                    #        self.player_b.player_tokens[self.damaged_token].hits = self.player_b.player_tokens[self.damaged_token].hits - self.damage_in_course
-                    #        self.damage_in_course = 0
-                    #        self.damaged_token = None
-                    #        #self.player_turn = True
-                    #        self.defense_indicator = False
-                    #    pass
-
-                elif not self.player_turn and self.defense_indicator:
-                    for crd in self.player_a.player_hand_objs:
-                        if crd.rec.collidepoint(self.mousepos):        
+                        for crd in self.player_a.player_hand_objs:
+                            if crd.rec.collidepoint(self.mousepos):        
+                            
+                                if crd.card_type == "D":
+                                    
+                                    crd.activate_card()
+                                    self.damage_dealt = 0
+                                    #self.damaged_token = None
+                                    self.player_a.faction_card_discard(crd)
+                                    #self.player_turn = True
+                                    
+                                    #discarder("cards_a", str(crd.identif))
+                                    #self.player_a.player_hand_objs.remove(crd)
+                                    self.order_to_send = send_msg_translator("DEFENSE", self.damaged_token, self.damage_dealt)
+                                    self.damaged_token = None
+                                    self.defense_indicator = False
+                                    
+                        if no_defense_button.collidepoint(self.mousepos):
+                            
+                            self.player_b.player_tokens[self.damaged_token].hits = self.player_b.player_tokens[self.damaged_token].hits - self.damage_dealt
+                            #self.damage_in_course = 0
+                            
+                            #self.player_turn = True
+                            
+                            self.order_to_send = send_msg_translator("DEFENSE", self.damaged_token, self.damage_dealt)
+                            self.damaged_token = None
+                            self.defense_indicator = False
                         
-                            if crd.card_type == "D":
-
-                                crd.activate_card()
-                                self.damage_in_course = 0
-                                #self.damaged_token = None
-                                damage_to_deal = 0
-                                self.player_a.faction_card_discard(crd)
-                                #self.player_turn = True
-                                self.defense_indicator = False
-                                #discarder("cards_a", str(crd.identif))
-                                #self.player_a.player_hand_objs.remove(crd)
-                                self.order_to_send = send_msg_translator("DEFENSE", damaged_token, damage_to_deal)
-                        
-                    if no_defense_button.collidepoint(self.mousepos):
-                        
-                        #self.player_b.player_tokens[self.damaged_token].hits = self.player_b.player_tokens[self.damaged_token].hits - self.damage_in_course
-                        self.damage_in_course = 0
-                        #self.damaged_token = None
-                        #self.player_turn = True
-                        self.defense_indicator = False
-                        for token in self.player_a.player_tokens:
-                            if str(token) == damaged_token:
-                                token.hits = token.hits - damage_to_deal
-                                self.order_to_send = send_msg_translator("DEFENSE", damaged_token, damage_to_deal)
         
-                
-        
-                    
-                    
         self.recieved_order = self.net.send_recv(self.order_to_send)
         
         if self.recieved_order != "NONE":
@@ -976,7 +954,7 @@ class Main():
         
         pygame.draw.rect(self.WIN, "yellow", temporal_change_turn_button)
         
-        if self.defense_indicator:
+        if self.defense_indicator and self.player_turn == False:
             pygame.draw.rect(self.WIN, "aqua", no_defense_button)
 
         spells_deck = pygame.image.load(os.path.join("images","spells_deck_scaled.jpg")).convert_alpha() # load spells deck image
@@ -1064,7 +1042,21 @@ class Main():
             print("tosend: ",self.order_to_send)
 
             self.player_ready = True
-        else: pass
+        else: 
+            print("next scene")
+
+            order = "BATCH]all:"
+            for token in self.player_a.player_tokens:
+                order += str(token.vector_to_go[0])+","+str(token.vector_to_go[1])+";"
+
+            order = order[:-1]
+            self.order_to_send = order    
+
+            print("tosend: ",self.order_to_send)
+            
+            
+            
+            #pass
         
        
     def starting_positions(self):
@@ -1215,7 +1207,7 @@ class Main():
         self.damage_in_course = 0
         #self.current_phase = "def"
         #pygame.time.wait(10000)
-        pygame.time.set_timer(self.freezing_mouse_event, 50, 1)
+        #pygame.time.set_timer(self.freezing_mouse_event, 50, 1)
         #self.phase_passer_method()
     
     def defense_activation(self, damaged_token, damage_to_deal):
