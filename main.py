@@ -341,7 +341,7 @@ class Main():
             
         
         elif code == "DEFENSE":
-            for token in self.player_a.player_tokens:
+            for token in self.player_b.player_tokens:
                 if str(token) == target:
                     token.hits = token.hits - order
             
@@ -851,42 +851,48 @@ class Main():
     
     
     
-                    ### DEFENSE PHASE EVENT ###
-                    if self.defense_indicator and self.player_turn == False:
+                ### DEFENSE PHASE EVENT ###
+                if self.defense_indicator and self.player_turn == False:
+                    print("in the defense phase")
+                    #self.defense_activation(self.damaged_token, self.damage_dealt)
+                    
+                    
+                #if self.current_phase == "def" and self.damaged_token != None: # test function
+                    
+                    #self.player_turn = False
+                    for token in self.player_a.player_dead_tokens:
+                        if str(token) == self.damaged_token:
+                    
+                            if no_defense_button.collidepoint(self.mousepos):
+
+                                token.hits = token.hits - self.damage_dealt
+                                #self.damage_in_course = 0
+
+                                #self.player_turn = True
+
+                                self.order_to_send = send_msg_translator("DEFENSE", self.damaged_token, self.damage_dealt)
+                                print("order to send in defense: "+self.order_to_send)
+                                self.damaged_token = None
+                                self.defense_indicator = False
+                    """for crd in self.player_a.player_hand_objs:
+                        if crd.rec.collidepoint(self.mousepos):        
                         
-                        self.defense_activation(self.damaged_token, self.damage_dealt)
-                        
-                        
-                    #if self.current_phase == "def" and self.damaged_token != None: # test function
-                        
-                        #self.player_turn = False
-                        for crd in self.player_a.player_hand_objs:
-                            if crd.rec.collidepoint(self.mousepos):        
-                            
-                                if crd.card_type == "D":
+                            if crd.card_type == "D":
+                                
+                                crd.activate_card()
+                                self.damage_dealt = 0
+                                #self.damaged_token = None
+                                self.player_a.faction_card_discard(crd)
+                                #self.player_turn = True
+                                
+                                #discarder("cards_a", str(crd.identif))
+                                #self.player_a.player_hand_objs.remove(crd)
+                                self.order_to_send = send_msg_translator("DEFENSE", self.damaged_token, self.damage_dealt)
+                                print("order to send in defense: "+self.order_to_send)
+                                self.damaged_token = None
+                                self.defense_indicator = False"""
                                     
-                                    crd.activate_card()
-                                    self.damage_dealt = 0
-                                    #self.damaged_token = None
-                                    self.player_a.faction_card_discard(crd)
-                                    #self.player_turn = True
-                                    
-                                    #discarder("cards_a", str(crd.identif))
-                                    #self.player_a.player_hand_objs.remove(crd)
-                                    self.order_to_send = send_msg_translator("DEFENSE", self.damaged_token, self.damage_dealt)
-                                    self.damaged_token = None
-                                    self.defense_indicator = False
-                                    
-                        if no_defense_button.collidepoint(self.mousepos):
-                            
-                            self.player_b.player_tokens[self.damaged_token].hits = self.player_b.player_tokens[self.damaged_token].hits - self.damage_dealt
-                            #self.damage_in_course = 0
-                            
-                            #self.player_turn = True
-                            
-                            self.order_to_send = send_msg_translator("DEFENSE", self.damaged_token, self.damage_dealt)
-                            self.damaged_token = None
-                            self.defense_indicator = False
+                        
                         
         
         self.recieved_order = self.net.send_recv(self.order_to_send)
