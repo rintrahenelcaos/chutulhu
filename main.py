@@ -307,7 +307,8 @@ class Main():
         
         if code == "BATCH":  # initial deploy order. Structure: "BATCH]all:xpos1,ypos1;xpos2,ypos;..."
             #print("initial deploy")
-            
+            self.enemy_ready = True
+                        
             for indicator in range(len(self.player_b.player_tokens)):
                 xpos, ypos = order[indicator][0], order[indicator][1]
                 self.player_b.player_tokens[indicator].vector_to_go[:] = xpos, ypos 
@@ -563,7 +564,7 @@ class Main():
             try:
                 code, target, order = recv_msg_translator(self.recieved_order)
                 self.orders_interpreter_method(code, target, order)
-                self.enemy_ready = True
+                #self.enemy_ready = True
                 
             except: pass
         
@@ -860,7 +861,7 @@ class Main():
                 #if self.current_phase == "def" and self.damaged_token != None: # test function
                     
                     #self.player_turn = False
-                    for token in self.player_a.player_dead_tokens:
+                    for token in self.player_a.player_tokens:
                         if str(token) == self.damaged_token:
                     
                             if no_defense_button.collidepoint(self.mousepos):
@@ -870,7 +871,7 @@ class Main():
 
                                 #self.player_turn = True
 
-                                self.order_to_send = send_msg_translator("DEFENSE", self.damaged_token, self.damage_dealt)
+                                self.order_to_send = send_msg_translator("DEFENSE", self.damaged_token, str(self.damage_dealt))
                                 print("order to send in defense: "+self.order_to_send)
                                 self.damaged_token = None
                                 self.defense_indicator = False
