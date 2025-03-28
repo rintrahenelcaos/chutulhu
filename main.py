@@ -151,7 +151,7 @@ class Main():
         self.mousepos = pygame.mouse.get_pos()
         
         
-        self.scene = "client_test"
+        #self.scene = "client_test"
         #self.player_a.token_list_loader()
         self.scene = "first_menu"
         
@@ -556,6 +556,11 @@ class Main():
             if not self.player_ready: # prevent redeploy after finnished 
                 self.pre_game_cancel_button.update(events)
             self.pre_game_ok_button.update(events)
+        
+        #if self.player_ready and self.enemy_ready:
+        #    
+        #    drawn_cards = self.player_a.fate_phase(repetitions = 3)
+        #    self.order_to_send = send_msg_translator("CARDSDRAWN", "faction", drawn_cards)
             
         
         self.recieved_order = self.net.send_recv(self.order_to_send)
@@ -570,6 +575,8 @@ class Main():
         
         if self.player_ready and self.enemy_ready:
             
+            #drawn_cards = self.player_a.fate_phase(repetitions = 3)
+            #self.order_to_send = send_msg_translator("CARDSDRAWN", "faction", drawn_cards)
             self.order_to_send = "NONE"
             self.recieved_order = "NONE"
             self.available_moves = []
@@ -628,7 +635,19 @@ class Main():
        
         
         pygame.display.update()
-             
+     
+    def in_course_preparations(self):
+        self.recieved_order = "NONE"
+        drawn_cards = self.player_a.fate_phase(repetitions = 3)
+        self.order_to_send = send_msg_translator("CARDSDRAWN", "faction", drawn_cards)  
+        while self.recieved_order == "NONE":
+            self.recieved_order = self.net.send_recv(self.order_to_send)
+        else: 
+            code, target, order = recv_msg_translator(self.recieved_order)
+            self.orders_interpreter_method(code, target, order)
+            self.scene = "in_course"
+            
+        
             
     def in_course(self):
         
