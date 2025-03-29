@@ -563,6 +563,28 @@ class Main():
         #    self.order_to_send = send_msg_translator("CARDSDRAWN", "faction", drawn_cards)
             
         
+        #self.recieved_order = self.net.send_recv(self.order_to_send)
+        #
+        #if self.recieved_order != "NONE":
+        #    try:
+        #        code, target, order = recv_msg_translator(self.recieved_order)
+        #        self.orders_interpreter_method(code, target, order)
+        #        #self.enemy_ready = True
+        #        
+        #    except: pass
+        
+        if self.player_ready:
+            if self.enemy_ready:
+            
+                #drawn_cards = self.player_a.fate_phase(repetitions = 3)
+                #self.order_to_send = send_msg_translator("CARDSDRAWN", "faction", drawn_cards)
+                self.confirm_deployment()
+                #self.order_to_send = "NONE"
+                #self.recieved_order = "NONE"
+                self.available_moves = []
+                #self.scene = "in_course"
+                self.in_course_preparations()  
+        
         self.recieved_order = self.net.send_recv(self.order_to_send)
         
         if self.recieved_order != "NONE":
@@ -571,17 +593,7 @@ class Main():
                 self.orders_interpreter_method(code, target, order)
                 #self.enemy_ready = True
                 
-            except: pass
-        
-        if self.player_ready and self.enemy_ready:
-            
-            #drawn_cards = self.player_a.fate_phase(repetitions = 3)
-            #self.order_to_send = send_msg_translator("CARDSDRAWN", "faction", drawn_cards)
-            self.order_to_send = "NONE"
-            self.recieved_order = "NONE"
-            self.available_moves = []
-            self.scene = "in_course"  
-             
+            except: pass     
             
                 
         if self.scene == "pre_game":
@@ -640,16 +652,22 @@ class Main():
         self.recieved_order = "NONE"
         drawn_cards = self.player_a.fate_phase(repetitions = 3)
         self.order_to_send = send_msg_translator("CARDSDRAWN", "faction", drawn_cards)  
-        while self.recieved_order == "NONE":
-            self.recieved_order = self.net.send_recv(self.order_to_send)
-        else: 
-            code, target, order = recv_msg_translator(self.recieved_order)
-            self.orders_interpreter_method(code, target, order)
-            self.scene = "in_course"
+        self.recieved_order = self.net.send_recv(self.order_to_send)
+        code, target, order = recv_msg_translator(self.recieved_order)
+        self.orders_interpreter_method(code, target, order)
+        self.scene = "in_course"
+        #"""while self.recieved_order == "NONE":
+        #    self.recieved_order = self.net.send_recv(self.order_to_send)
+        #else: 
+        #    code, target, order = recv_msg_translator(self.recieved_order)
+        #    self.orders_interpreter_method(code, target, order)
+        #    self.scene = "in_course""""
             
         
             
     def in_course(self):
+        
+        
         
         self.clock.tick(FPS)
         self.mousepos = pygame.mouse.get_pos()
