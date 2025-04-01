@@ -163,6 +163,8 @@ class Main():
                 self.main_menu()
             elif self.scene == "pre_game":
                 self.pre_game()
+            elif self.scene == "in_course_preparations":
+                self.in_course_preparations()
             elif self.scene == "in_course":
                 self.in_course()
             elif self.scene == "client_test":
@@ -583,7 +585,7 @@ class Main():
                 #self.recieved_order = "NONE"
                 self.available_moves = []
                 #self.scene = "in_course"
-                self.in_course_preparations()  
+                self.scene = "in_course_preparations" 
         
         self.recieved_order = self.net.send_recv(self.order_to_send)
         
@@ -649,20 +651,36 @@ class Main():
         pygame.display.update()
      
     def in_course_preparations(self):
+        
+        self.player_ready = False
+        self.enemy_ready = False
         self.recieved_order = "NONE"
         drawn_cards = self.player_a.fate_phase(repetitions = 3)
-        self.order_to_send = send_msg_translator("CARDSDRAWN", "faction", drawn_cards)  
+        self.order_to_send = send_msg_translator("CARDSDRAWN", "faction", drawn_cards)
         self.recieved_order = self.net.send_recv(self.order_to_send)
-        code, target, order = recv_msg_translator(self.recieved_order)
-        self.orders_interpreter_method(code, target, order)
-        self.scene = "in_course"
-        #"""while self.recieved_order == "NONE":
-        #    self.recieved_order = self.net.send_recv(self.order_to_send)
-        #else: 
-        #    code, target, order = recv_msg_translator(self.recieved_order)
-        #    self.orders_interpreter_method(code, target, order)
-        #    self.scene = "in_course""""
+        
+        while self.enemy_ready == False:
+            if self.player_ready == False:
+                self.recieved_order = self.net.send_recv(self.order_to_send)
+                if self.recieved_order != "NONE":
+                    try:
+                        code, target, order = recv_msg_translator(self.recieved_order)
+                        self.orders_interpreter_method(code, target, order)
+                        self.player_ready = True
+                    except:
+                        pass
+            elif self.player_ready == True:
+                self.order_to_send = "PLAYER_READY"
+                if self.recieved_order == "PLAYER_READY":
+                    self.enemy_ready == True
+            self.recieved_order = self.net.send_recv(self.order_to_send)
+                
             
+        if self.enemy_ready and self.player_ready:
+            self.net.send_recv(self.order_to_send)
+            self.scene = "in_course"
+        
+                    
         
             
     def in_course(self):

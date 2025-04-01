@@ -80,8 +80,10 @@ def send_msg_translator(code, target, order):
     elif code == "SCARDPLAYED":
         print("move token")
         
+        
     else:
         send_msg = code+"]"+target+":"+order
+        
     
     return send_msg
 
