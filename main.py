@@ -559,11 +559,7 @@ class Main():
                 self.pre_game_cancel_button.update(events)
             self.pre_game_ok_button.update(events)
         
-        #if self.player_ready and self.enemy_ready:
-        #    
-        #    drawn_cards = self.player_a.fate_phase(repetitions = 3)
-        #    self.order_to_send = send_msg_translator("CARDSDRAWN", "faction", drawn_cards)
-            
+       ####### Working perfectly ######             
         
         self.recieved_order = self.net.send_recv(self.order_to_send)
         
@@ -578,25 +574,35 @@ class Main():
         if self.player_ready:
             if self.enemy_ready:
             
-                #drawn_cards = self.player_a.fate_phase(repetitions = 3)
-                #self.order_to_send = send_msg_translator("CARDSDRAWN", "faction", drawn_cards)
                 self.confirm_deployment()
-                self.order_to_send = "NONE"
-                self.recieved_order = "NONE"
+                
                 self.available_moves = []
-                #self.scene = "in_course"
-                self.scene = "in_course_preparations" 
+                self.scene = "in_course"
+                #self.scene = "in_course_preparations" 
+        
+        ###################3 END ########################3
         
         #self.recieved_order = self.net.send_recv(self.order_to_send)
-        
+        #
         #if self.recieved_order != "NONE":
         #    try:
         #        code, target, order = recv_msg_translator(self.recieved_order)
         #        self.orders_interpreter_method(code, target, order)
         #        self.enemy_ready = True
         #        
-        #    except: pass     
-            
+        #    except: pass
+        #
+        #if self.player_ready:
+        #    if self.enemy_ready:
+        #    
+        #        self.confirm_deployment()
+        #        
+        #        self.available_moves = []
+        #        #self.scene = "in_course"
+        #        self.scene = "in_course_preparations" 
+        
+        
+                    
                 
         if self.scene == "pre_game":
             self.draw_window_pregame()
@@ -814,7 +820,7 @@ class Main():
                             
                             drawn_cards = self.player_a.fate_phase(repetitions = 9)
                             self.order_to_send = send_msg_translator("CARDSDRAWN", "faction", drawn_cards)
-                            #print(self.order_to_send)
+                            print(self.order_to_send)
                             pygame.time.set_timer(self.freezing_mouse_event, 50, 1) # prevents hitting the cards when draself.WINg
                             
                             #self.phase_passer_method()
