@@ -18,7 +18,6 @@ data = ["NONE","NONE"]
 #data = [Exchange_object("NONE"), Exchange_object("NONE")]
 factions_code = ["NONE","NONE"]
 
-
 def broadcast(msg, player):
     try:
         for ind_client in clients:
