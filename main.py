@@ -290,7 +290,9 @@ class Main():
             self.player_b.token_list_loader()
             #self.net.send_recv("NONE")
             self.pregame_mat_assigner() # assigns starting positions to each player token before launching the deploy phase
+            self.order_to_send = "NONE"
             self.scene = "pre_game"
+            
         else: pass 
             
         
@@ -464,7 +466,7 @@ class Main():
         self.clock.tick(FPS)
         self.mousepos = pygame.mouse.get_pos()
         #self.scene = "pre_game"
-        self.order_to_send = "NONE"
+        #self.order_to_send = "NONE"
         self.recieved_order = "NONE"
         
         
@@ -573,12 +575,21 @@ class Main():
         
         if self.player_ready:
             if self.enemy_ready:
+                order = "BATCH]all:"
+                for token in self.player_a.player_tokens:
+                    order += str(token.vector_to_go[0])+","+str(token.vector_to_go[1])+";"
+
+                order = order[:-1]
+                self.order_to_send = order    
+
+                print("tosend: ",self.order_to_send)
             
-                self.confirm_deployment()
+                #self.confirm_deployment()
                 
                 self.available_moves = []
-                self.scene = "in_course"
-                #self.scene = "in_course_preparations" 
+                #self.order_to_send = "NONE"
+                #self.scene = "in_course"
+                self.scene = "in_course_preparations" 
         
         ###################3 END ########################3
         
@@ -658,10 +669,9 @@ class Main():
      
     def in_course_preparations(self):
         
-        drawn_cards = self.player_a.fate_phase(repetitions = 3)
-        self.order_to_send = send_msg_translator("CARDSDRAWN", "faction", drawn_cards)
-        print(self.order_to_send)
-        #self.clock.tick(FPS)
+        #self.recieved_order = self.net.send_recv(self.order_to_send)
+        #code, target, order = recv_msg_translator(self.recieved_order)
+        #self.orders_interpreter_method(code, target, order)
         
         events = pygame.event.get()
         for event in events:
@@ -673,25 +683,45 @@ class Main():
                 
                 self.run = False
                 
-        response = self.net.send_recv(self.order_to_send)
-        
-        if response != "NONE":
-            try:
-                code, target, order = recv_msg_translator(self.recieved_order)
-                self.orders_interpreter_method(code, target, order)
-                self.enemy_ready = True
-                print("going to in_course")
-            
-                self.scene = "in_course"
-            except: pass
-            #self.net.send_recv("NONE")
-            #code, target, order = recv_msg_translator(self.recieved_order)
-            #self.orders_interpreter_method(code, target, order)
-            #self.player_b.player_faction = response
-            #print("going to in_course")
-            #
-            #self.scene = "in_course"
-        else: pass 
+        # test one-shot
+        drawn_cards = self.player_a.fate_phase(repetitions = 6)
+        self.order_to_send = send_msg_translator("CARDSDRAWN", "faction", drawn_cards)
+        print("SELF.ORDER_TO_SEND: CARDS DRAWN ===> ",self.order_to_send)
+        self.recieved_order = self.net.send_recv(self.order_to_send)
+        try:
+            code, target, order = recv_msg_translator(self.recieved_order)
+            self.orders_interpreter_method(code, target, order)
+        except: pass
+        self.scene = "in_course"
+                
+        #self.recieved_order = "NONE"
+        #drawn_cards = self.player_a.fate_phase(repetitions = 3)
+        #self.order_to_send = send_msg_translator("CARDSDRAWN", "faction", drawn_cards)
+        #print(self.order_to_send)
+        #self.clock.tick(FPS)
+                
+        #response = self.net.send_recv(self.order_to_send)
+        #
+        #if response != "NONE":
+        #    
+        #    try:
+        #        code, target, order = recv_msg_translator(self.recieved_order)
+        #        if code == "CARDSDRAWN":
+        #            self.orders_interpreter_method(code, target, order)
+        #            self.enemy_ready = True
+        #            print("going to in_course")
+        #    
+        #            self.scene = "in_course"
+        #        else: pass
+        #    except: pass
+        #    #self.net.send_recv("NONE")
+        #    #code, target, order = recv_msg_translator(self.recieved_order)
+        #    #self.orders_interpreter_method(code, target, order)
+        #    #self.player_b.player_faction = response
+        #    #print("going to in_course")
+        #    #
+        #    #self.scene = "in_course"
+        #else: pass 
         #self.player_ready = False
         #self.enemy_ready = False
         #self.recieved_order = "NONE"
@@ -731,6 +761,9 @@ class Main():
         self.mousepos = pygame.mouse.get_pos()
         focus_faction_card = None
         focus_spell_card = None
+        
+        
+        self.recieved_order = self.net.send_recv(self.order_to_send)
         
         # Network orders cleaner
         
@@ -818,7 +851,7 @@ class Main():
                     
                         if faction_deck_drawer_button.collidepoint(self.mousepos):
                             
-                            drawn_cards = self.player_a.fate_phase(repetitions = 9)
+                            drawn_cards = self.player_a.fate_phase(repetitions = 3)
                             self.order_to_send = send_msg_translator("CARDSDRAWN", "faction", drawn_cards)
                             print(self.order_to_send)
                             pygame.time.set_timer(self.freezing_mouse_event, 50, 1) # prevents hitting the cards when draself.WINg
@@ -991,7 +1024,7 @@ class Main():
                         
                         
         
-        self.recieved_order = self.net.send_recv(self.order_to_send)
+        #self.recieved_order = self.net.send_recv(self.order_to_send)
         
         if self.recieved_order != "NONE":
             try:
