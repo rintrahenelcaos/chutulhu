@@ -52,6 +52,7 @@ class Main():
         self.scene = "pre_game"
         self.current_phase = GAME_SEQUENCE[0]
         self.phase_passer = 2
+        self.player_is_hosting = False
         self.enemy_ready = False
         self.player_ready = False
         #new_game_preparations("INVESTIGATORS","SERPENT_PEOPLE")
@@ -217,6 +218,7 @@ class Main():
     
     def host_game_method(self):
         os.system("cls")
+        self.player_is_hosting = True
         self.server.start()
         self.to_second_menu()
         
@@ -669,6 +671,11 @@ class Main():
      
     def in_course_preparations(self):
         
+        self.recieved_order = self.net.send_recv(self.order_to_send)
+        try:
+            code, target, order = recv_msg_translator(self.recieved_order)
+            self.orders_interpreter_method(code, target, order)
+        except: pass
         #self.recieved_order = self.net.send_recv(self.order_to_send)
         #code, target, order = recv_msg_translator(self.recieved_order)
         #self.orders_interpreter_method(code, target, order)
@@ -765,6 +772,14 @@ class Main():
         
         self.recieved_order = self.net.send_recv(self.order_to_send)
         
+        if self.recieved_order != "NONE":
+            try:
+                code, target, order = recv_msg_translator(self.recieved_order)
+                self.orders_interpreter_method(code, target, order)
+                #self.enemy_ready = True
+            except: 
+                print("Failed interpretation of order")       
+        
         # Network orders cleaner
         
         self.order_to_send = "NONE"
@@ -857,6 +872,12 @@ class Main():
                             pygame.time.set_timer(self.freezing_mouse_event, 50, 1) # prevents hitting the cards when draself.WINg
                             
                             #self.phase_passer_method()
+                            
+                    ### SUMMON PHASE EVENT ###
+                    
+                    if self.current_phase == "summon":
+                        pass
+                        #pygame.time.set_timer(self.freezing_mouse_event, 50, 1)
     
                     ### MOVE PHASE EVENT ###
     
@@ -1026,13 +1047,13 @@ class Main():
         
         #self.recieved_order = self.net.send_recv(self.order_to_send)
         
-        if self.recieved_order != "NONE":
-            try:
-                code, target, order = recv_msg_translator(self.recieved_order)
-                self.orders_interpreter_method(code, target, order)
-                #self.enemy_ready = True
-            except: 
-                print("Failed interpretation of order")                       
+        #if self.recieved_order != "NONE":
+        #    try:
+        #        code, target, order = recv_msg_translator(self.recieved_order)
+        #        self.orders_interpreter_method(code, target, order)
+        #        #self.enemy_ready = True
+        #    except: 
+        #        print("Failed interpretation of order")                       
                 
         # surviving tokens control
         

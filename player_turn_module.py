@@ -108,7 +108,7 @@ class Player_Object():
             drawn_card_info = []
             for inf in req_info:
                 drawn_card_info.append(drawn_card_data[(self.faction_card_fields.index(inf))])
-            print("drawn_card_info: ",drawn_card_info)
+            #print("drawn_card_info: ",drawn_card_info)
             self.hand_refresher(drawn_card_info, xpos, ypos, self.player_hand_objs)
             drawn_cards.append(drawn_card_info[0])
         
@@ -254,7 +254,7 @@ class Player_Object():
         except:
             card_obj_list.append(CardObject(card_size,xpos,ypos,drawn_cards[4],drawn_cards[0],drawn_cards[1],drawn_cards[2])) #adds cardobject
             
-        print(card_obj_list)  
+        #print(card_obj_list)  
         
     def faction_card_discard(self,card_to_discard_obj):
         

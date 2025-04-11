@@ -108,7 +108,7 @@ CARD_FONT = pygame.font.SysFont("times",int(CELL*0.18))
 
 GAME_SEQUENCE = ["a_fate", "a_move", "a_att", "b_def","b_fate", "b_move", "b_att", "a_def"]
 GAME_SEQUENCE = ["fate", "move", "att"]
-
+GAME_SEQUENCE = ["fate", "summon", "move", "att"]
 
 ### Constants for object loaders
 
