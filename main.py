@@ -671,6 +671,7 @@ class Main():
      
     def in_course_preparations(self):
         
+        self.player_ready = True
         self.recieved_order = self.net.send_recv(self.order_to_send)
         try:
             code, target, order = recv_msg_translator(self.recieved_order)
@@ -686,6 +687,7 @@ class Main():
                 try:
                     self.net.send("!DISCONNECT")
                     self.server.terminate()
+                    
                 except: pass
                 
                 self.run = False
@@ -698,8 +700,15 @@ class Main():
         try:
             code, target, order = recv_msg_translator(self.recieved_order)
             self.orders_interpreter_method(code, target, order)
+            #self.player_ready = True
         except: pass
-        self.scene = "in_course"
+        
+        
+        if self.player_ready:
+            print("pass pregame")
+            self.scene = "in_course"
+        else: 
+            print("failed to receive instructions")
                 
         #self.recieved_order = "NONE"
         #drawn_cards = self.player_a.fate_phase(repetitions = 3)
