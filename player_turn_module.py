@@ -5,7 +5,7 @@ import sys
 from dbcreator import alltablesconstructor, individual_list
 from dbintermediatefunctions import deckmixer, deck_assigner, drawer, reshuffle_deck, card_counter
 from gameobjects import CardObject, TokenObject
-from constants import DECKS, FACTIONS, CELL, CARD_WIDTH, FACTION_DECK_POSITION, SPELL_DECK_POSITION, GRID, PRE_GAME_TOKEN_MAT, REQ_FIELDS, ENEMY_FACTION_HAND
+from constants import DECKS, FACTIONS, CELL, CARD_WIDTH, FACTION_DECK_POSITION, SPELL_DECK_POSITION, GRID, PRE_GAME_TOKEN_MAT, REQ_FIELDS, ENEMY_FACTION_HAND, ENEMY_SPELLS_HAND
 #from functionsmodule import movement_blocker
 #from pregame_functions import player_token_assigner
 from pickleobj import Exchange_object
@@ -125,6 +125,17 @@ class Player_Object():
                     drawn_card_info.append(card[(self.faction_card_fields.index(info))])
                 self.hand_refresher(drawn_card_info, ENEMY_FACTION_HAND.x, ENEMY_FACTION_HAND.y, self.player_hand_objs, ENEMY_FACTION_HAND.height*0.5)
     
+    def enemy_spell_draw(self, order):
+        
+        name_index = self.player_spell_deck.index("Card_Name")
+        for card in self.player_spell_deck:
+            if card[name_index] in order:
+                req_info = ["Card_Name","Type","Range","Notes","Images"]
+                drawn_card_info = []
+                for info in req_info:
+                    drawn_card_info.append(card[(self.spell_card_fields.index(info))])
+                self.hand_refresher(drawn_card_info, ENEMY_SPELLS_HAND.x, ENEMY_SPELLS_HAND.y, self.player_spell_hand_objs, ENEMY_SPELLS_HAND.height*0.5)
+    
     def enemy_card_played(self, target, order):
         
         try:
@@ -204,6 +215,8 @@ class Player_Object():
     ### New Method with lists 
     def xs_card_activation(self, xpos = SPELL_DECK_POSITION[0], ypos = SPELL_DECK_POSITION[1], repetitions = 1):
         
+        drawn_cards = []
+        
         for rep in range(repetitions):
             drawn_card_data = self.spell_drawer()
             req_info = ["Card_Name","Type","Range","Notes","Images"]
@@ -212,7 +225,11 @@ class Player_Object():
                 drawn_card_info.append(drawn_card_data[(self.spell_card_fields.index(inf))]) 
         
         self.hand_refresher(drawn_card_info, xpos, ypos, self.player_spell_hand_objs)
-    
+        drawn_cards.append(drawn_card_info[0])
+        
+        return drawn_cards
+        
+            
     
     def faction_drawer(self):
         
