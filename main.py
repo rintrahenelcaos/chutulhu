@@ -905,7 +905,7 @@ class Main():
                         
                         else:    
                             card_selected, code = self.card_picker()
-                            drawn_cards = self.player_a.fate_phase(repetitions=int(code))
+                            #drawn_cards = self.player_a.fate_phase(repetitions=int(code))
                             self.order_to_send = send_msg_translator("CARDPLAYED", "faction", card_selected)
                         #pygame.time.set_timer(self.freezing_mouse_event, 50, 1)
     
