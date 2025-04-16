@@ -85,12 +85,14 @@ class Main():
         self.pos = None
         self.ocupied_cell = None
         
+        ############ USER DEFINED EVENTS 
+        
         self.freezing_mouse_event = pygame.USEREVENT+1
         
         
         # test variables
         
-        #prueba = TokenObject(CELL, 0, 0, "token_1.png", "prueba1",1,"")
+        """#prueba = TokenObject(CELL, 0, 0, "token_1.png", "prueba1",1,"")
         prueba2 = TokenObject(CELL,CELL*3, CELL*4, "token_1.png", "prueba2", 1,"")
         prueba3 = TokenObject(CELL,CELL*3,CELL*2, "token_3.png", "prueba3",1,"")
 
@@ -101,25 +103,14 @@ class Main():
         #enemy5 = TokenObject(CELL,CELL*2, CELL*1, "token_2.png", "prueba2", 1,"")
         #enemy6 = TokenObject(CELL,CELL*4, CELL*2, "token_2.png", "prueba2", 1,"")
         #enemy7 = TokenObject(CELL,CELL*4, CELL*1, "token_2.png", "prueba2", 1,"")
-        #enemy8 = TokenObject(CELL,CELL*3, CELL*1, "token_2.png", "prueba2", 1,"")
+        #enemy8 = TokenObject(CELL,CELL*3, CELL*1, "token_2.png", "prueba2", 1,"")"""
         
          
         
         phase = str
         
 
-        #self.player_a.player_tokens.append(prueba)
-        #self.player_a.player_tokens.append(prueba2)
-        #self.player_a.player_tokens.append(prueba3) 
-
-        #self.player_b.player_tokens.append(enemy1) 
-        #self.player_b.player_tokens.append(enemy2) 
-        #self.player_b.player_tokens.append(enemy3)   
-        #self.player_b.player_tokens.append(enemy4)
-        #self.player_b.player_tokens.append(enemy5)
-        #self.player_b.player_tokens.append(enemy6)
-        #self.player_b.player_tokens.append(enemy7)
-        #self.player_b.player_tokens.append(enemy8)
+        
         
         
         # Network Objects
@@ -130,6 +121,8 @@ class Main():
         
         self.order_to_send = "NONE" # msg send to server
         self.recieved_order = "NONE" # msg recieved from the server 
+        
+        self.repeat_order_control = "NONE"  # used to check on repeated msgs
         
         
         # Main Menu Widgets
@@ -676,7 +669,16 @@ class Main():
         
         pygame.display.update()
      
+    def repeated_msg_checker(self):
+        
+        if self.order_to_send == self.repeat_order_control :
+            self.order_to_send = "NONE"
+        else:
+            self.repeat_order_control = "NONE"
+            
     def in_course_preparations(self):
+        
+        self.repeated_msg_checker()
         
         self.player_ready = True
         self.recieved_order = self.net.send_recv(self.order_to_send)
