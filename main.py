@@ -303,7 +303,18 @@ class Main():
        
         
         pygame.display.update()
+     
+    
+    def repeated_msg_checker(self, order, control):
         
+        if self.order_to_send == self.repeat_order_control :
+            self.order_to_send = "NONE"
+        else:
+            self.repeat_order_control = self.order_to_send
+        
+        
+            
+       
     def orders_interpreter_method(self, code, target, order):
         
         if code == "BATCH":  # initial deploy order. Structure: "BATCH]all:xpos1,ypos1;xpos2,ypos;..."
@@ -671,13 +682,7 @@ class Main():
         
         pygame.display.update()
      
-    def repeated_msg_checker(self):
-        
-        if self.order_to_send == self.repeat_order_control :
-            self.order_to_send = "NONE"
-        else:
-            self.repeat_order_control = "NONE"
-            
+    
     def in_course_preparations(self):
         
         self.repeated_msg_checker()
