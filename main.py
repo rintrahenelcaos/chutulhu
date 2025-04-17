@@ -485,8 +485,8 @@ class Main():
         #self.recieved_order = "NONE"
         self.repeated_msg_checker()
         
-        if self.order_to_send != "NONE":
-            self.net.send_only(self.order_to_send)
+        #if self.order_to_send != "NONE":
+        self.net.send_only(self.order_to_send)
         
         try:
             self.recieved_order = self.net.recieve_only()
