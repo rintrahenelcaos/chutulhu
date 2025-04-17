@@ -305,7 +305,7 @@ class Main():
         pygame.display.update()
      
     
-    def repeated_msg_checker(self, order, control):
+    def repeated_msg_checker(self):
         
         if self.order_to_send == self.repeat_order_control :
             self.order_to_send = "NONE"
