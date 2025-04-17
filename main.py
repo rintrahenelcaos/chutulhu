@@ -476,14 +476,24 @@ class Main():
  
     def pre_game(self):
         
-        self.repeated_msg_checker() 
+         
         
         self.clock.tick(FPS)
         self.mousepos = pygame.mouse.get_pos()
         #self.scene = "pre_game"
         #self.order_to_send = "NONE"
         #self.recieved_order = "NONE"
+        self.repeated_msg_checker()
         
+        self.recieved_order = self.net.send_recv(self.order_to_send)
+        
+        if self.recieved_order != "NONE":
+            try:
+                code, target, order = recv_msg_translator(self.recieved_order)
+                self.orders_interpreter_method(code, target, order)
+                self.enemy_ready = True
+                
+            except: pass
         
         self.movement_indicator = 1
                 
@@ -580,15 +590,15 @@ class Main():
        
         #self.repeated_msg_checker()          
         
-        self.recieved_order = self.net.send_recv(self.order_to_send)
-        
-        if self.recieved_order != "NONE":
-            try:
-                code, target, order = recv_msg_translator(self.recieved_order)
-                self.orders_interpreter_method(code, target, order)
-                self.enemy_ready = True
-                
-            except: pass
+        #self.recieved_order = self.net.send_recv(self.order_to_send)
+        #
+        #if self.recieved_order != "NONE":
+        #    try:
+        #        code, target, order = recv_msg_translator(self.recieved_order)
+        #        self.orders_interpreter_method(code, target, order)
+        #        self.enemy_ready = True
+        #        
+        #    except: pass
         
         if self.player_ready:
             if self.enemy_ready:
