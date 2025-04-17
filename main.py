@@ -476,11 +476,13 @@ class Main():
  
     def pre_game(self):
         
+        self.repeated_msg_checker() 
+        
         self.clock.tick(FPS)
         self.mousepos = pygame.mouse.get_pos()
         #self.scene = "pre_game"
         #self.order_to_send = "NONE"
-        self.recieved_order = "NONE"
+        #self.recieved_order = "NONE"
         
         
         self.movement_indicator = 1
@@ -576,7 +578,7 @@ class Main():
         
        ####### Working perfectly ######   
        
-        self.repeated_msg_checker()          
+        #self.repeated_msg_checker()          
         
         self.recieved_order = self.net.send_recv(self.order_to_send)
         
