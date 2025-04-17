@@ -563,7 +563,9 @@ class Main():
                 self.pre_game_cancel_button.update(events)
             self.pre_game_ok_button.update(events)
         
-       ####### Working perfectly ######             
+       ####### Working perfectly ######   
+       
+        self.repeated_msg_checker()          
         
         self.recieved_order = self.net.send_recv(self.order_to_send)
         
