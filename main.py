@@ -705,9 +705,16 @@ class Main():
     def in_course_preparations(self):
         
         self.repeated_msg_checker()
+                
+        #if self.order_to_send != "NONE":
+        self.net.send_only(self.order_to_send)
+        
+        
+        self.recieved_order = self.net.recieve_only()
         
         self.player_ready = True
-        self.recieved_order = self.net.send_recv(self.order_to_send)
+        
+        #self.recieved_order = self.net.send_recv(self.order_to_send)
         try:
             code, target, order = recv_msg_translator(self.recieved_order)
             self.orders_interpreter_method(code, target, order)
