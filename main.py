@@ -702,7 +702,7 @@ class Main():
         pygame.display.update()
      
     
-    def in_course_preparations(self):
+    def in_course_preparations_2(self):
         
         self.repeated_msg_checker()
                 
@@ -714,7 +714,7 @@ class Main():
         
         self.player_ready = True
         
-        self.recieved_order = self.net.send_recv(self.order_to_send)
+        #self.recieved_order = self.net.send_recv(self.order_to_send)
         try:
             code, target, order = recv_msg_translator(self.recieved_order)
             self.orders_interpreter_method(code, target, order)
@@ -809,8 +809,38 @@ class Main():
         #    self.net.send_recv(self.order_to_send)
         #    self.scene = "in_course"
         
-                    
+    def in_course_preparations(self):
         
+        events = pygame.event.get()
+        for event in events:
+            if event.type == pygame.QUIT:
+                try:
+                    self.net.send("!DISCONNECT")
+                    self.server.terminate()
+                    
+                except: pass
+                
+                self.run = False
+        
+        self.repeated_msg_checker()
+                
+        #if self.order_to_send != "NONE":
+        self.net.send_only(self.order_to_send)
+        
+        
+        self.recieved_order = self.net.recieve_only()
+        
+        try:
+            code, target, order = recv_msg_translator(self.recieved_order)
+            self.orders_interpreter_method(code, target, order)
+        except: pass
+        
+        drawn_cards = self.player_a.fate_phase(repetitions = 6)
+        self.order_to_send = send_msg_translator("CARDSDRAWN", "faction", drawn_cards)
+        print("SELF.ORDER_TO_SEND: CARDS DRAWN ===> ",self.order_to_send)
+        
+        print("pass pregame")
+        self.scene = "in_course"
             
     def in_course(self):
         
