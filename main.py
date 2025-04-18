@@ -838,7 +838,12 @@ class Main():
         drawn_cards = self.player_a.fate_phase(repetitions = 6)
         self.order_to_send = send_msg_translator("CARDSDRAWN", "faction", drawn_cards)
         print("SELF.ORDER_TO_SEND: CARDS DRAWN ===> ",self.order_to_send)
-        
+        self.net.send_only(send_msg_translator("CARDSDRAWN", "faction", drawn_cards))
+        self.recieved_order = self.net.recieve_only()
+        try:
+            code, target, order = recv_msg_translator(self.recieved_order)
+            self.orders_interpreter_method(code, target, order)
+        except: pass
         print("pass pregame")
         self.scene = "in_course"
             
