@@ -714,7 +714,7 @@ class Main():
         
         self.player_ready = True
         
-        #self.recieved_order = self.net.send_recv(self.order_to_send)
+        self.recieved_order = self.net.send_recv(self.order_to_send)
         try:
             code, target, order = recv_msg_translator(self.recieved_order)
             self.orders_interpreter_method(code, target, order)
@@ -738,7 +738,7 @@ class Main():
         drawn_cards = self.player_a.fate_phase(repetitions = 6)
         self.order_to_send = send_msg_translator("CARDSDRAWN", "faction", drawn_cards)
         print("SELF.ORDER_TO_SEND: CARDS DRAWN ===> ",self.order_to_send)
-        self.net.send_only(self.order_to_send)
+        #self.net.send_only(self.order_to_send)
         #self.recieved_order = self.net.send_recv(self.order_to_send)
         #try:
         #    code, target, order = recv_msg_translator(self.recieved_order)
