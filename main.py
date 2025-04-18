@@ -483,7 +483,7 @@ class Main():
         #self.scene = "pre_game"
         #self.order_to_send = "NONE"
         #self.recieved_order = "NONE"
-        self.repeated_msg_checker()
+        #self.repeated_msg_checker()
         
         #if self.order_to_send != "NONE":
         self.net.send_only(self.order_to_send)
@@ -842,6 +842,7 @@ class Main():
         self.recieved_order = self.net.recieve_only()
         try:
             code, target, order = recv_msg_translator(self.recieved_order)
+            
             self.orders_interpreter_method(code, target, order)
         except: pass
         print("pass pregame")
