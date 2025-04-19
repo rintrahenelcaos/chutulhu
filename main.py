@@ -874,7 +874,7 @@ class Main():
         
         # Network orders cleaner
         
-        self.order_to_send = "NONE"
+        #self.order_to_send = "NONE"
         
                 
         ### cursor's management ###
