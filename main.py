@@ -857,8 +857,12 @@ class Main():
         focus_faction_card = None
         focus_spell_card = None
         
+        self.net.send_only(self.order_to_send)
         
-        self.recieved_order = self.net.send_recv(self.order_to_send)
+        
+        self.recieved_order = self.net.recieve_only()
+        
+        #self.recieved_order = self.net.send_recv(self.order_to_send)
         
         if self.recieved_order != "NONE":
             try:
