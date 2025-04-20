@@ -312,10 +312,40 @@ class Main():
         else:
             self.repeat_order_control = self.order_to_send
         
+    def talker_with_response_checker(self):
+        
+        self.net.send_only(self.order_to_send)
+        self.recieved_order = self.net.recieve_only()
+        
+        if self.order_to_send.split("]",1)[0] == "RESPONSE":
+            self.order_to_send = "NONE"
+        
+        if self.recieved_order != "NONE":
+            code, target, order = recv_msg_translator(self.recieved_order)
+
+            if code == "RESPONSE":
+                if self.order_to_send == target:
+                    self.order_to_send = "NONE"
+            elif code == "NONE":
+                pass
+            else:
+                try:
+                    #code, target, order = recv_msg_translator(self.recieved_order)
+                    self.orders_interpreter_method(code, target, order)
+                    self.order_to_send = "RESPONSE]"+self.recieved_order 
+                except: 
+                    print("Failed interpretation of order")       
+                #self.orders_interpreter_method(code, target, order)
+                #self.order_to_send = "RESPONSE]"+self.recieved_order 
+            
+        #self.net.send_only(self.order_to_send)
+        
         
             
        
     def orders_interpreter_method(self, code, target, order):
+        
+        
         
         if code == "BATCH":  # initial deploy order. Structure: "BATCH]all:xpos1,ypos1;xpos2,ypos;..."
             #print("initial deploy")
@@ -485,19 +515,20 @@ class Main():
         #self.recieved_order = "NONE"
         #self.repeated_msg_checker()
         
+        self.talker_with_response_checker()
         #if self.order_to_send != "NONE":
-        self.net.send_only(self.order_to_send)
+        #self.net.send_only(self.order_to_send)
         
         
-        self.recieved_order = self.net.recieve_only()
+        #self.recieved_order = self.net.recieve_only()
         
         
         #self.recieved_order = self.net.send_recv(self.order_to_send)
         
         if self.recieved_order != "NONE":
             try:
-                code, target, order = recv_msg_translator(self.recieved_order)
-                self.orders_interpreter_method(code, target, order)
+                #code, target, order = recv_msg_translator(self.recieved_order)
+                #self.orders_interpreter_method(code, target, order)
                 self.enemy_ready = True
                 
             except: pass
@@ -821,24 +852,26 @@ class Main():
                 except: pass
                 
                 self.run = False
+                
+        self.talker_with_response_checker()
         
-        self.repeated_msg_checker()
+        #self.repeated_msg_checker()
                 
         #if self.order_to_send != "NONE":
-        self.net.send_only(self.order_to_send)
-        
-        
-        self.recieved_order = self.net.recieve_only()
-        
-        try:
-            code, target, order = recv_msg_translator(self.recieved_order)
-            self.orders_interpreter_method(code, target, order)
-        except: pass
+        #self.net.send_only(self.order_to_send)
+        #
+        #
+        #self.recieved_order = self.net.recieve_only()
+        #
+        #try:
+        #    code, target, order = recv_msg_translator(self.recieved_order)
+        #    self.orders_interpreter_method(code, target, order)
+        #except: pass
         
         drawn_cards = self.player_a.fate_phase(repetitions = 6)
         self.order_to_send = send_msg_translator("CARDSDRAWN", "faction", drawn_cards)
         print("SELF.ORDER_TO_SEND: CARDS DRAWN ===> ",self.order_to_send)
-        self.net.send_only(send_msg_translator("CARDSDRAWN", "faction", drawn_cards))
+        #self.net.send_only(send_msg_translator("CARDSDRAWN", "faction", drawn_cards))
         #self.recieved_order = self.net.recieve_only()
         #try:
         #    code, target, order = recv_msg_translator(self.recieved_order)
@@ -857,20 +890,21 @@ class Main():
         focus_faction_card = None
         focus_spell_card = None
         
-        self.net.send_only(self.order_to_send)
-        
-        
-        self.recieved_order = self.net.recieve_only()
-        
-        #self.recieved_order = self.net.send_recv(self.order_to_send)
-        
-        if self.recieved_order != "NONE":
-            try:
-                code, target, order = recv_msg_translator(self.recieved_order)
-                self.orders_interpreter_method(code, target, order)
-                #self.enemy_ready = True
-            except: 
-                print("Failed interpretation of order")       
+        self.talker_with_response_checker()
+        #self.net.send_only(self.order_to_send)
+        #
+        #
+        #self.recieved_order = self.net.recieve_only()
+        #
+        ##self.recieved_order = self.net.send_recv(self.order_to_send)
+        #
+        #if self.recieved_order != "NONE":
+        #    try:
+        #        code, target, order = recv_msg_translator(self.recieved_order)
+        #        self.orders_interpreter_method(code, target, order)
+        #        #self.enemy_ready = True
+        #    except: 
+        #        print("Failed interpretation of order")       
         
         # Network orders cleaner
         
@@ -1554,7 +1588,7 @@ class Main():
                 if crd.rec.collidepoint(self.mousepos):
                     if (crd.card_type == "A"):
                         self.attack_indicator = crd.activate_card()[1]
-                        
+                        code = crd.activate_card()[1]
                         #discarder("cards_a", str(crd.identif))
                         self.damage_in_course = crd.damage
                         card_picked = str(crd)
