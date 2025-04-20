@@ -349,7 +349,7 @@ class Main():
         
         if code == "BATCH":  # initial deploy order. Structure: "BATCH]all:xpos1,ypos1;xpos2,ypos;..."
             #print("initial deploy")
-            self.enemy_ready = True
+            #self.enemy_ready = True
                         
             for indicator in range(len(self.player_b.player_tokens)):
                 xpos, ypos = order[indicator][0], order[indicator][1]
