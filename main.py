@@ -315,10 +315,12 @@ class Main():
     def talker_with_response_checker(self):
         
         self.net.send_only(self.order_to_send)
-        self.recieved_order = self.net.recieve_only()
+        
         
         if self.order_to_send.split("]",1)[0] == "RESPONSE":
             self.order_to_send = "NONE"
+            
+        self.recieved_order = self.net.recieve_only()
         
         if self.recieved_order != "NONE":
             code, target, order = recv_msg_translator(self.recieved_order)
