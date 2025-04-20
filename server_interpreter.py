@@ -54,7 +54,66 @@ def recv_msg_translator(cargo):
         print("recv_msg_translator: ---> " + cargo)
         return code, target, order
     
+def recv_msg_translator(cargo):
     
+    if cargo != "NONE":
+    
+        first_split = cargo.split("]", 1)
+        code = first_split[0]
+        if code == "RESPONSE":
+            target = first_split[1]
+            order = ""
+        else: 
+            second_split = first_split[1].rsplit(":")
+            target = second_split[0]
+            order = second_split[1]
+            if code == "BATCH":  # initial deploy order. Structure: "BATCH]all:xpos1,ypos1;xpos2,ypos;..."
+                print("initial deploy")
+                coordinates = order.rsplit(";")
+                order = []
+                for coord in coordinates:
+                    individual = coord.rsplit(",")
+                    xpos = float(individual[0])
+                    ypos = float(individual[1])
+                    coord_tuple = (xpos, ypos)
+                    order.append((coord_tuple))
+            elif code == "VECTORTOGO":
+                print("move token")
+                coordinates = order.rsplit(",")
+                order = []
+                xpos = float(coordinates[0])
+                ypos = float(coordinates[1])
+                coord_tuple = (xpos, ypos)
+                order.append((coord_tuple))
+            elif code == "CARDSDRAWN":
+                cards_list = order.rsplit(";")
+                order = []
+                for card in cards_list:
+                    order.append(card)
+                print("cards drawn")
+            elif code == "CARDPLAYED":
+
+
+                print("card played")
+            elif code == "DAMAGE":
+                print("damage dealt to token")
+                order = int(order) 
+            elif code == "DEFENSE":
+                print("defense activated")
+                order = int(order)   
+
+            elif code == "ACARDPLAYED":
+                print("move token")
+            elif code == "XCARDPLAYED":
+                print("move token")
+            elif code == "SCARDPLAYED":
+                print("move token")
+
+
+        print("recv_msg_translator: ---> " + cargo)
+        return code, target, order
+    else:
+        return "NONE","",""
     
 
 def send_msg_translator(code, target, order):
