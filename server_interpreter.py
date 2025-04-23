@@ -54,7 +54,7 @@ def recv_msg_translator(cargo):
         print("recv_msg_translator: ---> " + cargo)
         return code, target, order
     
-def recv_msg_translator(cargo):
+def recv_msg_translator_no(cargo):
     
     if cargo != "NONE":
     

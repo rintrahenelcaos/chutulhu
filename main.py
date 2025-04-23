@@ -89,6 +89,8 @@ class Main():
         
         self.freezing_mouse_event = pygame.USEREVENT+1
         
+        self.passing_phase = False
+        
         
         # test variables
         
@@ -318,7 +320,9 @@ class Main():
         
         
         if self.order_to_send.split("]",1)[0] == "RESPONSE":
+            print("changing order: "+self.order_to_send)
             self.order_to_send = "NONE"
+            print("to: "+self.order_to_send)
             
         self.recieved_order = self.net.recieve_only()
         
@@ -405,6 +409,8 @@ class Main():
             print("XS card played")
         elif code == "SCARDPLAYED":
             print("move token")
+        elif code == "NEXT_PHASE":
+            self.phase_passer_method()
         elif code == "TURN_CHANGE":
             print("turn change")
             self.player_turn = not self.player_turn
@@ -1477,9 +1483,12 @@ class Main():
             
             self.player_turn = not self.player_turn
             self.current_phase = GAME_SEQUENCE[0]
+            
         else:
             
             self.current_phase = GAME_SEQUENCE[GAME_SEQUENCE.index(self.current_phase)+1]
+            
+        self.passing_phase =True
 
     def movement_activation(self, move):
         
