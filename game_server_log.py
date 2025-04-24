@@ -57,11 +57,9 @@ def handle_client(conn, addr, player):
                 
                 print("player disconnected")
                 connected = False
-            else: 
-                try: 
-                    log_len = int(cargo)
-                    if log_len < len(separated_game_logs[player]):
-                        conn.sendall()
+            elif cargo.split("]", 1) == "BATCH" :
+                pre_game_confirmation[player] = cargo
+                print("IN SERVER ======> "+pre_game_confirmation)
             
                             
             #print(f"[{addr}] {cargo}")
@@ -69,7 +67,6 @@ def handle_client(conn, addr, player):
             for dat in range(len(data)):
                 if dat == player:
                     data[dat] = cargo
-                    separated_game_logs[dat].append(cargo)
                     
                     
            
