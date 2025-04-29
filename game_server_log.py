@@ -21,7 +21,7 @@ factions_code = ["NONE","NONE"]
 pre_game_confirmation = ["NONE", "NONE"]
 in_course_confirmation = ["NONE", "NONE"]
 
-separated_game_logs = [[], []]
+separated_game_logs = [[]]
 
 def broadcast(msg, player):
     try:
@@ -57,11 +57,6 @@ def handle_client(conn, addr, player):
                 
                 print("player disconnected")
                 connected = False
-            else: 
-                try: 
-                    log_len = int(cargo)
-                    if log_len < len(separated_game_logs[player]):
-                        conn.sendall()
             
                             
             #print(f"[{addr}] {cargo}")
@@ -69,8 +64,6 @@ def handle_client(conn, addr, player):
             for dat in range(len(data)):
                 if dat == player:
                     data[dat] = cargo
-                    separated_game_logs[dat].append(cargo)
-                    
                     
            
             for dat in range(len(data)):

@@ -21,7 +21,7 @@ factions_code = ["NONE","NONE"]
 pre_game_confirmation = ["NONE", "NONE"]
 in_course_confirmation = ["NONE", "NONE"]
 
-separated_game_logs = [[], []]
+separated_game_logs = [[]]
 
 def broadcast(msg, player):
     try:
@@ -64,7 +64,6 @@ def handle_client(conn, addr, player):
             for dat in range(len(data)):
                 if dat == player:
                     data[dat] = cargo
-                    
                     
            
             for dat in range(len(data)):
