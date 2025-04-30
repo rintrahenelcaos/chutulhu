@@ -9,7 +9,7 @@ def recv_msg_translator(cargo):
         target = second_split[0]
         order = second_split[1]
         if code == "BATCH":  # initial deploy order. Structure: "BATCH]all:xpos1,ypos1;xpos2,ypos;..."
-            print("initial deploy")
+            #print("initial deploy")
             coordinates = order.rsplit(";")
             order = []
             for coord in coordinates:
@@ -51,7 +51,7 @@ def recv_msg_translator(cargo):
             print("move token")
 
 
-        print("recv_msg_translator: ---> " + cargo)
+        #print("recv_msg_translator: ---> " + cargo)
         return code, target, order
     
 def recv_msg_translator_no(cargo):
@@ -110,7 +110,7 @@ def recv_msg_translator_no(cargo):
                 print("move token")
 
 
-        print("recv_msg_translator: ---> " + cargo)
+        #print("recv_msg_translator: ---> " + cargo)
         return code, target, order
     else:
         return "NONE","",""

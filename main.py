@@ -23,7 +23,7 @@ from game_network import Network
 
 from pickleobj import Exchange_object
 
-from game_server import main as server_main
+from game_server_log import main as server_main
 
 from widgets import DropDown, Button
 
@@ -319,28 +319,28 @@ class Main():
         self.net.send_only(self.order_to_send)
         
         
-        if self.order_to_send.split("]",1)[0] == "RESPONSE":
-            print("changing order: "+self.order_to_send)
-            self.order_to_send = "NONE"
-            print("to: "+self.order_to_send)
+        #if self.order_to_send.split("]",1)[0] == "RESPONSE":
+        #    print("changing order: "+self.order_to_send)
+        #    self.order_to_send = "NONE"
+        #    print("to: "+self.order_to_send)
             
         self.recieved_order = self.net.recieve_only()
         
         if self.recieved_order != "NONE":
-            code, target, order = recv_msg_translator(self.recieved_order)
+            #code, target, order = recv_msg_translator(self.recieved_order)
 
-            if code == "RESPONSE":
-                if self.order_to_send == target:
-                    self.order_to_send = "NONE"
-            elif code == "NONE":
-                pass
-            else:
-                try:
-                    #code, target, order = recv_msg_translator(self.recieved_order)
-                    self.orders_interpreter_method(code, target, order)
-                    self.order_to_send = "RESPONSE]"+self.recieved_order 
-                except: 
-                    print("Failed interpretation of order")       
+            #if code == "RESPONSE":
+            #    if self.order_to_send == target:
+            #        self.order_to_send = "NONE"
+            #elif code == "NONE":
+            #    pass
+            #else:
+            try:
+                code, target, order = recv_msg_translator(self.recieved_order)
+                self.orders_interpreter_method(code, target, order)
+                #self.order_to_send = "RESPONSE]"+self.recieved_order 
+            except: 
+                print("Failed interpretation of order")       
                 #self.orders_interpreter_method(code, target, order)
                 #self.order_to_send = "RESPONSE]"+self.recieved_order 
             
@@ -414,7 +414,7 @@ class Main():
         elif code == "TURN_CHANGE":
             print("turn change")
             self.player_turn = not self.player_turn
-        print()
+        #print()
 
         
     def client_testing(self):
