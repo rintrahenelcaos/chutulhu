@@ -49,7 +49,7 @@ def handle_client(conn, addr, player):
             
             cargo = conn.recv(SIZE).decode(FORMAT)
             
-            data[player] = cargo
+            #data[player] = cargo
             
             
             
@@ -57,22 +57,22 @@ def handle_client(conn, addr, player):
                 
                 print("player disconnected")
                 connected = False
-            elif cargo.split("]", 1)[0] == "BATCH" :
-                pre_game_confirmation[player] = cargo
-                print("IN SERVER ======> ",pre_game_confirmation)
-                if pre_game_confirmation[0] != "NONE" and pre_game_confirmation[1] != "NONE":
-                    for dat in range(len(pre_game_confirmation)):
-                        if dat != player:
-                    
-                            conn.sendall((pre_game_confirmation[dat]).encode(FORMAT))    
-                    pre_game_confirmation = ["NONE", "NONE"]
-                else: 
-                    conn.sendall("NONE".encode(FORMAT))  
+            #elif cargo.split("]", 1)[0] == "BATCH" :
+            #    pre_game_confirmation[player] = cargo
+            #    print("IN SERVER ======> ",pre_game_confirmation)
+            #    if pre_game_confirmation[0] != "NONE" and pre_game_confirmation[1] != "NONE":
+            #        for dat in range(len(pre_game_confirmation)):
+            #            if dat != player:
+            #        
+            #                conn.sendall((pre_game_confirmation[dat]).encode(FORMAT))    
+            #        pre_game_confirmation = ["NONE", "NONE"]
+            #    else: 
+            #        conn.sendall(("NONE").encode(FORMAT))  
             else:
-                
-                for dat in range(len(data)):
-                    if dat == player:
-                        data[dat] = cargo
+                data[player] = cargo
+                #for dat in range(len(data)):
+                #    if dat == player:
+                #        data[dat] = cargo
                     
            
                 for dat in range(len(data)):

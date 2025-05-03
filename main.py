@@ -343,7 +343,8 @@ class Main():
                 print("Failed interpretation of order")       
                 #self.orders_interpreter_method(code, target, order)
                 #self.order_to_send = "RESPONSE]"+self.recieved_order 
-            
+        
+        self.order_to_send = "NONE"    
         #self.net.send_only(self.order_to_send)
         
         
@@ -743,7 +744,7 @@ class Main():
     
     def in_course_preparations_2(self):
         
-        self.repeated_msg_checker()
+        #self.repeated_msg_checker()
                 
         #if self.order_to_send != "NONE":
         self.net.send_only(self.order_to_send)
