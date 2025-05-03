@@ -338,6 +338,7 @@ class Main():
             try:
                 code, target, order = recv_msg_translator(self.recieved_order)
                 self.orders_interpreter_method(code, target, order)
+                print(self.recieved_order)
                 #self.order_to_send = "RESPONSE]"+self.recieved_order 
             except: 
                 print("Failed interpretation of order")       
