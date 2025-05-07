@@ -888,7 +888,7 @@ class Main():
         #    
         #    self.orders_interpreter_method(code, target, order)
         #except: pass
-        self.talker_with_response_checker()
+        #self.talker_with_response_checker()
         print("pass pregame")
         self.scene = "in_course"
             
