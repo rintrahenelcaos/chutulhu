@@ -70,8 +70,8 @@ def handle_client(conn, addr, player):
                 if dat != player:
                     
                     conn.sendall((data[dat]).encode(FORMAT))
-                    if data[dat] != "NONE":   # prevent repeated msg, dissable due to rapid fire msg
-                        print("=====> ON SERVER: ", data)
+                    #if data[dat] != "NONE":   # prevent repeated msg, dissable due to rapid fire msg
+                    #    print("=====> ON SERVER: ", data)
                     #    
                     #    data[dat] = ""
             
