@@ -69,6 +69,7 @@ def handle_client(conn, addr, player):
             #    else: 
             #        conn.sendall(("NONE").encode(FORMAT))  
             else:
+                #if data[player] != cargo:
                 data[player] = cargo
                 #for dat in range(len(data)):
                 #    if dat == player:
@@ -81,6 +82,7 @@ def handle_client(conn, addr, player):
                         conn.sendall((data[dat]).encode(FORMAT))
                     if data[dat] != "NONE":   # prevent repeated msg, dissable due to rapid fire msg
                         print("=====> ON SERVER: ", data)
+                        #data[dat] = "NONE"
                     #    
                     #    data[dat] = ""
                 

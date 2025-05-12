@@ -327,6 +327,19 @@ class Main():
         self.recieved_order = self.net.recieve_only()
         
         if self.recieved_order != "NONE":
+            if self.recieved_order == self.repeat_order_control:
+                self.recieved_order = "NONE"
+            else:
+                self.repeat_order_control = self.recieved_order
+                try:
+                    code, target, order = recv_msg_translator(self.recieved_order)
+                    self.orders_interpreter_method(code, target, order)
+                    print(self.recieved_order)
+                    #self.order_to_send = "RESPONSE]"+self.recieved_order 
+                except: 
+                    print("Failed interpretation of order")       
+                #self.orders_interpreter_method(code, target, order)
+                #self.order_to_send = "RESPONSE]"+self.recieved_order 
             #code, target, order = recv_msg_translator(self.recieved_order)
 
             #if code == "RESPONSE":
@@ -335,15 +348,7 @@ class Main():
             #elif code == "NONE":
             #    pass
             #else:
-            try:
-                code, target, order = recv_msg_translator(self.recieved_order)
-                self.orders_interpreter_method(code, target, order)
-                print(self.recieved_order)
-                #self.order_to_send = "RESPONSE]"+self.recieved_order 
-            except: 
-                print("Failed interpretation of order")       
-                #self.orders_interpreter_method(code, target, order)
-                #self.order_to_send = "RESPONSE]"+self.recieved_order 
+            
         
         #self.order_to_send = "NONE"    
         #self.net.send_only(self.order_to_send)
