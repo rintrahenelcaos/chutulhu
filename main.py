@@ -331,6 +331,7 @@ class Main():
                 self.recieved_order = "NONE"
             else:
                 self.repeat_order_control = self.recieved_order
+                print("order received")
                 try:
                     code, target, order = recv_msg_translator(self.recieved_order)
                     self.orders_interpreter_method(code, target, order)
