@@ -908,6 +908,7 @@ class Main():
         focus_spell_card = None
         
         self.talker_with_response_checker()
+        
         #self.net.send_only(self.order_to_send)
         #
         #
