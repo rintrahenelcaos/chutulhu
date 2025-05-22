@@ -87,6 +87,8 @@ class Main():
         
         ############ USER DEFINED EVENTS 
         
+        self.mouse_once = True   # Prevents overclicking of mouse
+        
         self.freezing_mouse_event = pygame.USEREVENT+1
         
         self.passing_phase = False
@@ -446,7 +448,7 @@ class Main():
                 self.run = False
                 
         
-            if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]:
+            if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0] :
                 if no_defense_button.collidepoint(self.mousepos):
                     var = 0
                     available_test = [(x,y) for x in range (8) for y in range(6, 8)]
@@ -983,10 +985,12 @@ class Main():
                 
             ### MOUSEBUTTONDOWN EVENTS ###
 
-            if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]:
+            if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]: # and self.mouse_once == True:
+                #self.mouse_once = False
                 if button2.collidepoint(self.mousepos):   ### passing phases ---> test only
                     
                     pygame.time.set_timer(self.freezing_mouse_event, 50, 1)
+                    
                     
                 
                 if self.player_turn:
@@ -1499,6 +1503,7 @@ class Main():
             self.current_phase = GAME_SEQUENCE[GAME_SEQUENCE.index(self.current_phase)+1]
             
         self.passing_phase =True
+        self.order_to_send = send_msg_translator("NEXT_PHASE", "pass", "phase")
 
     def movement_activation(self, move):
         

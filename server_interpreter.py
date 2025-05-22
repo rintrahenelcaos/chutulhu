@@ -49,6 +49,10 @@ def recv_msg_translator(cargo):
             print("move token")
         elif code == "SCARDPLAYED":
             print("move token")
+        elif code == "NEXT_PHASE":
+            target = ""
+            order = ""
+            print("passing phase")
 
 
         #print("recv_msg_translator: ---> " + cargo)
@@ -108,6 +112,7 @@ def recv_msg_translator_no(cargo):
                 print("move token")
             elif code == "SCARDPLAYED":
                 print("move token")
+            
 
 
         #print("recv_msg_translator: ---> " + cargo)
@@ -138,6 +143,7 @@ def send_msg_translator(code, target, order):
         print("move token")
     elif code == "SCARDPLAYED":
         print("move token")
+    
         
         
     else:
