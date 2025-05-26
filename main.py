@@ -1074,6 +1074,7 @@ class Main():
                                     #print("self.available_moves",self.available_moves)
                         else:
                             card_selected, code = self.card_picker()
+
                             self.order_to_send = send_msg_translator("CARDPLAYED", "faction", card_selected)
                             """
                             #for crd in self.player_a.player_hand_objs:
@@ -1586,6 +1587,7 @@ class Main():
     
     def card_picker(self):
         card_picked = str
+        code = str
         if self.current_phase == "move":
             for crd in self.player_a.player_hand_objs:
                 if crd.rec.collidepoint(self.mousepos):
