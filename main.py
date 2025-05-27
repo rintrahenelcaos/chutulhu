@@ -448,7 +448,7 @@ class Main():
                 self.run = False
                 
         
-            if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0] :
+            if event.type == pygame.MOUSEBUTTONUP  :
                 if no_defense_button.collidepoint(self.mousepos):
                     var = 0
                     available_test = [(x,y) for x in range (8) for y in range(6, 8)]
@@ -593,7 +593,7 @@ class Main():
                 except: pass
                 self.run = False
         
-            if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]:
+            if event.type == pygame.MOUSEBUTTONUP :
                 #if pre_game_cancel_button.collidepoint(self.mousepos): # cancel initial placement
                     #self.pregame_mat_assigner()
                     #self.moving_tokens = False
@@ -909,6 +909,7 @@ class Main():
         focus_faction_card = None
         focus_spell_card = None
         
+        
         self.talker_with_response_checker()
         
         #self.net.send_only(self.order_to_send)
@@ -983,9 +984,9 @@ class Main():
                 
                 self.phase_passer_method()
                 
-            ### MOUSEBUTTONDOWN EVENTS ###
+            ### MOUSEBUTTONUP EVENTS ###
 
-            if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]: # and self.mouse_once == True:
+            if event.type == pygame.MOUSEBUTTONUP : # and self.mouse_once == True:
                 #self.mouse_once = False
                 if button2.collidepoint(self.mousepos):   ### passing phases ---> test only
                     
@@ -994,7 +995,7 @@ class Main():
                     
                     
                 
-                if self.player_turn:
+                if self.player_turn and self.passing_phase == False:
                     
                     #if temporal_change_turn_button.collidepoint(self.mousepos):
                     #    
@@ -1220,6 +1221,9 @@ class Main():
         #        #self.enemy_ready = True
         #    except: 
         #        print("Failed interpretation of order")                       
+        
+        
+        self.passing_phase = False
                 
         # surviving tokens control
         
