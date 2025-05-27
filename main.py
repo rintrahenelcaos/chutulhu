@@ -989,7 +989,8 @@ class Main():
                 #self.mouse_once = False
                 if button2.collidepoint(self.mousepos):   ### passing phases ---> test only
                     
-                    pygame.time.set_timer(self.freezing_mouse_event, 50, 1)
+                    self.phase_passer_method()
+                    #pygame.time.set_timer(self.freezing_mouse_event, 50, 1)
                     
                     
                 
@@ -1017,9 +1018,9 @@ class Main():
                             drawn_cards = self.player_a.fate_phase(repetitions = 3)
                             self.order_to_send = send_msg_translator("CARDSDRAWN", "faction", drawn_cards)
                             print(self.order_to_send)
-                            pygame.time.set_timer(self.freezing_mouse_event, 50, 1) # prevents hitting the cards when draself.WINg
+                            #pygame.time.set_timer(self.freezing_mouse_event, 50, 1) # prevents hitting the cards when draself.WINg
                             
-                            #self.phase_passer_method()
+                            self.phase_passer_method()
                             
                     ### SUMMON PHASE EVENT ###
                     
@@ -1028,12 +1029,14 @@ class Main():
                             drawn_cards = self.player_a.fate_phase(repetitions=self.draw_cards_from_cards_indicator)
                             self.order_to_send = send_msg_translator("CARDSDRAWN", "faction", drawn_cards)
                             self.draw_cards_from_cards_indicator = None
-                            pygame.time.set_timer(self.freezing_mouse_event, 50, 1)
+                            self.phase_passer_method()
+                            #pygame.time.set_timer(self.freezing_mouse_event, 50, 1)
                         elif self.draw_spells_from_cards_indicator != None:
                             drawn_cards = self.player_a.xs_card_activation(repetitions=self.draw_spells_from_cards_indicator)
                             self.order_to_send = send_msg_translator("CARDSDRAWN", "spell", drawn_cards)
                             self.draw_spells_from_cards_indicator = None
-                            pygame.time.set_timer(self.freezing_mouse_event, 50, 1)
+                            self.phase_passer_method()
+                            #pygame.time.set_timer(self.freezing_mouse_event, 50, 1)
                         
                         else:    
                             card_selected, code = self.card_picker()
@@ -1520,7 +1523,8 @@ class Main():
         self.movement_indicator = None
         self.moving_tokens = False
         
-        pygame.time.set_timer(self.freezing_mouse_event, 50, 1)
+        self.phase_passer_method()
+        #pygame.time.set_timer(self.freezing_mouse_event, 50, 1)
         
         #self.phase_passer_method()
         
