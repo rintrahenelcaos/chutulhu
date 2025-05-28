@@ -128,6 +128,9 @@ class Main():
         
         self.repeat_order_control = "NONE"  # used to check on repeated msgs
         
+        self.player_log = []
+        self.enemy_log = []
+        
         
         # Main Menu Widgets
         self.faction_dropdown = DropDown(["white", "grey"], ["green", "blue"], CELL*6, CELL*5, CELL*3, CELL, GENERIC_FONT, "Select Faction", FACTIONS)
@@ -309,12 +312,37 @@ class Main():
         pygame.display.update()
      
     
+    def talker_with_logger(self):
+        
+        if self.order_to_send != "NONE":
+            self.player_log.append(self.order_to_send)
+        
+        
+        
+    
     def repeated_msg_checker(self):
         
         if self.order_to_send == self.repeat_order_control :
             self.order_to_send = "NONE"
         else:
             self.repeat_order_control = self.order_to_send
+            
+    def standard_talker(self):
+        
+        self.net.send_only(self.order_to_send)
+        
+        self.recieved_order = self.net.recieve_only()
+        
+        if self.recieved_order != "NONE":
+            try:
+                code, target, order = recv_msg_translator(self.recieved_order)
+                self.orders_interpreter_method(code, target, order)
+                print(self.recieved_order)
+                #self.order_to_send = "RESPONSE]"+self.recieved_order 
+            except: 
+                print("Failed interpretation of order")  
+                
+        self.order_to_send = "NONE"
         
     def talker_with_response_checker(self):
         
@@ -333,7 +361,7 @@ class Main():
                 self.recieved_order = "NONE"
             else:
                 self.repeat_order_control = self.recieved_order
-                print("order received")
+                print("order received: ", self.recieved_order)
                 try:
                     code, target, order = recv_msg_translator(self.recieved_order)
                     self.orders_interpreter_method(code, target, order)
@@ -427,100 +455,7 @@ class Main():
         #print()
 
         
-    def client_testing(self):
-        bucle = 0
-        
-        self.clock.tick(FPS)
-        self.mousepos = pygame.mouse.get_pos()
-        
-        tosend = "NONE"
-        enemy_pos = "NONE"
-                
-        phase_informer = "testing server"
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                try:
-                    self.net.send_recv("!DISCONNECT")
-                    self.server.terminate()
-                except: pass
-                
-                self.run = False
-                
-        
-            if event.type == pygame.MOUSEBUTTONUP  :
-                if no_defense_button.collidepoint(self.mousepos):
-                    var = 0
-                    available_test = [(x,y) for x in range (8) for y in range(6, 8)]
-                    order = "BATCH]all:"
-                    for token in self.player_a.player_tokens:
-                        token.vector_to_go = pygame.Vector2(available_test[var][0]*CELL, available_test[var][1]*CELL)
-                        order += str(available_test[var][0]*CELL)+","+str(available_test[var][1]*CELL)+";"
-                        var += 1
-                    order = order[:-1]
-                    tosend = order    
-                    #print("vector_to_go[0]: ",self.player_a.player_tokens[0].vector_to_go[0])
-                    #print(str(self.player_a.player_tokens[0].vector_to_go[0]))
-                    #vector_to_go0 = str(self.player_a.player_tokens[0].vector_to_go[0])
-                    #vector_to_go1 = str(self.player_a.player_tokens[0].vector_to_go[1])
-                    #tosend = "VECTORTOGO]"+str(self.player_a.player_tokens[0])+":"+vector_to_go0+","+vector_to_go1
-                    #tosend = vector_to_go0+":"+vector_to_go1
-                    print("tosend: ",tosend)
-                    
-        try:
-            
-            enemy_pos = self.net.send_recv(tosend)
-            """if tosend != "NONE":
-                while enemy_pos != "RECIEVED":
-                    print(tosend)
-                    enemy_pos = self.net.send_recv(tosend)"""
-            if enemy_pos != "NONE":
-                #self.net.send_recv("RECIEVED")
-                print("enemy_pos: ", enemy_pos)
-                if enemy_pos != "RECIEVED":
-                    code, target, order = recv_msg_translator(enemy_pos)
-                    self.orders_interpreter_method(code, target, order)
-                    #self.net.send_recv("RECIEVED")
-                """if code == "VECTORTOGO":
-                    for token in self.player_b.player_tokens:
-                        if str(token) == target:
-                            xpos, ypos = order[0][0], order[0][1]
-                            token.vector_to_go[:] = xpos, ypos"""
-                #separator = enemy_pos.index(":")
-                #xpos = float(enemy_pos[:separator])
-                #ypos = float(enemy_pos[separator+1:])
-                #self.player_b.player_tokens[0].vector_to_go[:] = xpos, ypos
-        
-        except:
-            print("problems in enemy_pos")
-        
-            
-            
-        
-        self.WIN.fill(BACKGROUND_COLOR)
-        BOARD.fill("tan4")
-
-        for row in range(ROWS):
-            for col in range(row % 2, ROWS, 2):
-                pygame.draw.rect(BOARD, "grey3",(CELL*row, CELL*col, CELL,CELL))
-        
-        #self.player_a.player_tokens[0].token_object_drawer(BOARD)
-        #self.player_b.player_tokens[0].token_object_drawer(BOARD, turner = True)
-        self.token_movement(self.scene)
-               
-        self.WIN.blit(BOARD,(0,0))    # actualizes BOARD -> always after all changes of it
-
-        pygame.draw.rect(self.WIN, "aqua", no_defense_button)
-        
-        
-
-        current_phase_informer = GENERIC_FONT.render(phase_informer, 1, "red")
-        self.WIN.blit(current_phase_informer, (CELL*10, 20))
-
-       
-        
-        pygame.display.update()   
-        
  
     def pre_game(self):
         
@@ -910,7 +845,8 @@ class Main():
         focus_spell_card = None
         
         
-        self.talker_with_response_checker()
+        #self.talker_with_response_checker()
+        self.standard_talker()
         
         #self.net.send_only(self.order_to_send)
         #
@@ -1054,19 +990,7 @@ class Main():
                             for move in self.available_moves:
                                 if move.collidepoint(self.mousepos):
                                     self.movement_activation(move)
-                                    """
-                                    #self.pos = (move.x, move.y)
-                                    ##print("move to: ", self.pos)
-                                    #self.position = pygame.Vector2(self.pos[0], self.pos[1])
-                                    #self.chosen_token.vector_to_go = self.position
-                                    #### resetting values to prevent various movements over the same card ###
-                                    #self.available_moves = [] 
-                                    #self.pos = None
-                                    #self.movement_indicator = None
-                                    #self.moving_tokens = False
-                                    #pygame.time.set_timer(self.freezing_mouse_event, 1000, 1)
-                                    ##self.phase_passer_method()
-                                    """
+                                   
     
                         elif pygame.mouse.get_cursor() == pygame.cursors.diamond:
                         
@@ -1080,25 +1004,8 @@ class Main():
                             card_selected, code = self.card_picker()
 
                             self.order_to_send = send_msg_translator("CARDPLAYED", "faction", card_selected)
-                            """
-                            #for crd in self.player_a.player_hand_objs:
-                            #    if crd.rec.collidepoint(self.mousepos):
-                            #        if (crd.card_type == "M" or crd.card_type == "XS" or crd.card_type == "XF"):
-                            #            code = crd.activate_card()
-                            #            #discarder("cards_a", str(crd.identif))
-                            #            
-                            #            self.player_a.faction_card_discard(crd)
-                            #            #self.player_a.player_hand_objs.remove(crd)
-    
-                            #            self.movement_indicator = self.player_a.move_phase(code)
-    
-                            #            if self.movement_indicator != None: self.moving_tokens = True
-                            #            #print("self.moving_tokens: ",self.moving_tokens)  # CONTROL
-    
-                            #for crd in self.player_a.player_spell_hand_objs:
-                            #    if crd.rec.collidepoint(self.mousepos):
-                            #        self.player_a.spell_card_discard(crd)
-                            """
+                            
+                            
                     ### ATTACK PHASE EVENT ###
     
                     if self.current_phase == "att": 
@@ -1111,30 +1018,7 @@ class Main():
                                             ### hit the enemy
                                             self.damage_activation(enemy)
                                             
-                                            """self.damaged_token = self.player_b.player_tokens.index(enemy) # to use
-                                            
-                                            #self.damage_dealt = self.damage_in_course
-                                            #enemy.hits = enemy.hits - self.damage_in_course
-    
-                                            ### resetting values to prevent various attacks over the same card ###
-                                            self.available_attacks = []
-                                            self.attack_indicator = None
-                                            self.attacking_tokens = False
-                                            self.defense_indicator = True
-                                            self.player_b.player_tokens[self.damaged_token].hits = self.player_b.player_tokens[self.damaged_token].hits - self.damage_in_course
-                                            
-                                            
-                                            
-                                            self.order_to_send = send_msg_translator("DAMAGE", self.player_b.player_tokens[self.damaged_token], self.damage_in_course)
-                                            print("Damage msg : ", self.order_to_send)
-                                            
-                                            self.damage_in_course = 0
-                                            #self.current_phase = "def"
-                                            #pygame.time.wait(10000)
-                                            pygame.time.set_timer(self.freezing_mouse_event, 50, 1)
-                                            #self.phase_passer_method()"""
-                        
-                                            
+                                                                                       
     
     
                         elif pygame.mouse.get_cursor() == pygame.cursors.diamond:
@@ -1149,21 +1033,7 @@ class Main():
                         else:
                             card_selected, code = self.card_picker()
                             self.order_to_send = send_msg_translator("CARDPLAYED", "faction", card_selected)
-                            """for crd in self.player_a.player_hand_objs:
-                                if crd.rec.collidepoint(self.mousepos):
-                                    if (crd.card_type == "A"):
-                                        self.attack_indicator = crd.activate_card()[1]
-                                        self.player_a.faction_card_discard(crd)
-                                        #discarder("cards_a", str(crd.identif))
-                                        self.damage_in_course = card.damage
-                                        #self.player_a.player_hand_objs.remove(crd)
-    
-    
-                                        #self.player_a.attack_phase()
-    
-                                        if self.attack_indicator != None: 
-                                            self.attacking_tokens = True"""
-                                            
+                                                                      
     
     
     
@@ -1191,36 +1061,10 @@ class Main():
                                 print("order to send in defense: "+self.order_to_send)
                                 self.damaged_token = None
                                 self.defense_indicator = False
-                    """for crd in self.player_a.player_hand_objs:
-                        if crd.rec.collidepoint(self.mousepos):        
-                        
-                            if crd.card_type == "D":
-                                
-                                crd.activate_card()
-                                self.damage_dealt = 0
-                                #self.damaged_token = None
-                                self.player_a.faction_card_discard(crd)
-                                #self.player_turn = True
-                                
-                                #discarder("cards_a", str(crd.identif))
-                                #self.player_a.player_hand_objs.remove(crd)
-                                self.order_to_send = send_msg_translator("DEFENSE", self.damaged_token, self.damage_dealt)
-                                print("order to send in defense: "+self.order_to_send)
-                                self.damaged_token = None
-                                self.defense_indicator = False"""
-                                    
+                                                        
                         
                         
         
-        #self.recieved_order = self.net.send_recv(self.order_to_send)
-        
-        #if self.recieved_order != "NONE":
-        #    try:
-        #        code, target, order = recv_msg_translator(self.recieved_order)
-        #        self.orders_interpreter_method(code, target, order)
-        #        #self.enemy_ready = True
-        #    except: 
-        #        print("Failed interpretation of order")                       
         
         
         self.passing_phase = False

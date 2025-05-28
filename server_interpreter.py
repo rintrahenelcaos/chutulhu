@@ -53,6 +53,8 @@ def recv_msg_translator(cargo):
             target = ""
             order = ""
             print("passing phase")
+        elif code == "LOG":
+            pass
 
 
         #print("recv_msg_translator: ---> " + cargo)
