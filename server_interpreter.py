@@ -154,6 +154,39 @@ def send_msg_translator(code, target, order):
     
     return send_msg
 
+def send_msg_translator_with_log(order_number,code, target, order):
+    
+    if code == "VECTORTOGO":
+        orderx = order[0]
+        ordery = order[1]
+        send_msg = code+"]"+str(target)+":"+str(orderx)+","+str(ordery)
+    elif code == "CARDSDRAWN":
+        temporal_order = ""
+        for ind_order in order:
+            temporal_order = temporal_order + ind_order + ";"
+        temporal_order = temporal_order[:-1]
+        send_msg = code+"]"+target+":"+temporal_order
+    elif code == "CARDPLAYED":
+        send_msg = code+"]"+target+":"+order
+    elif code == "DAMAGE":
+        send_msg = code+"]"+str(target)+":"+str(order)
+    elif code == "ACARDPLAYED":
+        print("card played: "+str(target))
+    elif code == "XCARDPLAYED":
+        print("move token")
+    elif code == "SCARDPLAYED":
+        print("move token")
+    
+        
+        
+    else:
+        send_msg = code+"]"+target+":"+order
+    
+    complete_msg = str(order_number)+"}"+send_msg
+        
+    
+    return complete_msg
+
 
 def main():
     
