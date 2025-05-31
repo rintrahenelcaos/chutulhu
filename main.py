@@ -131,7 +131,7 @@ class Main():
         self.player_log = []
         self.enemy_log = []
         self.order_number = 0
-        self.recieved_order_number = 0
+        self.recieved_order_number = -1
         
         
         # Main Menu Widgets
