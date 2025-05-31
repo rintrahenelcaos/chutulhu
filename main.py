@@ -1110,7 +1110,7 @@ class Main():
 
 
 
-
+        
         self.draw_window(focus_faction_card, focus_spell_card, "in_course")
     
          
