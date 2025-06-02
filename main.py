@@ -641,9 +641,17 @@ class Main():
                 #self.confirm_deployment()
                 
                 self.available_moves = []
+                
+                drawn_cards = self.player_a.fate_phase(repetitions = 6)
+        
+                self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDSDRAWN", "faction", drawn_cards)
+                self.order_to_send = send_msg_translator("CARDSDRAWN", "faction", drawn_cards)
+                print("SELF.ORDER_TO_SEND: CARDS DRAWN ===> ",self.order_to_send)
+                
+                self.standard_talker()
                 #self.order_to_send = "NONE"
-                #self.scene = "in_course"
-                self.scene = "in_course_preparations" 
+                self.scene = "in_course"
+                #self.scene = "in_course_preparations" 
         
         ###################3 END ########################3
         
