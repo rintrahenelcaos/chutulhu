@@ -320,6 +320,8 @@ class Main():
             
         
         self.net.send_only(self.order_to_send)
+        if self.order_to_send != "NONE":
+            print("##########> ORDER SENDED:   ", self.order_to_send)
         
         self.recieved_order = self.net.recieve_only()
         
@@ -350,9 +352,12 @@ class Main():
         else:
             self.repeat_order_control = self.order_to_send"""
             
-    """def standard_talker(self):
+    def standard_talker(self):
         
         self.net.send_only(self.order_to_send)
+        if self.order_to_send != "NONE":
+            print("##########> ORDER SENDED:   ", self.order_to_send)
+            print("IN SCENE: ", self.scene)
         
         self.recieved_order = self.net.recieve_only()
         
@@ -365,7 +370,7 @@ class Main():
             except: 
                 print("Failed interpretation of order")  
                 
-        self.order_to_send = "NONE" """
+        self.order_to_send = "NONE" 
         
     """def talker_with_response_checker(self):
         
@@ -491,7 +496,8 @@ class Main():
         #self.recieved_order = "NONE"
         #self.repeated_msg_checker()
         
-        self.talker_with_logger()
+        self.standard_talker()
+        #self.talker_with_logger()
         #if self.order_to_send != "NONE":
         #self.net.send_only(self.order_to_send)
         
@@ -502,10 +508,14 @@ class Main():
         #self.recieved_order = self.net.send_recv(self.order_to_send)
         
         if self.recieved_order != "NONE":
+            #### testing filtering msgs #########
+            if self.recieved_order.rsplit("]")[0] == "BATCH":
+                self.enemy_ready = True
             try:
                 #code, target, order = recv_msg_translator(self.recieved_order)
                 #self.orders_interpreter_method(code, target, order)
-                self.enemy_ready = True
+                #self.enemy_ready = True
+                pass
                 
             except: pass
         
@@ -616,7 +626,7 @@ class Main():
         
         if self.player_ready:
             if self.enemy_ready:
-                order = "BATCH]all:"
+                """order = "BATCH]all:"
                 order = ""
                 for token in self.player_a.player_tokens:
                     order += str(token.vector_to_go[0])+","+str(token.vector_to_go[1])+";"
@@ -627,7 +637,7 @@ class Main():
                 self.order_to_send = send_msg_translator_with_log(self.order_number,"BATCH","all",order)
                 
                 print("tosend: ",self.order_to_send)
-            
+            """
                 #self.confirm_deployment()
                 
                 self.available_moves = []
@@ -834,7 +844,8 @@ class Main():
                 
                 self.run = False
         
-        self.talker_with_logger()        
+        self.standard_talker()
+        #self.talker_with_logger()        
         #self.talker_with_response_checker()
         
         #self.repeated_msg_checker()
@@ -851,7 +862,9 @@ class Main():
         #except: pass
         
         drawn_cards = self.player_a.fate_phase(repetitions = 6)
+        
         self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDSDRAWN", "faction", drawn_cards)
+        self.order_to_send = send_msg_translator("CARDSDRAWN", "faction", drawn_cards)
         print("SELF.ORDER_TO_SEND: CARDS DRAWN ===> ",self.order_to_send)
         #self.net.send_only(send_msg_translator("CARDSDRAWN", "faction", drawn_cards))
         #self.recieved_order = self.net.recieve_only()
@@ -860,7 +873,9 @@ class Main():
         #    
         #    self.orders_interpreter_method(code, target, order)
         #except: pass
-        self.talker_with_logger()
+        
+        self.standard_talker()
+        #self.talker_with_logger()
         #self.talker_with_response_checker()
         print("pass pregame")
         self.scene = "in_course"
@@ -874,9 +889,9 @@ class Main():
         focus_faction_card = None
         focus_spell_card = None
         
-        
+        self.standard_talker()
         #self.talker_with_response_checker()
-        self.talker_with_logger()
+        #self.talker_with_logger()
         
         #self.net.send_only(self.order_to_send)
         #
@@ -960,7 +975,7 @@ class Main():
                     #pygame.time.set_timer(self.freezing_mouse_event, 50, 1)
                     
                     
-                
+            
                 if self.player_turn and self.passing_phase == False:
                     
                     #if temporal_change_turn_button.collidepoint(self.mousepos):
@@ -983,7 +998,9 @@ class Main():
                         if faction_deck_drawer_button.collidepoint(self.mousepos):
                             
                             drawn_cards = self.player_a.fate_phase(repetitions = 3)
+                            
                             self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDSDRAWN", "faction", drawn_cards)
+                            self.order_to_send = send_msg_translator("CARDSDRAWN", "faction", drawn_cards)
                             print(self.order_to_send)
                             #pygame.time.set_timer(self.freezing_mouse_event, 50, 1) # prevents hitting the cards when draself.WINg
                             
@@ -995,12 +1012,14 @@ class Main():
                         if self.draw_cards_from_cards_indicator != None:
                             drawn_cards = self.player_a.fate_phase(repetitions=self.draw_cards_from_cards_indicator)
                             self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDSDRAWN", "faction", drawn_cards)
+                            self.order_to_send = send_msg_translator("CARDSDRAWN", "faction", drawn_cards)
                             self.draw_cards_from_cards_indicator = None
                             self.phase_passer_method()
                             #pygame.time.set_timer(self.freezing_mouse_event, 50, 1)
                         elif self.draw_spells_from_cards_indicator != None:
                             drawn_cards = self.player_a.xs_card_activation(repetitions=self.draw_spells_from_cards_indicator)
                             self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDSDRAWN", "spell", drawn_cards)
+                            self.order_to_send = send_msg_translator("CARDSDRAWN", "spell", drawn_cards)
                             self.draw_spells_from_cards_indicator = None
                             self.phase_passer_method()
                             #pygame.time.set_timer(self.freezing_mouse_event, 50, 1)
@@ -1009,6 +1028,7 @@ class Main():
                             card_selected, code = self.card_picker()
                             #drawn_cards = self.player_a.fate_phase(repetitions=int(code))
                             self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDPLAYED", "faction", card_selected)
+                            self.order_to_send = send_msg_translator("CARDPLAYED", "faction", card_selected)
                         #pygame.time.set_timer(self.freezing_mouse_event, 50, 1)
     
                     ### MOVE PHASE EVENT ###
@@ -1034,6 +1054,7 @@ class Main():
                             card_selected, code = self.card_picker()
 
                             self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDPLAYED", "faction", card_selected)
+                            self.order_to_send = send_msg_translator("CARDPLAYED", "faction", card_selected)
                             
                             
                     ### ATTACK PHASE EVENT ###
@@ -1063,7 +1084,7 @@ class Main():
                         else:
                             card_selected, code = self.card_picker()
                             self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDPLAYED", "faction", card_selected)
-                                                                      
+                            self.order_to_send = send_msg_translator("CARDPLAYED", "faction", card_selected)                                        
     
     
     
@@ -1088,6 +1109,7 @@ class Main():
                                 #self.player_turn = True
 
                                 self.order_to_send = send_msg_translator_with_log(self.order_number,"DEFENSE", self.damaged_token, str(self.damage_dealt))
+                                self.order_to_send = send_msg_translator("DEFENSE", self.damaged_token, str(self.damage_dealt))
                                 print("order to send in defense: "+self.order_to_send)
                                 self.damaged_token = None
                                 self.defense_indicator = False
@@ -1110,7 +1132,7 @@ class Main():
 
 
 
-        
+        pygame.event.clear()
         self.draw_window(focus_faction_card, focus_spell_card, "in_course")
     
          
@@ -1239,7 +1261,8 @@ class Main():
                 order += str(token.vector_to_go[0])+","+str(token.vector_to_go[1])+";"
 
             order = order[:-1]
-            self.order_to_send = send_msg_translator_with_log(self.order_number, "BATCH", "all", order)    
+            self.order_to_send = send_msg_translator_with_log(self.order_number, "BATCH", "all", order)  
+            self.order_to_send = send_msg_translator("BATCH", "all", order)    
 
             print("tosend: ",self.order_to_send)
 
@@ -1253,7 +1276,8 @@ class Main():
                 order += str(token.vector_to_go[0])+","+str(token.vector_to_go[1])+";"
 
             order = order[:-1]
-            self.order_to_send = send_msg_translator_with_log(self.order_number, "BATCH", "all", order)    
+            self.order_to_send = send_msg_translator_with_log(self.order_number, "BATCH", "all", order)  
+            self.order_to_send = send_msg_translator("BATCH", "all", order)  
   
 
             print("tosend: ",self.order_to_send)
@@ -1388,6 +1412,7 @@ class Main():
             
         self.passing_phase =True
         self.order_to_send = send_msg_translator_with_log(self.order_number,"NEXT_PHASE", "pass", "phase")
+        self.order_to_send = send_msg_translator("NEXT_PHASE", "pass", "phase")
 
     def movement_activation(self, move):
         
@@ -1397,6 +1422,9 @@ class Main():
         self.chosen_token.vector_to_go = self.position
         # sending order to server
         self.order_to_send = send_msg_translator_with_log(self.order_number,"VECTORTOGO",self.chosen_token,self.pos)
+        self.order_to_send = send_msg_translator("VECTORTOGO",self.chosen_token,self.pos)
+        
+        
         ### resetting values to prevent various movements over the same card ###
         self.available_moves = [] 
         self.pos = None
@@ -1425,6 +1453,8 @@ class Main():
         
         
         self.order_to_send = send_msg_translator_with_log(self.order_number,"DAMAGE", self.player_b.player_tokens[self.damaged_token], self.damage_in_course)
+        self.order_to_send = send_msg_translator("DAMAGE", self.player_b.player_tokens[self.damaged_token], self.damage_in_course)
+        
         print("Damage msg : ", self.order_to_send)
         
         self.damage_in_course = 0
@@ -1450,6 +1480,8 @@ class Main():
                         #discarder("cards_a", str(crd.identif))
                         #self.player_a.player_hand_objs.remove(crd)
                         self.order_to_send = send_msg_translator_with_log(self.order_number,"DEFENSE", damaged_token, damage_to_deal)
+                        self.order_to_send = send_msg_translator("DEFENSE", damaged_token, damage_to_deal)
+                        
                         
         if no_defense_button.collidepoint(self.mousepos):
             
@@ -1462,6 +1494,7 @@ class Main():
                 if str(token) == damaged_token:
                     token.hits = token.hits - damage_to_deal
                     self.order_to_send = send_msg_translator_with_log(self.order_number,"DEFENSE", damaged_token, damage_to_deal)
+                    self.order_to_send = send_msg_translator("DEFENSE", damaged_token, damage_to_deal)
         
                 
         
