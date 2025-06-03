@@ -354,12 +354,13 @@ class Main():
             
     def standard_talker(self):
         
-        self.net.send_only(self.order_to_send)
+        self.recieved_order = self.net.send_recv(self.order_to_send)
+        ##self.net.send_only(self.order_to_send)
         if self.order_to_send != "NONE":
             print("##########> ORDER SENDED:   ", self.order_to_send)
             print("IN SCENE: ", self.scene)
         
-        self.recieved_order = self.net.recieve_only()
+        #self.recieved_order = self.net.recieve_only()
         
         if self.recieved_order != "NONE":
             try:
@@ -370,7 +371,7 @@ class Main():
             except: 
                 print("Failed interpretation of order")  
                 
-        self.order_to_send = "NONE" 
+        #self.order_to_send = "NONE" 
         
     """def talker_with_response_checker(self):
         
