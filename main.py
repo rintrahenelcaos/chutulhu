@@ -53,8 +53,10 @@ class Main():
         self.current_phase = GAME_SEQUENCE[0]
         self.phase_passer = 2
         self.player_is_hosting = False
+        
         self.enemy_ready = False
         self.player_ready = False
+        self.pre_game_ready = False
         #new_game_preparations("INVESTIGATORS","SERPENT_PEOPLE")
         self.player_a = Player_Object("NONE")
         #self.player_a = Player_Object("INVESTIGATORS")
@@ -371,7 +373,7 @@ class Main():
             except: 
                 print("Failed interpretation of order")  
                 
-        #self.order_to_send = "NONE" 
+        self.order_to_send = "NONE" 
         
     """def talker_with_response_checker(self):
         
@@ -508,17 +510,17 @@ class Main():
         
         #self.recieved_order = self.net.send_recv(self.order_to_send)
         
-        if self.recieved_order != "NONE":
-            #### testing filtering msgs #########
-            if self.recieved_order.rsplit("]")[0] == "BATCH":
-                self.enemy_ready = True
-            try:
-                #code, target, order = recv_msg_translator(self.recieved_order)
-                #self.orders_interpreter_method(code, target, order)
-                #self.enemy_ready = True
-                pass
-                
-            except: pass
+        #if self.recieved_order != "NONE":
+        #    #### testing filtering msgs #########
+        #    if self.recieved_order.rsplit("]")[0] == "BATCH":
+        #        self.enemy_ready = True
+        #    try:
+        #        #code, target, order = recv_msg_translator(self.recieved_order)
+        #        #self.orders_interpreter_method(code, target, order)
+        #        #self.enemy_ready = True
+        #        pass
+        #        
+        #    except: pass
         
         self.movement_indicator = 1
                 
@@ -625,33 +627,59 @@ class Main():
         #        
         #    except: pass
         
-        if self.player_ready:
-            if self.enemy_ready:
-                """order = "BATCH]all:"
-                order = ""
-                for token in self.player_a.player_tokens:
-                    order += str(token.vector_to_go[0])+","+str(token.vector_to_go[1])+";"
-                    
-                    
-                order = order[:-1]
-                #self.order_to_send = order    
-                self.order_to_send = send_msg_translator_with_log(self.order_number,"BATCH","all",order)
+        if self.pre_game_ready == True:
+            drawn_cards = self.player_a.fate_phase(repetitions = 6)
+    
+            self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDSDRAWN", "faction", drawn_cards)
+            self.order_to_send = send_msg_translator("CARDSDRAWN", "faction", drawn_cards)
+            print("SELF.ORDER_TO_SEND: CARDS DRAWN ===> ",self.order_to_send)
+            
+            #self.standard_talker()
+            #self.order_to_send = "NONE"
+            self.scene = "in_course"
+            
+        
+        if self.player_ready and self.enemy_ready:
+            self.available_moves = []
+            
+            self.pre_game_ready = True ### ensures pregame readiness
                 
-                print("tosend: ",self.order_to_send)
-            """
+            #drawn_cards = self.player_a.fate_phase(repetitions = 6)
+    #
+            #self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDSDRAWN", "faction", drawn_cards)
+            #self.order_to_send = send_msg_translator("CARDSDRAWN", "faction", drawn_cards)
+            #print("SELF.ORDER_TO_SEND: CARDS DRAWN ===> ",self.order_to_send)
+            #
+            #self.standard_talker()
+            ##self.order_to_send = "NONE"
+            #self.scene = "in_course"
+            #if self.enemy_ready:
+                #""" 
+                #order = "BATCH]all:"
+                #order = ""
+                #for token in self.player_a.player_tokens:
+                #    order += str(token.vector_to_go[0])+","+str(token.vector_to_go[1])+";"
+                #    
+                #    
+                #order = order[:-1]
+                ##self.order_to_send = order    
+                #self.order_to_send = send_msg_translator_with_log(self.order_number,"BATCH","all",order)
+                #
+                #print("tosend: ",self.order_to_send)
+                #"""
                 #self.confirm_deployment()
                 
-                self.available_moves = []
-                
-                drawn_cards = self.player_a.fate_phase(repetitions = 6)
-        
-                self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDSDRAWN", "faction", drawn_cards)
-                self.order_to_send = send_msg_translator("CARDSDRAWN", "faction", drawn_cards)
-                print("SELF.ORDER_TO_SEND: CARDS DRAWN ===> ",self.order_to_send)
-                
-                self.standard_talker()
+                #self.available_moves = []
+                #
+                #drawn_cards = self.player_a.fate_phase(repetitions = 6)
+        #
+                #self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDSDRAWN", "faction", drawn_cards)
+                #self.order_to_send = send_msg_translator("CARDSDRAWN", "faction", drawn_cards)
+                #print("SELF.ORDER_TO_SEND: CARDS DRAWN ===> ",self.order_to_send)
+                #
+                #self.standard_talker()
                 #self.order_to_send = "NONE"
-                self.scene = "in_course"
+                #self.scene = "in_course"
                 #self.scene = "in_course_preparations" 
         
         ###################3 END ########################3
@@ -675,7 +703,17 @@ class Main():
         #        #self.scene = "in_course"
         #        self.scene = "in_course_preparations" 
         
-        
+        if self.recieved_order != "NONE":
+            #### testing filtering msgs #########
+            if self.recieved_order.rsplit("]")[0] == "BATCH":
+                self.enemy_ready = True
+            try:
+                #code, target, order = recv_msg_translator(self.recieved_order)
+                #self.orders_interpreter_method(code, target, order)
+                #self.enemy_ready = True
+                pass
+                
+            except: pass
                     
                 
         if self.scene == "pre_game":
