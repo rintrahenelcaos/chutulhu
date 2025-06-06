@@ -1,20 +1,36 @@
-# Server Class with Log Register
+import sys
+import pygame
+from pygame.locals import *
+ 
+pygame.init()
+ 
+screen = pygame.display.set_mode((640,480))
+ 
+# Game loop.
+while True:
+    screen.fill((0, 0, 0))
+    
+    for event in pygame.event.get():
+        print(event)
+        if event.type == QUIT:
+            pygame.quit()
+            sys.exit()
 
-class Server:
-    def __init__(self):
-        self.log = []
 
-    def register_log(self, message):
-        self.log.append(message)
-        print(f"Log registered: {message}")
 
-    def display_logs(self):
-        for entry in self.log:
-            print(entry)
 
-# Example usage
-if __name__ == "__main__":
-    server = Server()
-    server.register_log("Server started.")
-    server.register_log("Client connected.")
-    server.display_logs()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
