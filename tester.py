@@ -27,7 +27,7 @@ from game_server_log import main as server_main
 
 from widgets import DropDown, Button
 
-from server_interpreter import recv_msg_translator, send_msg_translator, send_msg_translator_with_log
+from server_interpreter import recv_msg_translator, send_msg_translator, send_msg_translator_with_log, Communication_methods
 
 #self.WIN = pygame.display.set_mode((WIDTH, HEIGHT))  
 
@@ -123,6 +123,8 @@ class Main():
         
         self.server = Process(target = server_main)
         
+        
+        
         self.order_to_send = "NONE" # msg send to server
         self.recieved_order = "NONE" # msg recieved from the server 
         
@@ -132,6 +134,14 @@ class Main():
         self.enemy_log = []
         self.order_number = 0
         self.recieved_order_number = -1
+        
+        self.com_meth = Communication_methods(self.net, 
+                                              self.order_to_send, 
+                                              self.recieved_order, 
+                                              self.recieved_order_number, 
+                                              self.order_number, 
+                                              self.repeat_order_control, 
+                                              self.orders_interpreter_method)
         
         
         # Main Menu Widgets

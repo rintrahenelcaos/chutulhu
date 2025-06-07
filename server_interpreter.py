@@ -1,3 +1,45 @@
+class Communication_methods():
+    
+    
+    def __init__(self, net, order_to_send, recieved_order, recieved_order_number, order_number, repeat_order_control, orders_interpreter_method):
+        
+        self.net = net
+        self.order_to_send = order_to_send
+        self.recieved_order = recieved_order
+        self.recieved_order_number = recieved_order_number
+        self.order_number = order_number
+        self.repeat_order_control = repeat_order_control
+        
+        self.orders_interpreter_method = orders_interpreter_method
+        
+        
+    def talker_with_logger(self):
+        
+                  
+        
+        self.net.send_only(self.order_to_send)
+        
+        self.recieved_order = self.net.recieve_only()
+        
+        if self.recieved_order != "NONE":
+            try:
+                splitted_recieved_order = self.recieved_order.split("}", 1)
+                msg_number = splitted_recieved_order[0]
+                recieved_msg = splitted_recieved_order[1]
+                if int(msg_number) > self.recieved_order_number:
+                    code, target, order = recv_msg_translator(recieved_msg)
+                    self.orders_interpreter_method(code, target, order)
+                    print("recieved: ",self.recieved_order, " /// number of recieved: ", self.recieved_order_number)
+                    self.recieved_order_number += 1
+            except:
+                print("Failed interpretation of order")   
+                    
+        if self.order_to_send != self.repeat_order_control:
+            self.repeat_order_control = self.order_to_send
+            self.order_number += 1
+
+
+
 
 def recv_msg_translator(cargo):
     
