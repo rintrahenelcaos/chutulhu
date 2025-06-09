@@ -93,6 +93,8 @@ class Main():
         
         self.passing_phase = False
         
+        self.events_blocker = False  # Blocks events to allow phase passing
+        
         
         # test variables
         
@@ -331,6 +333,7 @@ class Main():
         
         self.net.send_only(self.order_to_send)
         
+        
         self.recieved_order = self.net.recieve_only()
         
         if self.recieved_order != "NONE":
@@ -347,6 +350,7 @@ class Main():
                 print("Failed interpretation of order")   
                     
         if self.order_to_send != self.repeat_order_control:
+            print("ORDER SENT: ------>  ", self.order_to_send)
             self.repeat_order_control = self.order_to_send
             self.order_number += 1
         
@@ -713,123 +717,16 @@ class Main():
 
         
         
-#
+
         current_phase_informer = GENERIC_FONT.render(phase_informer, 1, "red")
         self.WIN.blit(current_phase_informer, PHASE_INFORMER_RECT)
-#
+
        
         
         pygame.display.update()
      
     
-    """def in_course_preparations_2(self):
-        
-        #self.repeated_msg_checker()
-                
-        #if self.order_to_send != "NONE":
-        
-                
-        self.net.send_only(self.order_to_send)
-        
-        
-        self.recieved_order = self.net.recieve_only()
-        
-        self.player_ready = True
-        
-        #self.recieved_order = self.net.send_recv(self.order_to_send)
-        try:
-            code, target, order = recv_msg_translator(self.recieved_order)
-            self.orders_interpreter_method(code, target, order)
-        except: pass
-        #self.recieved_order = self.net.send_recv(self.order_to_send)
-        #code, target, order = recv_msg_translator(self.recieved_order)
-        #self.orders_interpreter_method(code, target, order)
-        
-        events = pygame.event.get()
-        for event in events:
-            if event.type == pygame.QUIT:
-                try:
-                    self.net.send("!DISCONNECT")
-                    self.server.terminate()
-                    
-                except: pass
-                
-                self.run = False
-                
-        # test one-shot
-        drawn_cards = self.player_a.fate_phase(repetitions = 6)
-        self.order_to_send = send_msg_translator("CARDSDRAWN", "faction", drawn_cards)
-        print("SELF.ORDER_TO_SEND: CARDS DRAWN ===> ",self.order_to_send)
-        #self.net.send_only(self.order_to_send)
-        #self.recieved_order = self.net.send_recv(self.order_to_send)
-        #try:
-        #    code, target, order = recv_msg_translator(self.recieved_order)
-        #    self.orders_interpreter_method(code, target, order)
-        #    #self.player_ready = True
-        #except: pass
-        
-        
-        if self.player_ready:
-            print("pass pregame")
-            self.scene = "in_course"
-        else: 
-            print("failed to receive instructions")
-                
-        #self.recieved_order = "NONE"
-        #drawn_cards = self.player_a.fate_phase(repetitions = 3)
-        #self.order_to_send = send_msg_translator("CARDSDRAWN", "faction", drawn_cards)
-        #print(self.order_to_send)
-        #self.clock.tick(FPS)
-                
-        #response = self.net.send_recv(self.order_to_send)
-        #
-        #if response != "NONE":
-        #    
-        #    try:
-        #        code, target, order = recv_msg_translator(self.recieved_order)
-        #        if code == "CARDSDRAWN":
-        #            self.orders_interpreter_method(code, target, order)
-        #            self.enemy_ready = True
-        #            print("going to in_course")
-        #    
-        #            self.scene = "in_course"
-        #        else: pass
-        #    except: pass
-        #    #self.net.send_recv("NONE")
-        #    #code, target, order = recv_msg_translator(self.recieved_order)
-        #    #self.orders_interpreter_method(code, target, order)
-        #    #self.player_b.player_faction = response
-        #    #print("going to in_course")
-        #    #
-        #    #self.scene = "in_course"
-        #else: pass 
-        #self.player_ready = False
-        #self.enemy_ready = False
-        #self.recieved_order = "NONE"
-        #drawn_cards = self.player_a.fate_phase(repetitions = 3)
-        #self.order_to_send = send_msg_translator("CARDSDRAWN", "faction", drawn_cards)
-        #self.recieved_order = self.net.send_recv(self.order_to_send)
-        #
-        #while self.enemy_ready == False:
-        #    if self.player_ready == False:
-        #        self.recieved_order = self.net.send_recv(self.order_to_send)
-        #        if self.recieved_order != "NONE":
-        #            try:
-        #                code, target, order = recv_msg_translator(self.recieved_order)
-        #                self.orders_interpreter_method(code, target, order)
-        #                self.player_ready = True
-        #            except:
-        #                pass
-        #    elif self.player_ready == True:
-        #        self.order_to_send = "PLAYER_READY"
-        #        if self.recieved_order == "PLAYER_READY":
-        #            self.enemy_ready == True
-        #    self.recieved_order = self.net.send_recv(self.order_to_send)
-        #        
-        #    
-        #if self.enemy_ready and self.player_ready:
-        #    self.net.send_recv(self.order_to_send)
-        #    self.scene = "in_course" """
+    
         
     def in_course_preparations(self):
         
@@ -860,7 +757,7 @@ class Main():
         #    self.orders_interpreter_method(code, target, order)
         #except: pass
         
-        drawn_cards = self.player_a.fate_phase(repetitions = 6)
+        drawn_cards = self.player_a.fate_phase(repetitions = 10)
         self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDSDRAWN", "faction", drawn_cards)
         print("SELF.ORDER_TO_SEND: CARDS DRAWN ===> ",self.order_to_send)
         #self.net.send_only(send_msg_translator("CARDSDRAWN", "faction", drawn_cards))
@@ -890,7 +787,39 @@ class Main():
         self.talker_with_logger()
         
         
-        self.passing_phase = False
+        #self.passing_phase = False
+        
+        ### HAPPENING OUTSIDE OF EVENTS ####
+        
+        if self.current_phase == "fate":
+            
+            pass
+        
+        elif self.current_phase == "summon":
+            
+            if self.draw_cards_from_cards_indicator != None:
+                drawn_cards = self.player_a.fate_phase(repetitions=self.draw_cards_from_cards_indicator)
+                self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDSDRAWN", "faction", drawn_cards)
+                self.draw_cards_from_cards_indicator = None
+                #self.passing_phase = True
+                #self.phase_passer_method()
+                #pygame.time.set_timer(self.freezing_mouse_event, 50, 1)
+            elif self.draw_spells_from_cards_indicator != None:
+                drawn_cards = self.player_a.xs_card_activation(repetitions=self.draw_spells_from_cards_indicator)
+                self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDSDRAWN", "spell", drawn_cards)
+                self.draw_spells_from_cards_indicator = None
+                #self.passing_phase = True
+                #self.phase_passer_method()
+                #pygame.time.set_timer(self.freezing_mouse_event, 50, 1)
+        
+        elif self.current_phase == "move":     
+            
+            pass
+        
+        elif self.current_phase == "att":
+            
+            pass   
+        
         
         #self.net.send_only(self.order_to_send)
         #
@@ -971,6 +900,7 @@ class Main():
                 if button2.collidepoint(self.mousepos):   ### passing phases ---> test only
                     
                     self.passing_phase = True
+                    #self.events_blocker = True
                     
                     #self.phase_passer_method()
                     #pygame.time.set_timer(self.freezing_mouse_event, 50, 1)
@@ -1000,7 +930,7 @@ class Main():
                             
                             drawn_cards = self.player_a.fate_phase(repetitions = 3)
                             self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDSDRAWN", "faction", drawn_cards)
-                            print(self.order_to_send)
+                            #print(self.order_to_send)
                             self.passing_phase = True
                             #pygame.time.set_timer(self.freezing_mouse_event, 50, 1) # prevents hitting the cards when draself.WINg
                             
@@ -1009,25 +939,31 @@ class Main():
                     ### SUMMON PHASE EVENT ###
                     
                     if self.current_phase == "summon":
-                        if self.draw_cards_from_cards_indicator != None:
-                            drawn_cards = self.player_a.fate_phase(repetitions=self.draw_cards_from_cards_indicator)
-                            self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDSDRAWN", "faction", drawn_cards)
-                            self.draw_cards_from_cards_indicator = None
-                            self.passing_phase = True
-                            #self.phase_passer_method()
-                            #pygame.time.set_timer(self.freezing_mouse_event, 50, 1)
-                        elif self.draw_spells_from_cards_indicator != None:
-                            drawn_cards = self.player_a.xs_card_activation(repetitions=self.draw_spells_from_cards_indicator)
-                            self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDSDRAWN", "spell", drawn_cards)
-                            self.draw_spells_from_cards_indicator = None
-                            self.passing_phase = True
-                            #self.phase_passer_method()
-                            #pygame.time.set_timer(self.freezing_mouse_event, 50, 1)
                         
-                        else:    
-                            card_selected, code = self.card_picker()
-                            #drawn_cards = self.player_a.fate_phase(repetitions=int(code))
-                            self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDPLAYED", "faction", card_selected)
+                        card_selected, code = self.card_picker()
+                        #    #drawn_cards = self.player_a.fate_phase(repetitions=int(code))
+                        self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDPLAYED", "faction", card_selected)
+                        
+                        
+                        #if self.draw_cards_from_cards_indicator != None:
+                        #    drawn_cards = self.player_a.fate_phase(repetitions=self.draw_cards_from_cards_indicator)
+                        #    self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDSDRAWN", "faction", drawn_cards)
+                        #    self.draw_cards_from_cards_indicator = None
+                        #    #self.passing_phase = True
+                        #    #self.phase_passer_method()
+                        #    #pygame.time.set_timer(self.freezing_mouse_event, 50, 1)
+                        #elif self.draw_spells_from_cards_indicator != None:
+                        #    drawn_cards = self.player_a.xs_card_activation(repetitions=self.draw_spells_from_cards_indicator)
+                        #    self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDSDRAWN", "spell", drawn_cards)
+                        #    self.draw_spells_from_cards_indicator = None
+                        #    #self.passing_phase = True
+                        #    #self.phase_passer_method()
+                        #    #pygame.time.set_timer(self.freezing_mouse_event, 50, 1)
+                        
+                        #else:    
+                        #    card_selected, code = self.card_picker()
+                        #    #drawn_cards = self.player_a.fate_phase(repetitions=int(code))
+                        #    self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDPLAYED", "faction", card_selected)
                         #pygame.time.set_timer(self.freezing_mouse_event, 50, 1)
     
                     ### MOVE PHASE EVENT ###
@@ -1107,21 +1043,29 @@ class Main():
                                 #self.player_turn = True
 
                                 self.order_to_send = send_msg_translator_with_log(self.order_number,"DEFENSE", self.damaged_token, str(self.damage_dealt))
-                                print("order to send in defense: "+self.order_to_send)
+                                #print("order to send in defense: "+self.order_to_send)
                                 self.damaged_token = None
                                 self.defense_indicator = False
                                                         
         pygame.event.clear()               
-                        
-        
-        
+         
+                       
+        if self.events_blocker == True:
+            
+            self.order_to_send = send_msg_translator_with_log(self.order_number,"NEXT_PHASE", "pass", "phase")
+            self.phase_passer_method()
+            
+            self.events_blocker = False
+            self.passing_phase = False
+            
         
         #self.passing_phase = False
         
         if self.passing_phase == True:
-            self.order_to_send = send_msg_translator_with_log(self.order_number,"NEXT_PHASE", "pass", "phase")
-            self.phase_passer_method()
-                
+            
+            self.events_blocker = True
+            
+                        
         # surviving tokens control
         
         for token_a in self.player_a.player_tokens:
@@ -1309,7 +1253,7 @@ class Main():
             #crd.rec.x = FACTION_HAND.x+5+CELL*player_hand.index(crd)*0.7 # assigns position to the object in the hand
             #crd.rec.y = FACTION_HAND.y+CELL*0.7
 
-            if current_phase == "move" and (crd.card_type == "M" or crd.card_type == "XF" or crd.card_type == "XS"):
+            if current_phase == "move" and (crd.card_type == "M"): # or crd.card_type == "XF" or crd.card_type == "XS"):
                 #xpos = FACTION_HAND.x+CELL*0.2
                 #position = pygame.Vector2(xpos, FACTION_HAND.y+5+available_space*self.player_a.player_hand_objs.index(crd))
                 
@@ -1448,7 +1392,7 @@ class Main():
         
         
         self.order_to_send = send_msg_translator_with_log(self.order_number,"DAMAGE", self.player_b.player_tokens[self.damaged_token], self.damage_in_course)
-        print("Damage msg : ", self.order_to_send)
+        #print("Damage msg : ", self.order_to_send)
         
         self.damage_in_course = 0
         #self.current_phase = "def"
