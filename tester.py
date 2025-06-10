@@ -987,8 +987,10 @@ class Main():
                                     #print("self.available_moves",self.available_moves)
                         else:
                             card_selected, code = self.card_picker()
-
-                            self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDPLAYED", "faction", card_selected)
+                            if card_selected == "NONE":
+                                self.order_to_send = "NONE"
+                            else:
+                                self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDPLAYED", "faction", card_selected)
                             
                             
                     ### ATTACK PHASE EVENT ###
@@ -1017,7 +1019,10 @@ class Main():
     
                         else:
                             card_selected, code = self.card_picker()
-                            self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDPLAYED", "faction", card_selected)
+                            if card_selected == "NONE":
+                                self.order_to_send = "NONE"
+                            else:
+                                self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDPLAYED", "faction", card_selected)
                                                                       
     
     
@@ -1437,8 +1442,8 @@ class Main():
     
     
     def card_picker(self):
-        card_picked = str
-        code = str
+        card_picked = "NONE"
+        code = "NONE"
         if self.current_phase == "move":
             for crd in self.player_a.player_hand_objs:
                 if crd.rec.collidepoint(self.mousepos):
@@ -1507,7 +1512,8 @@ class Main():
     
                         #if self.movement_indicator != None: self.moving_tokens = True
                         #print("self.moving_tokens: ",self.moving_tokens)  # CONTROL
-            
+        
+        
         
         print("returning card in card_picker :" ,card_picked)
         return card_picked, code    
