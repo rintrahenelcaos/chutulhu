@@ -941,30 +941,15 @@ class Main():
                     if self.current_phase == "summon":
                         
                         card_selected, code = self.card_picker()
-                        #    #drawn_cards = self.player_a.fate_phase(repetitions=int(code))
-                        self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDPLAYED", "faction", card_selected)
+                        
+                        if card_selected == "NONE":
+                                self.order_to_send = "NONE"
+                        else:
+                        
+                            self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDPLAYED", "faction", card_selected)
                         
                         
-                        #if self.draw_cards_from_cards_indicator != None:
-                        #    drawn_cards = self.player_a.fate_phase(repetitions=self.draw_cards_from_cards_indicator)
-                        #    self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDSDRAWN", "faction", drawn_cards)
-                        #    self.draw_cards_from_cards_indicator = None
-                        #    #self.passing_phase = True
-                        #    #self.phase_passer_method()
-                        #    #pygame.time.set_timer(self.freezing_mouse_event, 50, 1)
-                        #elif self.draw_spells_from_cards_indicator != None:
-                        #    drawn_cards = self.player_a.xs_card_activation(repetitions=self.draw_spells_from_cards_indicator)
-                        #    self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDSDRAWN", "spell", drawn_cards)
-                        #    self.draw_spells_from_cards_indicator = None
-                        #    #self.passing_phase = True
-                        #    #self.phase_passer_method()
-                        #    #pygame.time.set_timer(self.freezing_mouse_event, 50, 1)
                         
-                        #else:    
-                        #    card_selected, code = self.card_picker()
-                        #    #drawn_cards = self.player_a.fate_phase(repetitions=int(code))
-                        #    self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDPLAYED", "faction", card_selected)
-                        #pygame.time.set_timer(self.freezing_mouse_event, 50, 1)
     
                     ### MOVE PHASE EVENT ###
     
