@@ -346,8 +346,9 @@ class Main():
                     self.orders_interpreter_method(code, target, order)
                     print("recieved: ",self.recieved_order, " /// number of recieved: ", self.recieved_order_number)
                     self.recieved_order_number += 1
-            except:
-                print("Failed interpretation of order")   
+            except Exception as e:
+                print("Failed interpretation of order: ########>>>>>  ", self.recieved_order)  
+                print(e) 
                     
         if self.order_to_send != self.repeat_order_control:
             print("ORDER SENT: ------>  ", self.order_to_send)
@@ -943,7 +944,7 @@ class Main():
                         card_selected, code = self.card_picker()
                         
                         if card_selected == "NONE":
-                                self.order_to_send = "NONE"
+                                pass
                         else:
                         
                             self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDPLAYED", "faction", card_selected)
@@ -973,7 +974,7 @@ class Main():
                         else:
                             card_selected, code = self.card_picker()
                             if card_selected == "NONE":
-                                self.order_to_send = "NONE"
+                                pass
                             else:
                                 self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDPLAYED", "faction", card_selected)
                             
@@ -1005,7 +1006,7 @@ class Main():
                         else:
                             card_selected, code = self.card_picker()
                             if card_selected == "NONE":
-                                self.order_to_send = "NONE"
+                                pass
                             else:
                                 self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDPLAYED", "faction", card_selected)
                                                                       
