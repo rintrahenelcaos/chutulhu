@@ -127,7 +127,7 @@ class Player_Object():
     
     def enemy_spell_draw(self, order):
         
-        name_index = self.player_spell_deck.index("Card_Name")
+        name_index = self.spell_card_fields.index("Card_Name")
         for card in self.player_spell_deck:
             if card[name_index] in order:
                 req_info = ["Card_Name","Type","Range","Notes","Images"]

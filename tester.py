@@ -1134,6 +1134,7 @@ class Main():
         self.faction_hand_controller(focus_faction_card, self.current_phase)
         self.spells_hand_controller(focus_spell_card, self.current_phase)
         self.enemy_faction_hand_controller()
+        self.enemy_spell_hand_controller()
         
 
 
@@ -1321,7 +1322,7 @@ class Main():
         for crd in self.player_b.player_spell_hand_objs:
             ypos = int
             
-            position = pygame.Vector2(ENEMY_SPELLS_HAND.x+available_space*self.player_b.player_hand_objs.index(crd), ENEMY_SPELLS_HAND.y+4)
+            position = pygame.Vector2(ENEMY_SPELLS_HAND.x+available_space*self.player_b.player_spell_hand_objs.index(crd), ENEMY_SPELLS_HAND.y+4)
             
             crd.card_drawer(self.WIN, position, enemy = True)
             

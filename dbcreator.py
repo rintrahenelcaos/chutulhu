@@ -274,11 +274,11 @@ def main(faction_list):
     
     #alltablesconstructor(faction_list)
     
-    print(individual_list(csvs[4], faction=faction_list))
+    print(individual_list(csvs[4]))
 
 if __name__ == "__main__":
     factions = ["DEEP_ONES", "CULTIST"]
-    main("None")
+    main("k")
     
     
     
