@@ -11,6 +11,7 @@ from constants import FACTION_HAND, FACTION_DECK_POSITION, faction_deck_drawer_b
 from constants import SPELLS_HAND, SPELL_DECK_POSITION, spells_deck_drawer_button
 from constants import GENERIC_FONT, CARD_FONT, PHASE_INFORMER_RECT
 from constants import ENEMY_FACTION_HAND, ENEMY_SPELLS_HAND
+from constants import INFORMATION_FRAME
 
 from gameobjects import TokenObject, CardObject
 from player_turn_module import Player_Object
@@ -345,6 +346,7 @@ class Main():
                     code, target, order = recv_msg_translator(recieved_msg)
                     self.orders_interpreter_method(code, target, order)
                     print("recieved: ",self.recieved_order, " /// number of recieved: ", self.recieved_order_number)
+                    self.player_log.append("RECIEVED ##> "+self.recieved_order)
                     self.recieved_order_number += 1
             except Exception as e:
                 print("Failed interpretation of order: ########>>>>>  ", self.recieved_order)  
@@ -353,77 +355,10 @@ class Main():
         if self.order_to_send != self.repeat_order_control:
             print("ORDER SENT: ------>  ", self.order_to_send)
             self.repeat_order_control = self.order_to_send
+            self.player_log.append("SENT ##> "+self.order_to_send)
             self.order_number += 1
         
-                
-        
-    
-    """def repeated_msg_checker(self):
-        
-        if self.order_to_send == self.repeat_order_control :
-            self.order_to_send = "NONE"
-        else:
-            self.repeat_order_control = self.order_to_send"""
-            
-    """def standard_talker(self):
-        
-        self.net.send_only(self.order_to_send)
-        
-        self.recieved_order = self.net.recieve_only()
-        
-        if self.recieved_order != "NONE":
-            try:
-                code, target, order = recv_msg_translator(self.recieved_order)
-                self.orders_interpreter_method(code, target, order)
-                print(self.recieved_order)
-                #self.order_to_send = "RESPONSE]"+self.recieved_order 
-            except: 
-                print("Failed interpretation of order")  
-                
-        self.order_to_send = "NONE" """
-        
-    """def talker_with_response_checker(self):
-        
-        self.net.send_only(self.order_to_send)
-        
-        
-        #if self.order_to_send.split("]",1)[0] == "RESPONSE":
-        #    print("changing order: "+self.order_to_send)
-        #    self.order_to_send = "NONE"
-        #    print("to: "+self.order_to_send)
-            
-        self.recieved_order = self.net.recieve_only()
-        
-        if self.recieved_order != "NONE":
-            if self.recieved_order == self.repeat_order_control:
-                self.recieved_order = "NONE"
-            else:
-                self.repeat_order_control = self.recieved_order
-                print("order received: ", self.recieved_order)
-                try:
-                    code, target, order = recv_msg_translator(self.recieved_order)
-                    self.orders_interpreter_method(code, target, order)
-                    print(self.recieved_order)
-                    #self.order_to_send = "RESPONSE]"+self.recieved_order 
-                except: 
-                    print("Failed interpretation of order")       
-                #self.orders_interpreter_method(code, target, order)
-                #self.order_to_send = "RESPONSE]"+self.recieved_order 
-            #code, target, order = recv_msg_translator(self.recieved_order)
-
-            #if code == "RESPONSE":
-            #    if self.order_to_send == target:
-            #        self.order_to_send = "NONE"
-            #elif code == "NONE":
-            #    pass
-            #else:
-            
-        
-        #self.order_to_send = "NONE"    
-        #self.net.send_only(self.order_to_send)
-        
-        """
-            
+             
        
     def orders_interpreter_method(self, code, target, order):
         
@@ -743,38 +678,18 @@ class Main():
                 self.run = False
         
         self.talker_with_logger()        
-        #self.talker_with_response_checker()
         
-        #self.repeated_msg_checker()
-                
-        #if self.order_to_send != "NONE":
-        #self.net.send_only(self.order_to_send)
-        #
-        #
-        #self.recieved_order = self.net.recieve_only()
-        #
-        #try:
-        #    code, target, order = recv_msg_translator(self.recieved_order)
-        #    self.orders_interpreter_method(code, target, order)
-        #except: pass
         
         drawn_cards = self.player_a.fate_phase(repetitions = 10)
         self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDSDRAWN", "faction", drawn_cards)
         print("SELF.ORDER_TO_SEND: CARDS DRAWN ===> ",self.order_to_send)
-        #self.net.send_only(send_msg_translator("CARDSDRAWN", "faction", drawn_cards))
-        #self.recieved_order = self.net.recieve_only()
-        #try:
-        #    code, target, order = recv_msg_translator(self.recieved_order)
-        #    
-        #    self.orders_interpreter_method(code, target, order)
-        #except: pass
+        
         self.talker_with_logger()
-        #self.talker_with_response_checker()
+        
         print("pass pregame")
         self.scene = "in_course"
             
     def in_course(self):
-        
         
         
         self.clock.tick(FPS)
@@ -822,26 +737,7 @@ class Main():
             pass   
         
         
-        #self.net.send_only(self.order_to_send)
-        #
-        #
-        #self.recieved_order = self.net.recieve_only()
-        #
-        ##self.recieved_order = self.net.send_recv(self.order_to_send)
-        #
-        #if self.recieved_order != "NONE":
-        #    try:
-        #        code, target, order = recv_msg_translator(self.recieved_order)
-        #        self.orders_interpreter_method(code, target, order)
-        #        #self.enemy_ready = True
-        #    except: 
-        #        print("Failed interpretation of order")       
         
-        # Network orders cleaner
-        
-        #self.order_to_send = "NONE"
-        
-                
         ### cursor's management ###
         
         if BOARD.get_rect().collidepoint(self.mousepos):
@@ -1102,6 +998,7 @@ class Main():
         pygame.draw.rect(self.WIN, "red",SPELLS_HAND)
         pygame.draw.rect(self.WIN, "pink",ENEMY_FACTION_HAND)
         pygame.draw.rect(self.WIN, "red",ENEMY_SPELLS_HAND)
+        pygame.draw.rect(self.WIN, "yellow", INFORMATION_FRAME)
 
 
         faction_deck = pygame.image.load(os.path.join("images","faction_deck2.jpg")).convert_alpha() # load faction deck image

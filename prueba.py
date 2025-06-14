@@ -1,7 +1,7 @@
 import pygame
 import os
 
-from constants import WIDTH, HEIGHT,FACTION_DECK_POSITION, FACTION_HAND, SPELL_DECK_POSITION, SPELLS_HAND, BOARD, BACKGROUND_COLOR, ENEMY_FACTION_HAND, ENEMY_SPELLS_HAND, ROWS, COLUMNS ,CELL, GENERIC_FONT, faction_deck_drawer_button, spells_deck_drawer_button, INFORMATION_FRAME, PHASE_INFORMER_RECT
+from constants import WIDTH, HEIGHT,FACTION_DECK_POSITION, FACTION_HAND, SPELL_DECK_POSITION, SPELLS_HAND, BOARD, BACKGROUND_COLOR, ENEMY_FACTION_HAND, ENEMY_SPELLS_HAND, ROWS, COLUMNS ,CELL, GENERIC_FONT, faction_deck_drawer_button, spells_deck_drawer_button, INFORMATION_FRAME, PHASE_INFORMER_RECT, LOG_FRAME
 pygame.init()
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))  
 pygame.display.init()
@@ -28,7 +28,8 @@ while run:
     pygame.draw.rect(WIN, "pink",ENEMY_FACTION_HAND)
     pygame.draw.rect(WIN, "red",ENEMY_SPELLS_HAND)
     pygame.draw.rect(WIN,"white",faction_deck_drawer_button)
-    pygame.draw.rect(WIN,"white", INFORMATION_FRAME)
+    pygame.draw.rect(WIN,"yellow", INFORMATION_FRAME)
+    pygame.draw.rect(WIN, "pink", LOG_FRAME)
     faction_deck = pygame.image.load(os.path.join("images","faction_deck2.jpg")).convert_alpha() # load faction deck image
     #faction_deck_scaled_image = pygame.transform.rotate(faction_deck, 90.0)
     faction_deck_scaled_image = pygame.transform.scale(faction_deck, (faction_deck_drawer_button.width, faction_deck_drawer_button.height))

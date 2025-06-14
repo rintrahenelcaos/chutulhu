@@ -69,7 +69,8 @@ PRE_GAME_TOKEN_MAT = pygame.Rect((0,0),(BOARD.get_width(), CELL*5))
 
 ENEMY_FACTION_HAND = pygame.Rect((BOARD.get_width(),0),((WIDTH-BOARD.get_width())//2, CELL//2))
 ENEMY_SPELLS_HAND = pygame.Rect((BOARD.get_width()+ENEMY_FACTION_HAND.width,0),((WIDTH-BOARD.get_width())//2, CELL//2))
-INFORMATION_FRAME = pygame.Rect((BOARD.get_width(),CELL*1),((WIDTH-BOARD.get_width()),CELL*3))
+INFORMATION_FRAME = pygame.Rect((BOARD.get_width(),CELL*1),((WIDTH-BOARD.get_width()),CELL*5))
+LOG_FRAME = pygame.Rect((BOARD.get_width(),CELL*7), ((WIDTH-BOARD.get_width()),CELL*3))
 
 # Buttons
 
