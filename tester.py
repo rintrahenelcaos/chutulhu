@@ -11,7 +11,7 @@ from constants import FACTION_HAND, FACTION_DECK_POSITION, faction_deck_drawer_b
 from constants import SPELLS_HAND, SPELL_DECK_POSITION, spells_deck_drawer_button
 from constants import GENERIC_FONT, CARD_FONT, PHASE_INFORMER_RECT
 from constants import ENEMY_FACTION_HAND, ENEMY_SPELLS_HAND
-from constants import INFORMATION_FRAME
+from constants import INFORMATION_FRAME, LOG_FRAME
 
 from gameobjects import TokenObject, CardObject
 from player_turn_module import Player_Object
@@ -26,7 +26,7 @@ from pickleobj import Exchange_object
 
 from game_server_log import main as server_main
 
-from widgets import DropDown, Button
+from widgets import DropDown, Button, TextScrollLog
 
 from server_interpreter import recv_msg_translator, send_msg_translator, send_msg_translator_with_log, Communication_methods
 
@@ -153,12 +153,13 @@ class Main():
         self.host_button = Button(CELL*6, CELL*4, CELL*3, CELL,GENERIC_FONT, "HOST", "red",lambda: self.host_game_method() )
         self.join_button = Button(CELL*6, CELL*6, CELL*3, CELL,GENERIC_FONT, "JOIN", "white", lambda: self.to_second_menu() )
         
+        
         # Pregame Scene Widgets
         self.pre_game_cancel_button = Button(CELL, CELL//4*3, CELL*2,CELL//2, GENERIC_FONT, "Cancel Deploy", "red", lambda: self.pregame_mat_assigner())
         self.pre_game_ok_button = Button(CELL*4, CELL//4*3, CELL*2,CELL//2, GENERIC_FONT, "Confirm Deploy", "darkgreen", lambda: self.confirm_deployment())
         
         # Game perse Widgets
-        
+        self.scroll_log = TextScrollLog(LOG_FRAME, pygame.font.SysFont("Liberation Sans", int(CELL//4)), "green", "red", "pink", self.player_log)
         
     
         
@@ -321,7 +322,7 @@ class Main():
         phase_informer = "Waiting Enemy to Connect"
         current_phase_informer = GENERIC_FONT.render(phase_informer, 1, "red")
         self.WIN.blit(current_phase_informer, (CELL*10, 20))
-#
+
        
         
         pygame.display.update()
@@ -346,7 +347,7 @@ class Main():
                     code, target, order = recv_msg_translator(recieved_msg)
                     self.orders_interpreter_method(code, target, order)
                     print("recieved: ",self.recieved_order, " /// number of recieved: ", self.recieved_order_number)
-                    self.player_log.append("RECIEVED ##> "+self.recieved_order)
+                    self.player_log.append("red>"+self.recieved_order)
                     self.recieved_order_number += 1
             except Exception as e:
                 print("Failed interpretation of order: ########>>>>>  ", self.recieved_order)  
@@ -355,10 +356,14 @@ class Main():
         if self.order_to_send != self.repeat_order_control:
             print("ORDER SENT: ------>  ", self.order_to_send)
             self.repeat_order_control = self.order_to_send
-            self.player_log.append("SENT ##> "+self.order_to_send)
+            self.player_log.append("green>"+self.order_to_send)
             self.order_number += 1
         
-             
+    def logger_creator(self, msg):
+        
+        pass
+        
+                 
        
     def orders_interpreter_method(self, code, target, order):
         
@@ -962,6 +967,7 @@ class Main():
             if token_b.hits < 1:
                 self.player_b.player_tokens.remove(token_b)
 
+        self.scroll_log.update()
 
 
         
@@ -999,6 +1005,10 @@ class Main():
         pygame.draw.rect(self.WIN, "pink",ENEMY_FACTION_HAND)
         pygame.draw.rect(self.WIN, "red",ENEMY_SPELLS_HAND)
         pygame.draw.rect(self.WIN, "yellow", INFORMATION_FRAME)
+        
+        
+        
+        
 
 
         faction_deck = pygame.image.load(os.path.join("images","faction_deck2.jpg")).convert_alpha() # load faction deck image
@@ -1026,7 +1036,7 @@ class Main():
         spells_hand_sign = GENERIC_FONT.render("Spells hand",1,"black")
         self.WIN.blit(spells_hand_sign, (SPELLS_HAND.x+5,SPELLS_HAND.y))
         
-        
+        self.scroll_log.draw(self.WIN)
             
         self.faction_hand_controller(focus_faction_card, self.current_phase)
         self.spells_hand_controller(focus_spell_card, self.current_phase)

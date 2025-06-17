@@ -127,7 +127,7 @@ def example2():
     clock = pygame.time.Clock()
 
     font = pygame.font.SysFont("Liberation Sans", 65)
-    message = TextScroll(pygame.Rect(25, 0, 1100, 460), font, YELLOW, BLACK, STORY2, ms_per_line=300)
+    message = TextScroll(pygame.Rect(25, 0, 1100, 460), font, YELLOW, GREY, STORY2, ms_per_line=300)
 
     while True:
         for event in pygame.event.get():
@@ -142,7 +142,7 @@ def example2():
             clock.tick(60)
 
 if __name__ == "__main__":
-    example1()
+    example2()
         
         
         
