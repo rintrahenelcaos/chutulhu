@@ -28,7 +28,7 @@ def broadcast(msg, player):
         for ind_client in clients:
             if clients.index(ind_client) != player:
                 #msg = msg + str(clients.index(ind_client))
-                ind_client.send(msg.encode(FORMAT))
+                ind_client.sendall(msg.encode(FORMAT))
                 
     except Exception as error:
             print('Error :',error)
@@ -40,7 +40,7 @@ def handle_client(conn, addr, player):
     data[player] = faction
     for cl in range(len(data)):
         if cl != player:
-            conn.send(data[cl].encode(FORMAT))
+            conn.sendall(data[cl].encode(FORMAT))
 
     connected = True
     enemy_on_line = False

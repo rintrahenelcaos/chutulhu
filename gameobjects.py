@@ -113,12 +113,12 @@ class TokenObject:
             self.vector_to_go = vector
         if turner:
              
-            self.go_pos = self.go_pos.move_towards(self.vector_to_go, 5)
+            self.go_pos = self.go_pos.move_towards(self.vector_to_go, 10)
             self.rec.x = abs(self.go_pos[0] - BOARD.get_width()) - CELL
             self.rec.y = abs(self.go_pos[1] - BOARD.get_height()) -  CELL
             
         else:    
-            self.go_pos = self.go_pos.move_towards(self.vector_to_go, 5)
+            self.go_pos = self.go_pos.move_towards(self.vector_to_go, 10)
             self.rec.x = self.go_pos[0]
             self.rec.y = self.go_pos[1]
         board.blit(self.scaled_image, (self.rec))

@@ -134,7 +134,7 @@ class Main():
         self.repeat_order_control = "NONE"  # used to check on repeated msgs
         
         self.player_log = []
-        self.enemy_log = []
+        self.previous_msg = "NONE"
         self.order_number = 0
         self.recieved_order_number = -1
         
@@ -159,7 +159,7 @@ class Main():
         self.pre_game_ok_button = Button(CELL*4, CELL//4*3, CELL*2,CELL//2, GENERIC_FONT, "Confirm Deploy", "darkgreen", lambda: self.confirm_deployment())
         
         # Game perse Widgets
-        self.scroll_log = TextScrollLog(LOG_FRAME, pygame.font.SysFont("Liberation Sans", int(CELL//4)), "green", "red", "pink", self.player_log)
+        self.scroll_log = TextScrollLog(LOG_FRAME, pygame.font.SysFont("Liberation Sans", int(CELL//4)), "green", "red", "gray0", self.player_log)
         
     
         
@@ -349,6 +349,7 @@ class Main():
                     print("recieved: ",self.recieved_order, " /// number of recieved: ", self.recieved_order_number)
                     self.player_log.append("red>"+self.recieved_order)
                     self.recieved_order_number += 1
+                
             except Exception as e:
                 print("Failed interpretation of order: ########>>>>>  ", self.recieved_order)  
                 print(e) 
@@ -356,6 +357,7 @@ class Main():
         if self.order_to_send != self.repeat_order_control:
             print("ORDER SENT: ------>  ", self.order_to_send)
             self.repeat_order_control = self.order_to_send
+            
             self.player_log.append("green>"+self.order_to_send)
             self.order_number += 1
         
