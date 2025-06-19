@@ -97,6 +97,13 @@ def recv_msg_translator(cargo):
             print("passing phase")
         elif code == "LOG":
             pass
+        elif code == "FATEPHASEENDED":
+            cards_list = order.rsplit(";")
+            order = []
+            for card in cards_list:
+                order.append(card)
+            print("fate phase and cards drawn")
+            
 
 
         #print("recv_msg_translator: ---> " + cargo)

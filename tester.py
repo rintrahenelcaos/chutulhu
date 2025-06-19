@@ -419,6 +419,9 @@ class Main():
         elif code == "CARDPLAYED":
             card_info_name, card_type_info, card_info_image = self.player_b.enemy_card_played(target, order)
             print("card played")
+        elif code == "FATEPHASEENDED":
+            self.player_b.enemy_fate_phase(order)
+            self.phase_passer_method()
         elif code == "ACARDPLAYED":
             print("move token")
         elif code == "XFCARDPLAYED":
@@ -833,7 +836,7 @@ class Main():
                         if faction_deck_drawer_button.collidepoint(self.mousepos):
                             
                             drawn_cards = self.player_a.fate_phase(repetitions = 3)
-                            self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDSDRAWN", "faction", drawn_cards)
+                            self.order_to_send = send_msg_translator_with_log(self.order_number,"FATEPHASEENDED", "faction", drawn_cards)
                             #print(self.order_to_send)
                             self.passing_phase = True
                             #pygame.time.set_timer(self.freezing_mouse_event, 50, 1) # prevents hitting the cards when draself.WINg
