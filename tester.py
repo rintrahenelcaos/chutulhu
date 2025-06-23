@@ -63,6 +63,7 @@ class Main():
         self.player_turn = True
         self.mousepos = pygame.mouse.get_pos()
         
+        
         self.draw_cards_from_cards_indicator = None
         self.draw_spells_from_cards_indicator = None
         
@@ -116,7 +117,14 @@ class Main():
         
         phase = str
         
-
+        # Informative variables
+        
+        self.last_card_played_information = None
+        self.last_card_played_image = None
+        self.last_card_played_name = "NONE"
+        self.last_card_played_type = None
+        self.last_card_played_range = None
+        self.last_card_played_damage = None
         
         
         
@@ -330,9 +338,6 @@ class Main():
     
     def talker_with_logger(self):
         
-        
-            
-        
         self.net.send_only(self.order_to_send)
         
         
@@ -418,6 +423,7 @@ class Main():
                     
         elif code == "CARDPLAYED":
             card_info_name, card_type_info, card_info_image = self.player_b.enemy_card_played(target, order)
+            
             print("card played")
         elif code == "FATEPHASEENDED":
             self.player_b.enemy_fate_phase(order)
@@ -800,6 +806,8 @@ class Main():
                 pass
                 #self.phase_passer_method()
                 
+               
+                
             ### MOUSEBUTTONUP EVENTS ###
 
             if event.type == pygame.MOUSEBUTTONUP : # and self.mouse_once == True:
@@ -838,10 +846,10 @@ class Main():
                             drawn_cards = self.player_a.fate_phase(repetitions = 3)
                             self.order_to_send = send_msg_translator_with_log(self.order_number,"FATEPHASEENDED", "faction", drawn_cards)
                             #print(self.order_to_send)
-                            self.passing_phase = True
+                            #self.passing_phase = True
                             #pygame.time.set_timer(self.freezing_mouse_event, 50, 1) # prevents hitting the cards when draself.WINg
                             
-                            #self.phase_passer_method()
+                            self.phase_passer_method()
                             
                     ### SUMMON PHASE EVENT ###
                     
@@ -1047,6 +1055,7 @@ class Main():
         self.spells_hand_controller(focus_spell_card, self.current_phase)
         self.enemy_faction_hand_controller()
         self.enemy_spell_hand_controller()
+        self.last_card_played(INFORMATION_FRAME)
         
 
 
@@ -1238,11 +1247,18 @@ class Main():
             
             crd.card_drawer(self.WIN, position, enemy = True)
             
-    def enemy_card_played_shower(self):
+    def last_card_played(self, board):
+        
+        info_rec = pygame.Rect((board.x+5, board.y+5),(board.width, board.height))
+        
+        if self.last_card_played_information != None :
+            
+        
+            self.WIN.blit(GENERIC_FONT.render("last card played"+self.last_card_played_information[2], 1, "black"), info_rec)
+        else: 
+            self.WIN.blit(GENERIC_FONT.render("last card played", 1, "black"), info_rec)
         
         
-        
-        pass
     
     def phase_passer_method(self):
         
@@ -1274,7 +1290,7 @@ class Main():
         self.movement_indicator = None
         self.moving_tokens = False
         
-        self.phase_passer_method()
+        #self.phase_passer_method()
         #pygame.time.set_timer(self.freezing_mouse_event, 50, 1)
         
         #self.phase_passer_method()
@@ -1334,11 +1350,7 @@ class Main():
                     token.hits = token.hits - damage_to_deal
                     self.order_to_send = send_msg_translator_with_log(self.order_number,"DEFENSE", damaged_token, damage_to_deal)
         
-                
-        
-        
-        
-    
+
     
     def card_picker(self):
         card_picked = "NONE"
@@ -1353,7 +1365,10 @@ class Main():
                         #    self.order_to_send = "MCARDPLAYED]:"+str(crd)+":all"
                         #elif crd.card_type == "XS" or crd.card_type == "XF":
                         #    self.order_to_send = "XCARDPLAYED]:"+str(crd)+":"+crd.card_type
+                        
+                        
                         card_picked = str(crd)
+                        self.last_card_played_information = crd.card_information_returner()
                         self.player_a.faction_card_discard(crd)
                         #self.player_a.player_hand_objs.remove(crd)
     
@@ -1375,6 +1390,7 @@ class Main():
                         #discarder("cards_a", str(crd.identif))
                         self.damage_in_course = crd.damage
                         card_picked = str(crd)
+                        self.last_card_played_information = crd.card_information_returner()
                         self.player_a.faction_card_discard(crd)
                         #self.player_a.player_hand_objs.remove(crd)
     
