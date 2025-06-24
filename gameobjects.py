@@ -83,7 +83,10 @@ class CardObject(pygame.sprite.Sprite):
         elif self.card_type == "D":
             code = defense_activation()"""
         return code
-             
+    
+    def card_information_returner(self):
+        
+        return self.image, self.card_type, self.name_show, self.range, self.damage         
         
              
         

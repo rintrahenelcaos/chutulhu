@@ -226,6 +226,13 @@ def send_msg_translator_with_log(order_number,code, target, order):
     elif code == "SCARDPLAYED":
         print("move token")
     
+    elif code == "FATEPHASEENDED":
+        temporal_order = ""
+        for ind_order in order:
+            temporal_order = temporal_order + ind_order + ";"
+        temporal_order = temporal_order[:-1]
+        send_msg = code+"]"+target+":"+temporal_order
+    
         
         
     else:
