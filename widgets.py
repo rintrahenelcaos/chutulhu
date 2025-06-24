@@ -236,7 +236,7 @@ class Enemy_Does_Capsulle:
             self.rect.x = self.v2_position[0]
             self.rect.y = self.v2_position[1]
         
-        self.scaled_image = pygame.transform.scale(self.image, (self.width, self.height))
+        self.scaled_image = pygame.transform.scale(self.image, (self.width, self.width*5/3))
         board.blit(self.scaled_image, (self.rect))
     
 
