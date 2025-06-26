@@ -212,7 +212,7 @@ class TextScrollLog:
 
 ### Information slide window ###
 
-class Enemy_Does_Capsulle:
+class EnemyDoesCapsulle:
     
     def __init__(self, capsulle_width, capsulle_height, initial_pos, activated_pos, colour, image, text, image_width) -> None:
         self.width = capsulle_width
@@ -224,10 +224,11 @@ class Enemy_Does_Capsulle:
         self.image = image
         self.text = text
         self.active = True
-        self.v2_position = pygame.Vector2(self.initial_pos)
+        self.v2_position = pygame.Vector2(self.initial_pos[0], self.initial_pos[1])
         self.rect = pygame.Rect(self.initial_pos[0], self.initial_pos[1], self.width, self.height)
         self.image = pygame.image.load(os.path.join("images",str(image))).convert_alpha()
         self.scaled_image = pygame.transform.scale(self.image, (self.width, self.height))
+        
         
     def capsulle_drawer(self, board, vector = None, enemy = False):
         
@@ -236,7 +237,16 @@ class Enemy_Does_Capsulle:
             self.rect.x = self.v2_position[0]
             self.rect.y = self.v2_position[1]
         
+        if self.active == False:
+            self.v2_position = self.v2_position.move_towards(pygame.Vector2(self.initial_pos), 15)
+            self.rect.x = self.v2_position[0]
+            self.rect.y = self.v2_position[1]
+            
+        
         self.scaled_image = pygame.transform.scale(self.image, (self.width, self.width*5/3))
         board.blit(self.scaled_image, (self.rect))
     
+    def destroying_capsulle(self):
+        self.active == False
+        
 

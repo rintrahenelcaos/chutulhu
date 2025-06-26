@@ -26,7 +26,7 @@ from pickleobj import Exchange_object
 
 from game_server_log import main as server_main
 
-from widgets import DropDown, Button, TextScrollLog
+from widgets import DropDown, Button, TextScrollLog, EnemyDoesCapsulle
 
 from server_interpreter import recv_msg_translator, send_msg_translator, send_msg_translator_with_log, Communication_methods
 
@@ -126,7 +126,7 @@ class Main():
         self.last_card_played_range = None
         self.last_card_played_damage = None
         
-        
+        self.enemy_does_list = []
         
         # Network Objects
         
@@ -1255,9 +1255,14 @@ class Main():
             
         
             self.WIN.blit(GENERIC_FONT.render("last card played"+self.last_card_played_information[2], 1, "black"), info_rec)
+            self.enemy_does_list.append(EnemyDoesCapsulle(board.width, board.height, {self.WIN.get_width(), self.WIN.get_height}, "activated_pos", "red", self.last_card_played_information[0], self.last_card_played_information[2], board.width/2))
+            self.last_card_played_information = None
+            print(self.enemy_does_list)
         else: 
             self.WIN.blit(GENERIC_FONT.render("last card played", 1, "black"), info_rec)
         
+        for card in self.enemy_does_list:
+            card.drawer(self.WIN, vector=(board.x+15, board.y+15))
         
     
     def phase_passer_method(self):
@@ -1420,6 +1425,8 @@ class Main():
                         #elif crd.card_type == "XS" or crd.card_type == "XF":
                         #    self.order_to_send = "XCARDPLAYED]:"+str(crd)+":"+crd.card_type
                         #card_picked = str(crd)
+                        
+                        self.last_card_played_information = crd.card_information_returner()
                         self.player_a.faction_card_discard(crd)
                         #self.player_a.player_hand_objs.remove(crd)
     
