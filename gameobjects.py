@@ -17,6 +17,7 @@ class CardObject(pygame.sprite.Sprite):
         self.ypos = ypos
         self.go_pos = pygame.Vector2(self.xpos, self.ypos)
         self.rec = pygame.Rect(self.go_pos[0], self.go_pos[1], self.size, self.size)
+        self.image_dir = image
         self.image = pygame.image.load(os.path.join("images",str(image))).convert_alpha()
         self.scaled_image = pygame.transform.scale(self.image, (self.size, self.size))
         self.back_image = pygame.image.load(os.path.join("images",str(card_back))).convert_alpha()
@@ -86,7 +87,7 @@ class CardObject(pygame.sprite.Sprite):
     
     def card_information_returner(self):
         
-        return self.image, self.card_type, self.name_show, self.range, self.damage         
+        return self.image_dir, self.card_type, self.name_show, self.range, self.damage         
         
              
         

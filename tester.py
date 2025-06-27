@@ -1255,14 +1255,17 @@ class Main():
             
         
             self.WIN.blit(GENERIC_FONT.render("last card played"+self.last_card_played_information[2], 1, "black"), info_rec)
-            self.enemy_does_list.append(EnemyDoesCapsulle(board.width, board.height, {self.WIN.get_width(), self.WIN.get_height}, "activated_pos", "red", self.last_card_played_information[0], self.last_card_played_information[2], board.width/2))
+            initial_vector = pygame.Vector2(self.WIN.get_width(), self.WIN.get_height())
+            self.enemy_does_list.append(EnemyDoesCapsulle(board.width, board.height, initial_vector, "activated_pos", "red", self.last_card_played_information[0], self.last_card_played_information[2], board.width/2))
             self.last_card_played_information = None
             print(self.enemy_does_list)
         else: 
             self.WIN.blit(GENERIC_FONT.render("last card played", 1, "black"), info_rec)
         
+        """
         for card in self.enemy_does_list:
             card.drawer(self.WIN, vector=(board.x+15, board.y+15))
+        """
         
     
     def phase_passer_method(self):
