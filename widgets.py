@@ -233,7 +233,7 @@ class EnemyDoesCapsulle:
     def capsulle_drawer(self, board, vector = None, enemy = False):
         
         if vector != None :
-            self.v2_position = self.v2_position.move_towards(vector, 10)
+            self.v2_position = self.v2_position.move_towards(vector, 20)
             self.rect.x = self.v2_position[0]
             self.rect.y = self.v2_position[1]
         
