@@ -39,7 +39,7 @@ class CardObject(pygame.sprite.Sprite):
         
     def card_drawer(self, board, vector = None, enemy = False):
         if vector != None:
-            self.go_pos = self.go_pos.move_towards(vector, 6)
+            self.go_pos = self.go_pos.move_towards(vector, 10)
             self.rec.x = self.go_pos[0]
             self.rec.y = self.go_pos[1]
         

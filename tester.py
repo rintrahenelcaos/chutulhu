@@ -95,7 +95,7 @@ class Main():
         
         self.passing_phase = False
         
-        self.events_blocker = False  # Blocks events to allow phase passing
+        self.events_blocker = 0  # Blocks events to allow phase passing
         
         
         # test variables
@@ -814,15 +814,17 @@ class Main():
                 #self.mouse_once = False
                 if button2.collidepoint(self.mousepos):   ### passing phases ---> test only
                     
-                    self.passing_phase = True
-                    #self.events_blocker = True
+                    self.order_to_send = send_msg_translator_with_log(self.order_number,"NEXT_PHASE", "pass", "phase")
+                    self.phase_passer_method()
+                    #self.passing_phase = True
+                    self.events_blocker = 50
                     
                     #self.phase_passer_method()
                     #pygame.time.set_timer(self.freezing_mouse_event, 50, 1)
                     
                     
                 
-                if self.player_turn and self.passing_phase == False:
+                if self.player_turn and self.events_blocker == False:
                     
                     #if temporal_change_turn_button.collidepoint(self.mousepos):
                     #    
@@ -839,7 +841,7 @@ class Main():
                         
                     ### FATE PHASE ###
     
-                    if self.current_phase == "fate":
+                    if self.current_phase == "fate" and self.events_blocker == False:
                     
                         if faction_deck_drawer_button.collidepoint(self.mousepos):
                             
@@ -853,7 +855,7 @@ class Main():
                             
                     ### SUMMON PHASE EVENT ###
                     
-                    if self.current_phase == "summon":
+                    if self.current_phase == "summon" and self.events_blocker == False:
                         
                         card_selected, code = self.card_picker()
                         
@@ -868,7 +870,7 @@ class Main():
     
                     ### MOVE PHASE EVENT ###
     
-                    if self.current_phase == "move":
+                    if self.current_phase == "move" and self.events_blocker == False:
                     
                     
                         if pygame.mouse.get_cursor() == pygame.cursors.broken_x: 
@@ -895,7 +897,7 @@ class Main():
                             
                     ### ATTACK PHASE EVENT ###
     
-                    if self.current_phase == "att": 
+                    if self.current_phase == "att" and self.events_blocker == False: 
                     
                         if pygame.mouse.get_cursor() == pygame.cursors.broken_x:
                             for attack in self.available_attacks:
@@ -952,23 +954,29 @@ class Main():
                                 self.damaged_token = None
                                 self.defense_indicator = False
                                                         
-        pygame.event.clear()               
+                      
          
                        
-        if self.events_blocker == True:
+        if self.events_blocker > 0:
             
-            self.order_to_send = send_msg_translator_with_log(self.order_number,"NEXT_PHASE", "pass", "phase")
-            self.phase_passer_method()
+            self.events_blocker = self.events_blocker - 1
+            print("events blocker = " ,self.events_blocker)
             
-            self.events_blocker = False
-            self.passing_phase = False
+            #self.order_to_send = send_msg_translator_with_log(self.order_number,"NEXT_PHASE", "pass", "phase")
+            #self.phase_passer_method()
+            
+            #self.events_blocker = False
+            #self.passing_phase = False
             
         
         #self.passing_phase = False
         
         if self.passing_phase == True:
             
-            self.events_blocker = True
+            self.order_to_send = send_msg_translator_with_log(self.order_number,"NEXT_PHASE", "pass", "phase")
+            self.phase_passer_method()
+            
+            #self.events_blocker = True
             
                         
         # surviving tokens control
