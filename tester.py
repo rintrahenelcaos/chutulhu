@@ -422,7 +422,8 @@ class Main():
             
                     
         elif code == "CARDPLAYED":
-            card_info_name, card_type_info, card_info_image = self.player_b.enemy_card_played(target, order)
+            #card_info_name, card_type_info, card_info_image = self.player_b.enemy_card_played(target, order)
+            self.last_card_played_information = self.player_b.enemy_card_played(target, order)
             
             print("card played")
         elif code == "FATEPHASEENDED":
@@ -817,7 +818,7 @@ class Main():
                     self.order_to_send = send_msg_translator_with_log(self.order_number,"NEXT_PHASE", "pass", "phase")
                     self.phase_passer_method()
                     #self.passing_phase = True
-                    self.events_blocker = 50
+                    self.events_blocker = 30
                     
                     #self.phase_passer_method()
                     #pygame.time.set_timer(self.freezing_mouse_event, 50, 1)
@@ -852,6 +853,7 @@ class Main():
                             #pygame.time.set_timer(self.freezing_mouse_event, 50, 1) # prevents hitting the cards when draself.WINg
                             
                             self.phase_passer_method()
+                            self.events_blocker = 60
                             
                     ### SUMMON PHASE EVENT ###
                     
@@ -864,7 +866,7 @@ class Main():
                         else:
                         
                             self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDPLAYED", "faction", card_selected)
-                        
+                        self.events_blocker = 30
                         
                         
     
@@ -893,7 +895,7 @@ class Main():
                                 pass
                             else:
                                 self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDPLAYED", "faction", card_selected)
-                            
+                        self.events_blocker = 30    
                             
                     ### ATTACK PHASE EVENT ###
     
@@ -925,7 +927,8 @@ class Main():
                                 pass
                             else:
                                 self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDPLAYED", "faction", card_selected)
-                                                                      
+                        
+                        self.events_blocker = 30                                              
     
     
     

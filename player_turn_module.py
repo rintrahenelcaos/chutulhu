@@ -145,7 +145,8 @@ class Player_Object():
                 print("order :",order)
                 for card in self.player_hand_objs:
                     if str(card) == order:
-                        card_info_name, card_type_info, card_info_image = card.name_show, card.card_type, card.image
+                        #card_info_name, card_type_info, card_info_image = card.name_show, card.card_type, card.image
+                        card_played_information = card.card_information_returner()
                         self.player_hand_objs.remove(card)
                         
             elif target == "spell":
@@ -155,7 +156,8 @@ class Player_Object():
                     if str(card) == order:
                         self.player_spell_hand_objs.remove(card)
             
-            return card_info_name, card_type_info, card_info_image
+            return card_played_information
+            #return card_info_name, card_type_info, card_info_image
                      
         except: print("failed at identifying faction card")
         
