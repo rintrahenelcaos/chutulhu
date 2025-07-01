@@ -840,6 +840,8 @@ class Main():
                             #print("spell card played")  # CONTROL
                             pass
                         
+                    
+                        
                     ### FATE PHASE ###
     
                     if self.current_phase == "fate" and self.events_blocker == False:
@@ -956,8 +958,11 @@ class Main():
                                 #print("order to send in defense: "+self.order_to_send)
                                 self.damaged_token = None
                                 self.defense_indicator = False
-                                                        
-                      
+                
+                if len(self.enemy_does_list) > 0:
+                    if self.enemy_does_list[0].rect.collidepoint(self.mousepos):
+                        print(self.enemy_does_list[0])
+                        self.enemy_does_list[0].destroying_capsulle()
          
                        
         if self.events_blocker > 0:
@@ -1268,8 +1273,10 @@ class Main():
         
             self.WIN.blit(GENERIC_FONT.render("last card played"+self.last_card_played_information[2], 1, "black"), info_rec)
             initial_vector = pygame.Vector2(self.WIN.get_width(), board.y+5)
-            self.enemy_does_list.append(EnemyDoesCapsulle(board.height*3/5, board.height, initial_vector, "activated_pos", "red", self.last_card_played_information[0], self.last_card_played_information[2], board.height*3/5))
+            new_capsule = EnemyDoesCapsulle(board.height*3/5, board.height, initial_vector, "activated_pos", "red", self.last_card_played_information[0], self.last_card_played_information[2], board.height*3/5)
+            self.enemy_does_list.append(new_capsule)
             self.last_card_played_information = None
+            
             print(self.enemy_does_list)
         else: 
             self.WIN.blit(GENERIC_FONT.render("last card played", 1, "black"), info_rec)
