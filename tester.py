@@ -1273,7 +1273,8 @@ class Main():
         
             self.WIN.blit(GENERIC_FONT.render("last card played"+self.last_card_played_information[2], 1, "black"), info_rec)
             initial_vector = pygame.Vector2(self.WIN.get_width(), board.y+5)
-            new_capsule = EnemyDoesCapsulle(board.height*3/5, board.height, initial_vector, "activated_pos", "red", self.last_card_played_information[0], self.last_card_played_information[2], board.height*3/5)
+            activated_vector = pygame.Vector2(board.x+15, board.y+15)
+            new_capsule = EnemyDoesCapsulle(board.height*3/5, board.height, initial_vector, activated_vector, "red", self.last_card_played_information[0], self.last_card_played_information[2], board.height*3/5)
             self.enemy_does_list.append(new_capsule)
             self.last_card_played_information = None
             
@@ -1283,7 +1284,7 @@ class Main():
         
         
         for enemy_doing in self.enemy_does_list:
-            enemy_doing.capsulle_drawer(self.WIN, vector=(board.x+15, board.y+15))
+            enemy_doing.capsulle_drawer(self.WIN)
         
         
     

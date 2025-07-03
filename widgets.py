@@ -233,14 +233,17 @@ class EnemyDoesCapsulle:
     def capsulle_drawer(self, board, vector = None, enemy = False):
         
         if vector != None :
-            self.v2_position = self.v2_position.move_towards(vector, 50)
+            self.v2_position = self.v2_position.move_towards(self.activated_pos, 50)
             self.rect.x = self.v2_position[0]
             self.rect.y = self.v2_position[1]
+        self.v2_position = self.v2_position.move_towards(self.activated_pos, 50)
+        self.rect.x = self.v2_position[0]
+        self.rect.y = self.v2_position[1]
         
-        if self.active == False:
+        """if self.active == False:
             self.v2_position = self.v2_position.move_towards(pygame.Vector2(self.initial_pos), 50)
             self.rect.x = self.v2_position[0]
-            self.rect.y = self.v2_position[1]
+            self.rect.y = self.v2_position[1]"""
             
         
         self.scaled_image = pygame.transform.scale(self.image, (self.width, self.width*5/3))
