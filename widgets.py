@@ -238,15 +238,15 @@ class EnemyDoesCapsulle:
         #    self.v2_position = self.v2_position.move_towards(self.activated_pos, 50)
         #    self.rect.x = self.v2_position[0]
         #    self.rect.y = self.v2_position[1]
-        self.v2_position = self.v2_position.move_towards(self.activated_pos, 50)
-        self.rect.x = self.v2_position[0]
-        self.rect.y = self.v2_position[1]
+        #self.v2_position = self.v2_position.move_towards(self.activated_pos, 50)
+        #self.rect.x = self.v2_position[0]
+        #self.rect.y = self.v2_position[1]
         
         if self.active :
             self.v2_position = self.v2_position.move_towards(self.activated_pos, 50)
             self.rect.x = self.v2_position[0]
             self.rect.y = self.v2_position[1]
-        else:
+        elif self.active == False:
             self.v2_position = self.v2_position.move_towards(pygame.Vector2(self.initial_pos), 50)
             self.rect.x = self.v2_position[0]
             self.rect.y = self.v2_position[1]

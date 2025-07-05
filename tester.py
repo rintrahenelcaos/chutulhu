@@ -962,8 +962,13 @@ class Main():
                 if len(self.enemy_does_list) > 0:
                     if self.enemy_does_list[0].rect.collidepoint(self.mousepos):
                         print(self.enemy_does_list[0])
-                        self.enemy_does_list[0].destroying_capsulle()
-         
+                        self.enemy_does_list[0].active = False
+                        print("enemy_does_list[0]: ", self.enemy_does_list[0], " --- ", self.enemy_does_list[0].active)
+
+                    for enemy_doing in self.enemy_does_list:
+                        if enemy_doing.active == False and (enemy_doing.rect.x == enemy_doing.initial_pos[0] and enemy_doing.rect.y == enemy_doing.initial_pos[1]):
+                            self.enemy_does_list.remove(enemy_doing)
+                            print(self.enemy_does_list)
                        
         if self.events_blocker > 0:
             
