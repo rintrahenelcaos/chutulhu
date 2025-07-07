@@ -823,6 +823,12 @@ class Main():
                     #self.phase_passer_method()
                     #pygame.time.set_timer(self.freezing_mouse_event, 50, 1)
                     
+                if len(self.enemy_does_list) > 0:
+                    if self.enemy_does_list[0].rect.collidepoint(self.mousepos):
+                        print(self.enemy_does_list[0])
+                        self.enemy_does_list[0].active = False
+                        print("enemy_does_list[0]: ", self.enemy_does_list[0], " --- ", self.enemy_does_list[0].active)
+
                     
                 
                 if self.player_turn and self.events_blocker == False:
@@ -868,7 +874,7 @@ class Main():
                         else:
                         
                             self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDPLAYED", "faction", card_selected)
-                        self.events_blocker = 30
+                            self.events_blocker = 30
                         
                         
     
@@ -897,7 +903,7 @@ class Main():
                                 pass
                             else:
                                 self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDPLAYED", "faction", card_selected)
-                        self.events_blocker = 30    
+                                self.events_blocker = 30    
                             
                     ### ATTACK PHASE EVENT ###
     
@@ -930,7 +936,7 @@ class Main():
                             else:
                                 self.order_to_send = send_msg_translator_with_log(self.order_number,"CARDPLAYED", "faction", card_selected)
                         
-                        self.events_blocker = 30                                              
+                                self.events_blocker = 30                                              
     
     
     
@@ -959,16 +965,7 @@ class Main():
                                 self.damaged_token = None
                                 self.defense_indicator = False
                 
-                if len(self.enemy_does_list) > 0:
-                    if self.enemy_does_list[0].rect.collidepoint(self.mousepos):
-                        print(self.enemy_does_list[0])
-                        self.enemy_does_list[0].active = False
-                        print("enemy_does_list[0]: ", self.enemy_does_list[0], " --- ", self.enemy_does_list[0].active)
-
-                    for enemy_doing in self.enemy_does_list:
-                        if enemy_doing.active == False and (enemy_doing.rect.x == enemy_doing.initial_pos[0] and enemy_doing.rect.y == enemy_doing.initial_pos[1]):
-                            self.enemy_does_list.remove(enemy_doing)
-                            print(self.enemy_does_list)
+                
                        
         if self.events_blocker > 0:
             
@@ -1272,6 +1269,7 @@ class Main():
         
         info_rec = pygame.Rect((board.x+5, board.y+5),(board.width, board.height))
         
+        y_pos = board.y+5
         
         if self.last_card_played_information != None :
             
@@ -1289,7 +1287,13 @@ class Main():
         
         
         for enemy_doing in self.enemy_does_list:
+                        
+            enemy_doing.activated_pos = pygame.Vector2(board.x+15+5*self.enemy_does_list.index(enemy_doing), y_pos) 
+             
             enemy_doing.capsulle_drawer(self.WIN)
+            if enemy_doing.active == False and (enemy_doing.rect.x == enemy_doing.initial_pos[0] and enemy_doing.rect.y == enemy_doing.initial_pos[1]):
+                self.enemy_does_list.remove(enemy_doing)
+                print(self.enemy_does_list) 
         
         
     
