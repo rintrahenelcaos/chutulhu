@@ -1288,7 +1288,7 @@ class Main():
         
         for enemy_doing in self.enemy_does_list:
                         
-            enemy_doing.activated_pos = pygame.Vector2(board.x+15+5*self.enemy_does_list.index(enemy_doing), y_pos) 
+            enemy_doing.activated_pos = pygame.Vector2(board.x+15+20*self.enemy_does_list.index(enemy_doing), y_pos) 
              
             enemy_doing.capsulle_drawer(self.WIN)
             if enemy_doing.active == False and (enemy_doing.rect.x == enemy_doing.initial_pos[0] and enemy_doing.rect.y == enemy_doing.initial_pos[1]):
