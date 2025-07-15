@@ -1090,9 +1090,16 @@ class Main():
     
     def token_movement(self, game_secene):
     
-
+        superior_layer = []
+        
         for obj in self.player_a.player_tokens:
-            obj.token_object_drawer(BOARD)
+            if obj.moving == True:
+                superior_layer.append(self.player_a.player_tokens.index(obj))
+            elif obj.moving == False:
+                obj.token_object_drawer(BOARD)
+        for layered in superior_layer:
+            self.player_a.player_tokens[layered].token_object_drawer(BOARD)
+            
         if game_secene == "in_course" or game_secene == "client_test":
             
             for obj2 in self.player_b.player_tokens:
@@ -1319,6 +1326,7 @@ class Main():
         #print("move to: ", self.pos)
         self.position = pygame.Vector2(self.pos[0], self.pos[1])
         self.chosen_token.vector_to_go = self.position
+        self.chosen_token.moving = True
         # sending order to server
         self.order_to_send = send_msg_translator_with_log(self.order_number,"VECTORTOGO",self.chosen_token,self.pos)
         ### resetting values to prevent various movements over the same card ###

@@ -64,6 +64,7 @@ class CardObject(pygame.sprite.Sprite):
     
     def card_info_shower(self, board):
         
+        
         info_rec = pygame.Rect(self.rec.x, self.rec.y-self.size*2, self.size, self.sizeheight)
         info_image = pygame.transform.scale(self.image,(self.size*2, self.sizeheight*2))
         card_info_name = CARD_FONT.render(self.name_show, 1, "black")
@@ -91,9 +92,10 @@ class CardObject(pygame.sprite.Sprite):
         
              
         
-class TokenObject:
+class TokenObject(pygame.sprite.Sprite):
     
     def __init__(self, size, xpos, ypos, image, identif, hits, notes):
+        pygame.sprite.Sprite.__init__(self)
         self.size = size
         self.xpos = xpos
         self.ypos = ypos
@@ -125,6 +127,8 @@ class TokenObject:
             self.go_pos = self.go_pos.move_towards(self.vector_to_go, 10)
             self.rec.x = self.go_pos[0]
             self.rec.y = self.go_pos[1]
+        if self.rec.x == self.vector_to_go.x and self.rec.y == self.vector_to_go.y:
+            self.moving = False
         board.blit(self.scaled_image, (self.rec))
         
         
