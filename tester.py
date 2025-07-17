@@ -556,6 +556,7 @@ class Main():
                             #print("move to: ", self.pos)
                             self.position = pygame.Vector2(self.pos[0], self.pos[1])
                             self.chosen_token.vector_to_go = self.position
+                            self.chosen_token.moving = True
                             ### resetting values to prevent various movements over the same card ###
                             self.pos = None
                             self.moving_tokens = False
